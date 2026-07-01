@@ -1,0 +1,38 @@
+{
+  "agent": "dev-messaging",
+  "probed_at": "2026-07-01T15:42:00Z",
+  "score": "4/4",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-messaging.yaml (pós-correção)",
+  "questions": [
+    {
+      "q": "Existe Saga/StateMachine no repo? Quem assumiria uma nova?",
+      "sustained_by": "DOMAIN-MESSAGING-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep saga|statemachine vazio, repetido nesta re-sonda",
+      "proof": "grep saga|statemachine vazio, repetido nesta re-sonda"
+    },
+    {
+      "q": "Distribuição dos IConsumer<T> por bounded context?",
+      "sustained_by": "DOMAIN-MESSAGING-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "5 consumers em 6 serviços confirmados",
+      "proof": "5 consumers em 6 serviços confirmados"
+    },
+    {
+      "q": "Há split-brain de config do RabbitMQ?",
+      "sustained_by": "DOMAIN-MESSAGING-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ConfigurationExtensions.cs e DependencyInjectionExtensions.cs leem a mesma seção RabbitMqTransportOptions — REFUTAÇÃO original confirmada",
+      "proof": "ConfigurationExtensions.cs e DependencyInjectionExtensions.cs leem a mesma seção RabbitMqTransportOptions — REFUTAÇÃO original confirmada"
+    },
+    {
+      "q": "AddMessagingHealthCheck é código morto? Em quantos serviços?",
+      "sustained_by": "DOMAIN-MESSAGING-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep no repo inteiro → 1 match (só a definição), zero call sites",
+      "proof": "grep no repo inteiro → 1 match (só a definição), zero call sites"
+    }
+  ],
+  "proof_summary": "4/4 (100%) PASSOU na re-sonda pós-correção. Ciclo de correção do 2b.6 funcionou: erro real (split-brain inexistente) foi corrigido para o achado real (health check morto) e a fatia corrigida resistiu à verificação independente."
+}

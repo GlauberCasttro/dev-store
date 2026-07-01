@@ -1,0 +1,45 @@
+{
+  "agent": "devops",
+  "probed_at": "2026-07-01T15:36:00Z",
+  "score": "5/5",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/devops.yaml",
+  "questions": [
+    {
+      "q": "WebApp.Status tem Controllers/Models?",
+      "sustained_by": "DOMAIN-DEVOPS-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "find só retorna arquivos de infra/config",
+      "proof": "find só retorna arquivos de infra/config"
+    },
+    {
+      "q": "appsettings.Production concorda com Program.cs sobre ENDPOINTS?",
+      "sustained_by": "DOMAIN-DEVOPS-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Production=array JSON vs Program.cs:14 Get<string>()",
+      "proof": "Production=array JSON vs Program.cs:14 Get<string>()"
+    },
+    {
+      "q": "Cadeia depends_on completa?",
+      "sustained_by": "DOMAIN-DEVOPS-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "docker-compose.yml confirma exatamente",
+      "proof": "docker-compose.yml confirma exatamente"
+    },
+    {
+      "q": "Ordem dos jobs do CI — imagem pode rodar sem teste?",
+      "sustained_by": "DOMAIN-DEVOPS-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "build.yml — needs sequencial confirmado",
+      "proof": "build.yml — needs sequencial confirmado"
+    },
+    {
+      "q": "Seria seguro tratar WebApp.Status como dev-* pleno?",
+      "sustained_by": "DOMAIN-DEVOPS-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "mesma evidência da Q1",
+      "proof": "mesma evidência da Q1"
+    }
+  ],
+  "proof_summary": "5/5 certas-com-evidência."
+}

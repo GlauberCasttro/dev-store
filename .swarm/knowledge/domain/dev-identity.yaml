@@ -1,0 +1,32 @@
+# Fatia de domínio — dev-identity (Identity.API)
+- id: DOMAIN-IDENTITY-001
+  kind: project_pattern
+  claim: "É o ÚNICO ponto de emissão de JWT da plataforma, com JWKS ROTATIVO (KeepFor=15min, não segredo estático) e storage de chaves dedicado (ApplicationDbContext : ISecurityKeyContext, tabela SecurityKeys). CORRIGIDO pela sonda de maestria (2b.6): a configuração JWT (AddJwtConfiguration/JwtConfig.cs) vive no building-block compartilhado DevStore.WebAPI.Core/Identity/, não em Identity.API — e o número real de CHAMADORES de AddJwtConfiguration é 7 (Bff.Checkout, Orders.API, ShoppingCart.API, Billing.API, Customers.API, Catalog.API, Identity.API), não 9 (2 dos 9 diretórios em src/services — Orders.Domain, Orders.Infra — são libs sem Program.cs, e Billing.DevsPay é simulador in-process; nenhum consome JWT)."
+  applies_to: "dev-identity · impacto cross-serviço do JWKS"
+  source: "src/building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs:22 (path corrigido); src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs:8,14"
+  confidence: verified
+  check: "grep -rl 'AddJwtConfiguration' src/services — 7 chamadores reais, não 9"
+
+- id: DOMAIN-IDENTITY-002
+  kind: bound_decision
+  claim: "Register() implementa uma SAGA DE COMPENSAÇÃO MANUAL: cria IdentityUser → publica UserRegisteredIntegrationEvent via IBus.Request esperando confirmação de dev-customers → se falhar, desfaz (DeleteAsync). Não há orquestrador formal (nenhum MassTransit Saga/StateMachine no repo) — é compensação ad-hoc com risco de condição de corrida entre delete e falha de rede."
+  applies_to: "dev-identity · saga de registro sem orquestrador formal"
+  source: "src/services/DevStore.Identity.API/Controllers/AuthController.cs:53,107-124"
+  confidence: verified
+  check: "grep -rliE 'saga|statemachine' --include=*.cs src → vazio, confirma ausência de orquestrador formal"
+
+- id: DOMAIN-IDENTITY-003
+  kind: project_pattern
+  claim: "Hashing de senha usa Argon2 (NetDevPack.Security.PasswordHasher.Argon2), configurado centralmente em IdentityConfig.cs. Nunca hashear senha manualmente em outro lugar do serviço — a política é 1 ponto de configuração."
+  applies_to: "dev-identity · política de senha centralizada"
+  source: "src/services/DevStore.Identity.API/Configuration/IdentityConfig.cs:38-40"
+  confidence: verified
+  check: "grep -rn 'Argon2\\|PasswordHasher' src/services/DevStore.Identity.API — só em IdentityConfig.cs"
+
+- id: DOMAIN-IDENTITY-004
+  kind: project_pattern
+  claim: "ValidateJwt (endpoint de debug de validação de token) é compilado SOMENTE sob #if DEBUG — não existe em builds Release/Production. Nunca assumir que esse endpoint está disponível para diagnóstico em produção."
+  applies_to: "dev-identity · endpoint condicional"
+  source: "src/services/DevStore.Identity.API/Controllers/AuthController.cs:155-177"
+  confidence: verified
+  check: "grep -n '#if DEBUG' AuthController.cs — envolve ValidateJwt"

@@ -1,0 +1,32 @@
+# Fatia de domínio — dev-cart (ShoppingCart.API)
+- id: DOMAIN-CART-001
+  kind: project_pattern
+  claim: "É o ÚNICO serviço do repo com Minimal API (Program.cs, sem Controllers/) — qualquer task nesta fronteira edita rotas direto no Program.cs (app.MapGet/Post/Put/Delete), não cria um Controller novo."
+  applies_to: "dev-cart · estilo arquitetural único"
+  source: "src/services/DevStore.ShoppingCart.API/Program.cs:40-81"
+  confidence: verified
+  check: "find src/services/DevStore.ShoppingCart.API -iname Controllers → não existe"
+
+- id: DOMAIN-CART-002
+  kind: project_pattern
+  claim: "É o ÚNICO serviço com superfície gRPC própria (Protos/shoppingcart.proto, ShoppingCartOrders.GetShoppingCart) — consumida pelo dev-checkout-bff via client gerado. Mudança de contrato aqui exige regenerar o client do lado do BFF (acoplamento de build via <Protobuf> no .csproj do Bff.Checkout)."
+  applies_to: "dev-cart · contrato gRPC compartilhado com dev-checkout-bff"
+  source: "src/services/DevStore.ShoppingCart.API/Protos/shoppingcart.proto:7-9; src/api-gateways/DevStore.Bff.Checkout/DevStore.Bff.Checkout.csproj (Protobuf Include)"
+  confidence: verified
+  check: "alterar o .proto e confirmar que o Bff.Checkout precisa rebuildar para gerar o novo stub"
+
+- id: DOMAIN-CART-003
+  kind: project_pattern
+  claim: "CustomerShoppingCart tem MAX_ITEMS=5 (constante hardcoded) — limite de negócio real, não configuração. Task que altera comportamento de carrinho precisa saber que esse teto existe e é fixo no código."
+  applies_to: "dev-cart · Model/CustomerShoppingCart.cs"
+  source: "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs:8"
+  confidence: verified
+  check: "grep -n MAX_ITEMS CustomerShoppingCart.cs"
+
+- id: DOMAIN-CART-004
+  kind: project_pattern
+  claim: "O carrinho é removido reativamente ao consumir OrderDoneIntegrationEvent (ShoppingCartIntegrationHandler) — não há remoção síncrona no fluxo de checkout. Um pedido finalizado com falha na entrega desse evento deixa o carrinho 'pendurado'."
+  applies_to: "dev-cart · limpeza reativa a evento"
+  source: "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs:8,23"
+  confidence: verified
+  check: "seguir o Consume(OrderDoneIntegrationEvent)→RemoveShoppingCart"

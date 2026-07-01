@@ -1,0 +1,8 @@
+{"type": "task.ready", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T20:48:10+00:00"}
+{"type": "task.dispatched", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T20:52:27+00:00"}
+{"type": "task.in_progress", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T20:52:34+00:00"}
+{"type": "task.submitted", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T20:57:17+00:00"}
+{"type": "task.verifying", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T20:57:17+00:00"}
+{"type": "gate.report", "task": "TASK-00-01-DEV", "verdict": "PASS", "actor": "tech-lead", "at": "2026-07-01T20:58:41+00:00"}
+{"type": "task.accepted", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T20:58:41+00:00"}
+{"type": "task.committed", "task": "TASK-00-01-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T22:19:41+00:00"}

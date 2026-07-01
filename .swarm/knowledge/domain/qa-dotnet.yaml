@@ -1,0 +1,32 @@
+# Fatia de domínio — qa-dotnet
+- id: DOMAIN-QA-001
+  kind: bound_decision
+  claim: "Cobertura real é 1/11 fronteiras (só Catalog, 1 único [Fact]: GET products sem parâmetros). Qualquer task de QA nova fronteira PRECISA criar a infraestrutura de teste (fixture análoga a CatalogIntegrationTests), não presumir que já existe algo genérico reutilizável fora de Catalog."
+  applies_to: "qa-dotnet · lacuna de cobertura"
+  source: "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs:11; ProjectReference único a DevStore.Catalog.API"
+  confidence: verified
+  check: "grep -ro '\\[Fact\\]' src/tests → 1 ocorrência"
+
+- id: DOMAIN-QA-002
+  kind: project_pattern
+  claim: "O padrão é 100% integração ponta-a-ponta via WebApplicationFactory<TProgram> contra SQL Server REAL (localhost:1433, appsettings.Test.json) — zero mocks (Moq/NSubstitute/Bogus ausentes do .csproj). Novo teste segue esse padrão, não introduzir mock a menos que seja decisão deliberada de mudar a filosofia de teste do projeto."
+  applies_to: "qa-dotnet · filosofia de teste real"
+  source: "src/tests/DevStore.Tests/IntegrationTest.cs:9,14; DevStore.Tests.csproj sem Moq/NSubstitute/Bogus"
+  confidence: verified
+  check: "ler DevStore.Tests.csproj — Xunit + Microsoft.AspNetCore.Mvc.Testing apenas"
+
+- id: DOMAIN-QA-003
+  kind: project_pattern
+  claim: "IntegrationTest<TProgram> fornece ExecuteInScope (acesso a DI scope) — JÁ USADO 1x em CatalogIntegrationTests.cs:11 (helper AddProducts) — e ShouldEventuallyAssert (polling assertivo 5s/150ms) — ZERO uso em todo o repo. Corrigido pela sonda de maestria (2b.6): a claim original afirmava 'nenhum dos dois é usado', o que era factualmente errado para ExecuteInScope."
+  applies_to: "qa-dotnet · infraestrutura parcialmente subutilizada"
+  source: "src/tests/DevStore.Tests/IntegrationTest.cs:30-43 (ExecuteInScope), 45-68 (ShouldEventuallyAssert); src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs:11 (uso real de ExecuteInScope)"
+  confidence: verified
+  check: "grep -rn 'ExecuteInScope' src/tests → 2 ocorrências (definição + uso em CatalogIntegrationTests.cs:11); grep -rn 'ShouldEventuallyAssert' src/tests → 1 ocorrência (só definição, zero uso)"
+
+- id: DOMAIN-QA-004
+  kind: bound_decision
+  claim: "Rodar o teste exige SQL Server real acessível em localhost:1433 (Docker) — não é possível rodar `dotnet test` isoladamente sem infra. Além disso, o SDK .NET 9.0.302 não está instalado no ambiente de scan atual (verified:false no PROJECT_PROFILE) — qualquer verification_command baseado em dotnet test está sujeito a essa degradação até o SDK ser instalado."
+  applies_to: "qa-dotnet · pré-requisitos de execução"
+  source: "src/services/DevStore.Catalog.API/appsettings.Test.json (Server=localhost,1433); .swarm/state/PROJECT_PROFILE.yaml#stacks[0].verified"
+  confidence: verified
+  check: "tentar dotnet test sem SQL Server rodando — falha de conexão"

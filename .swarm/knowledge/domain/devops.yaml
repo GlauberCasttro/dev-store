@@ -1,0 +1,32 @@
+# Fatia de domínio — devops (gate: docker/, .github/workflows/, WebApp.Status)
+- id: DOMAIN-DEVOPS-001
+  kind: bound_decision
+  claim: "WebApp.Status é 100% infraestrutura de observabilidade (0 Controllers/Models) — dashboard HealthChecksUI que agrega /healthz-infra de 8 serviços via polling HTTP. Tratado como gate, não como dev-* de produto: qualquer mudança de comportamento de negócio não pertence aqui."
+  applies_to: "devops · classificação da fronteira WebApp.Status"
+  source: "find src/web/DevStore.WebApp.Status → só Program.cs, Dockerfile, appsettings*.json"
+  confidence: verified
+  check: "confirmar ausência de pasta Controllers/Models neste projeto"
+
+- id: DOMAIN-DEVOPS-002
+  kind: bound_decision
+  claim: "BUG CONFIRMADO — appsettings.Production.json define ENDPOINTS como ARRAY JSON enquanto Program.cs:14 espera STRING única via Get<string>() (formato 'Nome|URL;Nome|URL' usado em Development/Docker). Isso quebra silenciosamente o dashboard em produção. Prioridade real de correção nesta fronteira."
+  applies_to: "devops · footgun de config real"
+  source: "src/web/DevStore.WebApp.Status/appsettings.Production.json:28-37 (array) vs Program.cs:14 (Get<string>())"
+  confidence: verified
+  check: "rodar com ASPNETCORE_ENVIRONMENT=Production e appsettings.Production.json real — confirmar falha/vazio no dashboard"
+
+- id: DOMAIN-DEVOPS-003
+  kind: project_pattern
+  claim: "Topologia de dependência real (docker-compose depends_on): api-cart/catalog/customers/order dependem de api-identity; api-billing depende de api-identity+api-order; api-bff-checkout depende de api-identity+api-cart+api-billing+api-order; web-mvc depende de api-catalog+api-identity+api-customers+api-bff-checkout. Qualquer alteração de ordem de bootstrap/deploy tem que respeitar essa cadeia."
+  applies_to: "devops · ordem de dependência de deploy"
+  source: "docker/docker-compose.yml (depends_on por serviço)"
+  confidence: verified
+  check: "ler docker-compose.yml seção depends_on de cada serviço"
+
+- id: DOMAIN-DEVOPS-004
+  kind: project_pattern
+  claim: "CI (.github/workflows/build.yml) roda mssql+rabbitmq como services do job, builda com dotnet build --configuration Release --no-restore, testa com dotnet test --no-build --no-restore, e SÓ ENTÃO builda+pusha imagens Docker (job separado, depende do anterior). Não pular a etapa de teste ao ajustar o pipeline de imagem."
+  applies_to: "devops · pipeline de CI"
+  source: ".github/workflows/build.yml:45-58 (services), 71-82 (build/test), 88-101 (docker build/push)"
+  confidence: verified
+  check: "ler build.yml — 3 jobs sequenciais: versioning→build-and-test→build-docker-image-services"

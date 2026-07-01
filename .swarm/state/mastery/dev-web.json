@@ -1,0 +1,45 @@
+{
+  "agent": "dev-web",
+  "probed_at": "2026-07-01T15:36:00Z",
+  "score": "5/5",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-web.yaml",
+  "questions": [
+    {
+      "q": "ProjectReference a serviço de domínio de backend?",
+      "sustained_by": "DOMAIN-WEB-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "csproj só referencia Core+WebAPI.Core",
+      "proof": "csproj só referencia Core+WebAPI.Core"
+    },
+    {
+      "q": "Transporte de sessão — Bearer ou Cookie?",
+      "sustained_by": "DOMAIN-WEB-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "IdentityConfig.cs — CookieAuthenticationDefaults",
+      "proof": "IdentityConfig.cs — CookieAuthenticationDefaults"
+    },
+    {
+      "q": "Refit ativo ou vestigial?",
+      "sustained_by": "DOMAIN-WEB-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep interfaces Refit vazio; ExceptionMiddleware.cs só captura exceção",
+      "proof": "grep interfaces Refit vazio; ExceptionMiddleware.cs só captura exceção"
+    },
+    {
+      "q": "Bug de valor errado no checkout — onde está?",
+      "sustained_by": "DOMAIN-WEB-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CheckoutBffService.MapToOrder — mapeamento puro sem cálculo",
+      "proof": "CheckoutBffService.MapToOrder — mapeamento puro sem cálculo"
+    },
+    {
+      "q": "Seria seguro introduzir nova interface Refit?",
+      "sustained_by": "DOMAIN-WEB-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "mesma evidência — padrão real é HttpClient+Polly",
+      "proof": "mesma evidência — padrão real é HttpClient+Polly"
+    }
+  ],
+  "proof_summary": "5/5 certas-com-evidência."
+}

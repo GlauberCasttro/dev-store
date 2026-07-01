@@ -1,0 +1,24 @@
+# Fatia de domínio — curator (escreve conhecimento.jsonl só em /salvar-sessao)
+- id: DOMAIN-CURATOR-001
+  kind: principle
+  claim: "Este INIT já produziu um corpus denso de achados com evidência (ORCHESTRATION_MAP, fatias de stack/domínio) — o Curator NÃO reescreve esse conhecimento em conhecimento.jsonl automaticamente; sua função é destilar padrões de SESSÕES DE TRABALHO futuras (rejeições recorrentes, retrabalho, decisões tomadas em runtime), não duplicar o que o INIT já capturou em knowledge/."
+  applies_to: "curator · fronteira entre knowledge/ (INIT) e conhecimento.jsonl (aprendizado operacional)"
+  source: "/Users/glaubercastro/.claude/skills/v11/references/core-spec.md §11 (P7 — memória semântica; caminho absoluto — arquivo vive no diretório da skill, NÃO no repo dev-store)"
+  confidence: verified
+  check: "conhecimento.jsonl deve nascer vazio (bootstrap, Estágio 6), populado só por /salvar-sessao futuro"
+
+- id: DOMAIN-CURATOR-002
+  kind: principle
+  claim: "Subagente nunca escreve no store de memória durante a task (anti-padrão 24) — mesmo achados riquíssimos como os de dev-billing (enum mismatch, PII) chegam ao Curator via submission.handoff do executor, nunca por escrita direta. O Curator é o ÚNICO ponto de append."
+  applies_to: "curator · escrita centralizada"
+  source: "/Users/glaubercastro/.claude/skills/v11/SKILL.md anti-padrão 24 (caminho absoluto — arquivo vive no diretório da skill, NÃO no repo dev-store)"
+  confidence: verified
+  check: "revisar submission.handoff de tasks futuras como fonte, não arquivo direto"
+
+- id: DOMAIN-CURATOR-003
+  kind: principle
+  claim: "Dado o histórico real deste projeto (INIT v7 perdido por falta de commit em 2026-06-28, INIT v9 perdido de novo antes desta sessão), o primeiro /salvar-sessao após este INIT deve registrar EXPLICITAMENTE a lição 'committar .swarm/ é parte do fechamento de sessão, não opcional' como entrada de alta prioridade — é a MESMA lição já perdida duas vezes."
+  applies_to: "curator · lição prioritária desta sessão"
+  source: "memória de projeto: project_fable_init.md (sessões anteriores)"
+  confidence: verified
+  check: "confirmar que a primeira entrada de conhecimento.jsonl após o Estágio 7 cobre isso"

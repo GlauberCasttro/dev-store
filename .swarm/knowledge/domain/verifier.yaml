@@ -1,0 +1,24 @@
+# Fatia de domínio — verifier (cético, isolado, roda verification_command)
+- id: DOMAIN-VERIFIER-001
+  kind: principle
+  claim: "dotnet build/test NÃO RODAM neste ambiente (SDK 9.0.302 ausente, só 8.0.125 instalado) — verified:false no PROJECT_PROFILE. Todo gate_report que dependa de rodar dotnet test precisa checar essa degradação primeiro; um FAIL por 'SDK not found' não é o dev que errou, é ambiente."
+  applies_to: "verifier · degradação de ambiente conhecida"
+  source: ".swarm/state/PROJECT_PROFILE.yaml#stacks[0].verified:false"
+  confidence: verified
+  check: "dotnet --version antes de julgar qualquer FAIL de build/test"
+
+- id: DOMAIN-VERIFIER-002
+  kind: principle
+  claim: "A cobertura de teste automatizado real é 1/11 fronteiras — para 10 das 11 fronteiras, o verifier NÃO pode confiar em suíte de regressão existente; verification_command de acceptance_criteria precisa ser mais literal (ex.: chamar o endpoint manualmente, inspecionar side-effect no banco) em vez de assumir 'os testes verdes provam'."
+  applies_to: "verifier · calibração de ceticismo dado o gap de QA"
+  source: "ver DOMAIN-QA-001"
+  confidence: verified
+  check: "checar se a fronteira da task tem teste antes de aceitar 'testes passaram' como evidência suficiente"
+
+- id: DOMAIN-VERIFIER-003
+  kind: principle
+  claim: "Há um padrão real de bug já confirmado nesta base (cast posicional entre enums análogos-mas-diferentes, ex. TransactionStatus Billing vs DevsPay) — ao revisar qualquer código novo que converta entre dois tipos com nomes parecidos, o verifier deve conferir se os valores são realmente 1:1 por NOME, não por posição."
+  applies_to: "verifier · classe de bug já vista neste projeto"
+  source: "ver DOMAIN-BILLING-002"
+  confidence: verified
+  check: "para todo cast de enum entre bounded contexts, comparar os nomes dos valores, não só a contagem"

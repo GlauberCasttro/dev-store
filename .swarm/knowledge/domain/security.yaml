@@ -1,0 +1,40 @@
+# Fatia de domínio — security (gate)
+- id: DOMAIN-SECURITY-001
+  kind: bound_decision
+  claim: "Achado crítico #1 — PAN+CVV em claro no bus RabbitMQ (OrderInitiatedIntegrationEvent), sem mascaramento/tokenização antes da publicação. Violação PCI-DSS confirmada. Todo review de segurança que toque dev-orders/dev-billing precisa considerar esse fato como base."
+  applies_to: "security · dev-orders + dev-billing"
+  source: "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs:12-15"
+  confidence: verified
+  check: "grep -n 'CardNumber\\|SecurityCode' OrderInitiatedIntegrationEvent.cs"
+
+- id: DOMAIN-SECURITY-002
+  kind: bound_decision
+  claim: "Achado crítico #2 — enum mismatch em dev-billing (Chargeback→Refund por cast posicional) tem implicação de segurança financeira: um chargeback (fraude/contestação) é tratado como reembolso administrativo comum, mascarando sinal de fraude."
+  applies_to: "security · dev-billing"
+  source: "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs:73"
+  confidence: verified
+  check: "ver DOMAIN-BILLING-002"
+
+- id: DOMAIN-SECURITY-003
+  kind: bound_decision
+  claim: "Achado crítico #3 — CPF (SocialNumber) e Email em claro, sem hash/encriptação, persistidos E publicados no bus (UserRegisteredIntegrationEvent). Risco LGPD, não só PCI. Afeta dev-customers e dev-identity."
+  applies_to: "security · dev-customers + dev-identity"
+  source: "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs:18-27; src/building-blocks/DevStore.Core/Messages/Integration/UserRegisteredIntegrationEvent.cs:11-12"
+  confidence: verified
+  check: "ver DOMAIN-CUSTOMERS-002"
+
+- id: DOMAIN-SECURITY-004
+  kind: principle
+  claim: "Único ponto de emissão/validação de identidade é dev-identity (JWKS rotativo, Argon2). Qualquer proposta de autenticação alternativa (ex.: API key, Basic Auth) para um novo endpoint tem que ser justificada contra esse padrão único já estabelecido, não introduzida ad-hoc por serviço."
+  applies_to: "security · dev-identity como autoridade única"
+  source: "src/services/DevStore.Identity.API/Configuration/JwtConfig.cs:22"
+  confidence: verified
+  check: "ver DOMAIN-IDENTITY-001"
+
+- id: DOMAIN-SECURITY-005
+  kind: bound_decision
+  claim: "Ausência de idempotência em dev-billing (Authorize/Capture/Cancel) não é só bug de confiabilidade — é superfície de fraude potencial (reprocessamento duplicado de captura). Entra no threat model deste produto como item real, não hipotético."
+  applies_to: "security · dev-billing"
+  source: "src/services/DevStore.Billing.API/Services/BillingService.cs:24-118"
+  confidence: verified
+  check: "ver DOMAIN-BILLING-004"

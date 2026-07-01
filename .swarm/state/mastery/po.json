@@ -1,0 +1,42 @@
+{
+  "agent": "po",
+  "probed_at": "2026-07-01T15:48:00Z",
+  "score": "4/4",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/po.yaml",
+  "questions": [
+    {
+      "q": "Glossário fixo e sinônimos proibidos?",
+      "answer_blind": "Order/ShoppingCart/Voucher/Customer/Product/SocialNumber fixos, nunca Pedido/Basket/Coupon/Client/Item/CPF.",
+      "sustained_by": "DOMAIN-PO-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CONVENTIONS.md linhas 9-14,43-44",
+      "proof": "CONVENTIONS.md linhas 9-14,43-44"
+    },
+    {
+      "q": "Quantos passos tem o fluxo de checkout, em que ordem?",
+      "answer_blind": "5 passos: ShoppingCart→DeliveryAddress→Payment→FinishOrder→OrderDone/MyOrders.",
+      "sustained_by": "DOMAIN-PO-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderController.cs rotas na ordem confirmada",
+      "proof": "OrderController.cs rotas na ordem confirmada"
+    },
+    {
+      "q": "Por que critério de aceite precisa ser mais explícito sobre verificação manual?",
+      "answer_blind": "Cobertura real 1/11 fronteiras — só Catalog tem suíte.",
+      "sustained_by": "DOMAIN-PO-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep [Fact] → 1 ocorrência; .csproj de testes só referencia Catalog",
+      "proof": "grep [Fact] → 1 ocorrência; .csproj de testes só referencia Catalog"
+    },
+    {
+      "q": "Achados de segurança/PII pré-existentes a considerar?",
+      "answer_blind": "PAN/CVV em claro, CPF/Email em claro, enum mismatch de pagamento.",
+      "sustained_by": "DOMAIN-PO-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "TransactionStatus.cs Billing vs DevsPay, cast em CreditCardPaymentFacade.cs:73,88",
+      "proof": "TransactionStatus.cs Billing vs DevsPay, cast em CreditCardPaymentFacade.cs:73,88"
+    }
+  ],
+  "proof_summary": "4/4 certas-com-evidência."
+}

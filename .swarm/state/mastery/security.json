@@ -1,0 +1,52 @@
+{
+  "agent": "security",
+  "probed_at": "2026-07-01T15:40:00Z",
+  "score": "6/6",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/security.yaml",
+  "questions": [
+    {
+      "q": "Dados de cartão em claro no bus — qual evento e qual violação?",
+      "sustained_by": "DOMAIN-SECURITY-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderInitiatedIntegrationEvent.cs:11-14",
+      "proof": "OrderInitiatedIntegrationEvent.cs:11-14"
+    },
+    {
+      "q": "Enum mismatch e implicação financeira?",
+      "sustained_by": "DOMAIN-SECURITY-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CreditCardPaymentFacade.cs:73,88",
+      "proof": "CreditCardPaymentFacade.cs:73,88"
+    },
+    {
+      "q": "PII persistida e publicada em claro?",
+      "sustained_by": "DOMAIN-SECURITY-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CustomerMapping.cs:18-27, UserRegisteredIntegrationEvent.cs:11-12",
+      "proof": "CustomerMapping.cs:18-27, UserRegisteredIntegrationEvent.cs:11-12"
+    },
+    {
+      "q": "Autoridade única de identidade?",
+      "sustained_by": "DOMAIN-SECURITY-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "AddJwtConfiguration em 7 serviços; ressalva: MVC usa Cookie Auth coexistente",
+      "proof": "AddJwtConfiguration em 7 serviços; ressalva: MVC usa Cookie Auth coexistente"
+    },
+    {
+      "q": "Idempotência em Authorize/Capture/Cancel?",
+      "sustained_by": "DOMAIN-SECURITY-005",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "BillingService.cs:24-118 sem chave de dedup",
+      "proof": "BillingService.cs:24-118 sem chave de dedup"
+    },
+    {
+      "q": "5 achados críticos do gate?",
+      "sustained_by": "DOMAIN-SECURITY-001,002,003,004,005",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "todos confirmados individualmente",
+      "proof": "todos confirmados individualmente"
+    }
+  ],
+  "proof_summary": "6/6 (100%) PASSOU. Ressalva de nuance registrada (Cookie Auth do MVC coexiste com JWT), não invalida achado."
+}

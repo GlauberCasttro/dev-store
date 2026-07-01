@@ -1,0 +1,45 @@
+{
+  "agent": "dev-customers",
+  "probed_at": "2026-07-01T15:38:00Z",
+  "score": "5/5",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-customers.yaml",
+  "questions": [
+    {
+      "q": "Customer pode ser criado via POST direto?",
+      "sustained_by": "DOMAIN-CUSTOMERS-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "NewCustomerIntegrationHandler.cs:11,21-26",
+      "proof": "NewCustomerIntegrationHandler.cs:11,21-26"
+    },
+    {
+      "q": "SocialNumber/Email têm proteção na persistência?",
+      "sustained_by": "DOMAIN-CUSTOMERS-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CustomerMapping.cs:18-27",
+      "proof": "CustomerMapping.cs:18-27"
+    },
+    {
+      "q": "CustomerContext vs OrdersContext — consistência?",
+      "sustained_by": "DOMAIN-CUSTOMERS-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CustomerContext.cs:22-23,68-73 vs OrdersContext.cs:90-93",
+      "proof": "CustomerContext.cs:22-23,68-73 vs OrdersContext.cs:90-93"
+    },
+    {
+      "q": "Address é aggregate root independente?",
+      "sustained_by": "DOMAIN-CUSTOMERS-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Address.cs:6 (Entity, não IAggregateRoot)",
+      "proof": "Address.cs:6 (Entity, não IAggregateRoot)"
+    },
+    {
+      "q": "Endpoint de Address cria ou atualiza Customer existente?",
+      "sustained_by": "DOMAIN-CUSTOMERS-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CustomerController.cs:25,33 — só address, nunca criação direta",
+      "proof": "CustomerController.cs:25,33 — só address, nunca criação direta"
+    }
+  ],
+  "proof_summary": "5/5 certas-com-evidência."
+}

@@ -1,0 +1,127 @@
+{
+  "id": "TASK-00-01-DEV",
+  "sprint": "SPRINT-00",
+  "agent": "dev-billing",
+  "status": "COMMITTED",
+  "dependencies": [],
+  "allowed_paths": [
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs"
+  ],
+  "objective": "1) Adicionar comentário CAUTION imediatamente acima da linha do cast posicional em CreditCardPaymentFacade.cs:73 (dentro de ToTransaction). 2) Citar DOMAIN-BILLING-002 e o mapeamento exato incorreto (DevsPay.Chargeback(4) -> Billing.API.Refund(4)). 3) NÃO alterar nenhuma linha de código executável, só adicionar o comentário. 4) NÃO corrigir o bug em si (fora de escopo desta task — smoke de bootstrap do harness, mudança deliberadamente mínima e reversível).",
+  "context_inline": "DOMAIN-BILLING-002 (.swarm/knowledge/domain/dev-billing.yaml, confidence: verified): 'BUG CONFIRMADO — CreditCardPaymentFacade.cs:73 faz cast posicional (TransactionStatus)transaction.Status entre DOIS enums independentes com semântica diferente na posição 4: DevsPay.Chargeback -> Billing.API.Refund. Qualquer mudança nesta fronteira que toque TransactionStatus tem que corrigir isso com switch explícito, nunca assumir que os enums são intercambiáveis por posição.' Os dois enums reais: Billing.API.Models.TransactionStatus (Authorized=1,Paid=2,Denied=3,Refund=4,Canceled=5) vs DevsPay.TransactionStatus (Authorized=1,Paid=2,Refused=3,Chargeback=4,Cancelled=5) — a posição 4 diverge semanticamente. Esta task NÃO pede o fix (switch nominal) — só o comentário de aviso, para não deixar o footgun silencioso.",
+  "anchors": [
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs",
+    ".claude/rules/dev-billing-layer.md",
+    ".swarm/knowledge/domain/dev-billing.yaml"
+  ],
+  "context_complete": true,
+  "forbidden_explore": true,
+  "max_reads": 3,
+  "acceptance_criteria": [
+    "Um comentário de linha (// CAUTION ...) aparece imediatamente acima (1-3 linhas) da linha 'TransactionStatus = (TransactionStatus)transaction.Status,' dentro do método ToTransaction",
+    "O comentário cita 'DOMAIN-BILLING-002' e o mapeamento exato 'Chargeback' -> 'Refund' (ou equivalente inequívoco)",
+    "Nenhuma linha de código executável foi alterada — só a linha do comentário foi adicionada",
+    "verification_command retorna exit 0"
+  ],
+  "verification_command": "python3 -c \"import codecs,sys; p='src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs'; b=open(p,'rb').read(); d=b.decode('utf-16') if b[:2] in (codecs.BOM_UTF16_LE,codecs.BOM_UTF16_BE) else b.decode('utf-8'); i=d.find('TransactionStatus = (TransactionStatus)transaction.Status'); sys.exit(0 if i>=0 and 'DOMAIN-BILLING-002' in d[max(0,i-300):i] else 1)\"",
+  "probe_command": "python3 -c \"import codecs,sys; p='src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs'; b=open(p,'rb').read(); d=b.decode('utf-16') if b[:2] in (codecs.BOM_UTF16_LE,codecs.BOM_UTF16_BE) else b.decode('utf-8'); sys.exit(0 if 'TransactionStatus = (TransactionStatus)transaction.Status' in d else 1)\"",
+  "contract": null,
+  "attempts": 0,
+  "status_history": [
+    {
+      "at": "2026-07-01T20:48:10+00:00",
+      "from": "DRAFT",
+      "to": "READY",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T20:52:27+00:00",
+      "from": "READY",
+      "to": "DISPATCHED",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T20:52:34+00:00",
+      "from": "DISPATCHED",
+      "to": "IN_PROGRESS",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T20:57:17+00:00",
+      "from": "IN_PROGRESS",
+      "to": "SUBMITTED",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T20:57:17+00:00",
+      "from": "SUBMITTED",
+      "to": "VERIFYING",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T20:58:41+00:00",
+      "from": "VERIFYING",
+      "to": "ACCEPTED",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T22:19:41+00:00",
+      "from": "ACCEPTED",
+      "to": "COMMITTED",
+      "actor": "tech-lead",
+      "reason": "Aprovação humana explícita do usuário ('pode comitar')"
+    }
+  ],
+  "submission": {
+    "status": "SUBMITTED",
+    "files_changed": [
+      "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs"
+    ],
+    "checks_run": [
+      "verification_command (python3 decode UTF-16LE + find DOMAIN-BILLING-002 lookback) -> exit 0",
+      "file(1) confirmando 'Unicode text, UTF-16, little-endian text, with CRLF line terminators' preservado após a edição",
+      "leitura manual do trecho editado (ToTransaction) confirmando que só as 2 linhas de comentário foram inseridas, nenhuma linha de código executável alterada"
+    ],
+    "risks": "Nenhum risco novo introduzido — mudança é só comentário. Nota técnica: o comentário foi mantido deliberadamente curto (2 linhas) para que a citação 'DOMAIN-BILLING-002' ficasse dentro da janela de lookback de 300 caracteres usada pelo verification_command a partir do índice da linha do cast; uma primeira tentativa com comentário de 3 linhas mais descritivo empurrou 'DOMAIN-BILLING-002' fora dessa janela e falhou a verificação (exit 1) — corrigido no mesmo ciclo.",
+    "notes": "Comentário inserido imediatamente acima (2 linhas) de 'TransactionStatus = (TransactionStatus)transaction.Status,' dentro de ToTransaction (Facade/CreditCardPaymentFacade.cs). Texto: '// CAUTION DOMAIN-BILLING-002: cast posicional entre 2 enums TransactionStatus distintos — DevsPay.Chargeback(4) -> Billing.API.Refund(4) (mapeamento incorreto e silencioso).' Bug em si NÃO corrigido (fora de escopo). Codificação UTF-16LE com BOM e CRLF preservada via leitura/escrita binária controlada (decode/encode explícito 'utf-16-le' com BOM_UTF16_LE prefixado), evitando que a ferramenta de edição regravasse o arquivo em UTF-8.",
+    "handoff": "Pronto para verifier. Território tocado: só o arquivo em allowed_paths. Nenhum outro consumer/arquivo foi lido ou alterado (respeitado max_reads/forbidden_explore do brief)."
+  },
+  "gate_report": {
+    "verdict": "PASS",
+    "evidence": [
+      "git diff --stat -- src/ mostra 1 file changed, 0 insertions(+), 0 deletions(-) (Bin diff) apenas para src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs",
+      "git status --short mostra M .gitignore, M src/services/.../CreditCardPaymentFacade.cs, e ?? apenas para diretorios/arquivos de harness — nenhum outro arquivo de produto tocado",
+      "Read do arquivo linhas 68-84 confirma 2 linhas de comentario imediatamente acima da linha 75 do cast, sem alteracao de codigo executavel",
+      "python3 verification_command executado diretamente -> EXIT_CODE=0",
+      "file confirma UTF-16 little-endian preservado"
+    ],
+    "criteria": [
+      {
+        "id": "C1",
+        "pass": true,
+        "proof": "Read tool linhas 68-84: comentario nas linhas 73-74 imediatamente acima da linha 75 do cast, dentro da janela 1-3 linhas exigida."
+      },
+      {
+        "id": "C2",
+        "pass": true,
+        "proof": "Comentario contem literalmente 'DOMAIN-BILLING-002' e o mapeamento exato 'Chargeback(4) -> Billing.API.Refund(4)'."
+      },
+      {
+        "id": "C3",
+        "pass": true,
+        "proof": "git diff --stat -- src/ = 1 file changed; leitura manual confirma linha 75 identica ao original, apenas 2 linhas de comentario adicionadas, nenhum outro campo do objeto Transaction alterado."
+      },
+      {
+        "id": "C4",
+        "pass": true,
+        "proof": "verification_command executado via Bash -> EXIT_CODE=0."
+      }
+    ]
+  }
+}

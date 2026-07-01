@@ -1,0 +1,40 @@
+# Fatia de domínio — dev-billing (Billing.API + Billing.DevsPay)
+- id: DOMAIN-BILLING-001
+  kind: project_pattern
+  claim: "Esta fronteira é 100% mensageria — PaymentController.cs é uma classe VAZIA, sem endpoints HTTP reais. Toda superfície real são os 3 IConsumer<T> de BillingIntegrationHandler. Nunca propor endpoint HTTP novo aqui sem entender por que o design original é consumer-only."
+  applies_to: "dev-billing · superfície de entrada"
+  source: "src/services/DevStore.Billing.API/Controllers/PaymentController.cs:5; src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs:11-14"
+  confidence: verified
+  check: "ler PaymentController.cs — classe vazia herdando MainController sem métodos"
+
+- id: DOMAIN-BILLING-002
+  kind: bound_decision
+  claim: "BUG CONFIRMADO — CreditCardPaymentFacade.cs:73 faz cast posicional (TransactionStatus)transaction.Status entre DOIS enums independentes com semântica diferente na posição 4: DevsPay.Chargeback → Billing.API.Refund. Qualquer mudança nesta fronteira que toque TransactionStatus tem que corrigir isso com switch explícito, nunca assumir que os enums são intercambiáveis por posição."
+  applies_to: "dev-billing · SEC/BIZ crítico — enum mismatch"
+  source: "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs:73,88; src/services/DevStore.Billing.API/Models/TransactionStatus.cs:3-9; src/services/DevStore.Billing.DevsPay/TransactionStatus.cs:3-9"
+  confidence: verified
+  check: "comparar os dois enums lado a lado — Chargeback(4)≠Refund(4) semanticamente"
+
+- id: DOMAIN-BILLING-003
+  kind: bound_decision
+  claim: "BUG CONFIRMADO (PCI-DSS) — OrderInitiatedIntegrationEvent carrega Holder/CardNumber/ExpirationDate/SecurityCode EM CLARO pelo RabbitMQ, desde a origem em OrderCommandHandler.cs até o consumo em BillingIntegrationHandler.cs. Nenhuma mudança nesta fronteira deve aumentar a superfície de dados de cartão em claro — objetivo de longo prazo é mascarar/tokenizar ANTES da publicação no bus, não depois."
+  applies_to: "dev-billing · security crítico — PII/PCI no bus"
+  source: "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs:12-15; src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:140-143; src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs:51-52"
+  confidence: verified
+  check: "grep -rn 'CardNumber\\|SecurityCode' src/building-blocks/DevStore.Core/Messages/Integration — confirma trânsito em claro"
+
+- id: DOMAIN-BILLING-004
+  kind: bound_decision
+  claim: "AUSÊNCIA CONFIRMADA de idempotência — Authorize/Capture/Cancel (BillingService.cs) não têm chave de deduplicação. Redelivery do RabbitMQ do mesmo evento (OrderLoweredStockIntegrationEvent, por exemplo) executaria uma segunda captura completa. Qualquer task de 'melhorar confiabilidade' nesta fronteira deve considerar isso PRIMEIRO."
+  applies_to: "dev-billing · gap de confiabilidade"
+  source: "src/services/DevStore.Billing.API/Services/BillingService.cs:24-118"
+  confidence: verified
+  check: "grep -rn 'Idempot\\|MessageId' src/services/DevStore.Billing.API → vazio"
+
+- id: DOMAIN-BILLING-005
+  kind: project_pattern
+  claim: "DevStore.Billing.DevsPay NÃO é um gateway real — é uma lib in-process (ProjectReference direto, sem HTTP/Refit) que usa Bogus.Random.Bool(0.7f) para simular 70% de sucesso de autorização. Nunca tratar comportamento do DevsPay como representativo de gateway real (latência, rate-limit, etc.) ao projetar testes/features."
+  applies_to: "dev-billing · Billing.DevsPay é simulador, não integração real"
+  source: "src/services/DevStore.Billing.DevsPay/Transaction.cs:99-135"
+  confidence: verified
+  check: "ler Transaction.cs:101-102 — faker.Random.Bool(0.7f), sem chamada de rede"

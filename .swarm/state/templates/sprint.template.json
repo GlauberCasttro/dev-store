@@ -1,0 +1,23 @@
+{
+  "id": "SPRINT-NN",
+  "name": "",
+  "status": "DRAFT",
+  "status_vocab_nota": "DRAFT | ACTIVE | ARCHIVED — nada além disso; validate-all bloqueia",
+  "branch": "sprint-NN-slug",
+  "baseline": {
+    "verification_global": "comando global de build+test do PROJECT_PROFILE",
+    "tests_passing_at_start": null
+  },
+  "tasks": [],
+  "waves": [
+    { "wave": 1, "tasks": [], "note": "paralelo só sem dependência e sem interseção de allowed_paths" }
+  ],
+  "definition_of_done": [
+    "todas as tasks COMMITTED (ACCEPTED sem commit = ciclo aberto, não fecha)",
+    "toda onda DEV/ARCH tem onda QA correspondente verificada",
+    "adiadas com sprint-destino; bloqueadas resolvidas (BLOCKED nunca é final)",
+    "verificação global verde ou falha formalmente aceita pelo usuário",
+    "encerramento via transition.py --sprint --to ARCHIVED (ferramenta valida) + archive + índices"
+  ],
+  "pre_migration": false
+}

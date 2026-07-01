@@ -1,0 +1,24 @@
+# Fatia de domínio — dev-messaging (standby)
+- id: DOMAIN-MESSAGING-001
+  kind: principle
+  claim: "Não há MassTransit Saga/StateMachine no repo — toda orquestração cross-serviço é ad-hoc (Request/Response síncrono ou Publish/Consume simples com compensação manual, ex.: dev-identity.Register). Se um pedido de founder introduzir uma Saga real, este é o agente que deveria assumir a fronteira, não o dono do bounded context individual."
+  applies_to: "dev-messaging · gatilho de ativação (standby → integrated)"
+  source: "grep -rliE 'saga|statemachine' --include=*.cs src → vazio"
+  confidence: verified
+  check: "repetir o grep após qualquer nova feature de orquestração — se a ausência deixar de ser verdadeira, reconsiderar standby"
+
+- id: DOMAIN-MESSAGING-002
+  kind: project_pattern
+  claim: "IConsumer<T> está distribuído em 5 handlers em 5 projetos distintos (OrderIntegrationHandler+OrderOrchestratorIntegrationHandler em Orders, BillingIntegrationHandler em Billing, CatalogIntegrationHandler em Catalog, NewCustomerIntegrationHandler em Customers, ShoppingCartIntegrationHandler em Cart) — cada dono de bounded context já mantém seu próprio consumer. A fusão só valeria a pena se a complexidade de coordenação entre eles crescesse."
+  applies_to: "dev-messaging · superfície atual já é 'dono por contexto'"
+  source: "knowledge/ORCHESTRATION_MAP.yaml (5 fronteiras com IConsumer próprio)"
+  confidence: verified
+  check: "listar os 5 arquivos de consumer citados"
+
+- id: DOMAIN-MESSAGING-003
+  kind: project_pattern
+  claim: "REFUTADA E CORRIGIDA pela sonda de maestria (2b.6): a claim original ('duas fontes divergentes de config do RabbitMQ, risco de split-brain') está ERRADA — GetMessagingConnectionString (ConfigurationExtensions.cs) lê a MESMA seção 'RabbitMqTransportOptions' que o bind do MassTransit (DependencyInjectionExtensions.cs:13-15), não é fonte independente. O achado REAL e mais grave: AddMessagingHealthCheck (MessagingExtensions.cs) NUNCA é chamada em nenhum Program.cs/Configuration dos 6 serviços — é código morto. O risco real é 'health check de RabbitMQ ausente', não 'split-brain de configuração'."
+  applies_to: "dev-messaging · health check de RabbitMQ é código morto (não split-brain)"
+  source: "src/building-blocks/DevStore.MessageBus/ConfigurationExtensions.cs:8-16 (mesma seção RabbitMqTransportOptions); src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs:13-15; grep -rn 'AddMessagingHealthCheck' src → zero chamadas fora da própria definição"
+  confidence: verified
+  check: "grep -rn 'AddMessagingHealthCheck' src/services src/building-blocks/*/Program.cs → confirmar ausência de call site"

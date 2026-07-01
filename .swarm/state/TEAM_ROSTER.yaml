@@ -1,0 +1,134 @@
+# Estágio 2 — Team Deriver · TEAM_ROSTER.yaml (proposto)
+# Cada agente carrega o sinal do PROJECT_PROFILE/ORCHESTRATION_MAP que o justifica.
+protocol_version: 7
+status: integrated   # approved pelo founder em 2026-07-01 (Estágio 3.1); integrated em 2026-07-01 pós-Estágio 7 — manifesto §7.1 confirmado no disco + smoke dispatch (TASK-00-01-DEV) real e gate_report PASS, revisão semântica independente (init-validation.jsonl fase 7/semantic) achou 2 gaps administrativos (RESUME.md e este campo), corrigidos antes desta promoção
+main_role: tech-lead
+
+agents:
+  # --- Fixos (core-spec §12: todo harness Fable tem, no mínimo) ---
+  - name: verifier
+    kind: fixed
+    rationale: "Tríade P2 — verificação isolada e cética, sempre presente."
+    model_hint: sonnet
+    effort: high
+
+  - name: po
+    kind: fixed
+    rationale: "Refinamento e critérios de aceite são pré-condição de todo brief (core-spec §3)."
+    model_hint: haiku
+
+  - name: curator
+    kind: fixed
+    rationale: "P7 — memória de projeto (conhecimento.jsonl) escrita só pelo Curator em /salvar-sessao; readonly fora dele."
+    model_hint: haiku
+
+  - name: qa-dotnet
+    kind: fixed
+    rationale: "1 por ecossistema com test_dirs próprios — src/tests/DevStore.Tests é .NET/xUnit. Escopo exclusivo de testes; herda a lacuna real (1/11 fronteiras cobertas) como prioridade de trabalho, não some do roster por isso."
+    trees: ["src/tests/DevStore.Tests/"]
+    model_hint: sonnet
+
+  # --- architect (core-spec: camadas com contrato entre si OU monorepo com fronteiras de API internas) ---
+  - name: architect
+    kind: derived
+    rationale: "Monorepo com 9 microserviços + 1 BFF + 1 web trocando contratos HTTP/gRPC/eventos entre si (ORCHESTRATION_MAP.yaml: depends_on cruzado); Orders.API/Domain/Infra é clean architecture com contratos de camada explícitos (IOrderRepository). Também atua como árbitro em não-convergência dev↔verifier (core-spec §7.4)."
+    model_hint: opus
+    effort: max
+
+  # --- dev-* : 1 por contexto real distinto (C1, v7.5 — sem teto por contagem) ---
+  - name: dev-core
+    kind: derived
+    rationale: "Shared kernel (DevStore.Core+WebAPI.Core) — 40 arquivos, ZERO ProjectReference de saída, todos os outros 9 projetos de serviço dependem de pelo menos um dos dois. MessageBus (2 arquivos) foi separado como território de dev-messaging (PATCH mesa redonda 3.2 — persona Fronteiras encontrou overlap de trees; resolvido dando território real e não-sobreposto a cada um, em vez de trees:[] + trees_if_activated, que o harness-lint não reconhece — territorio-obrigatorio)."
+    trees: ["src/building-blocks/DevStore.Core/", "src/building-blocks/DevStore.WebAPI.Core/"]
+    model_hint: sonnet
+
+  - name: dev-catalog
+    kind: derived
+    rationale: "Bounded context Catalog — Product/Stock, EF Core multi-provider, consumer de OrderAuthorizedIntegrationEvent. 17 arquivos, padrões próprios (sem CQRS, ao contrário de Orders/Customers)."
+    trees: ["src/services/DevStore.Catalog.API/"]
+    model_hint: sonnet
+
+  - name: dev-customers
+    kind: derived
+    rationale: "Bounded context Customers — Customer/Address/SocialNumber(PII), CQRS via MediatR, criação só por evento (UserRegisteredIntegrationEvent), nunca por HTTP direto. 23 arquivos."
+    trees: ["src/services/DevStore.Customers.API/"]
+    model_hint: sonnet
+
+  - name: dev-identity
+    kind: derived
+    rationale: "Único ponto de emissão de JWT (JWKS rotativo) da plataforma + storage de chaves de assinatura (ISecurityKeyContext) + Argon2. Padrão de saga de compensação manual entre Register e confirmação de Customer. 12 arquivos, superfície pequena mas crítica — merece especialista dedicado, não fusão com outro serviço."
+    trees: ["src/services/DevStore.Identity.API/"]
+    model_hint: sonnet
+
+  - name: dev-orders
+    kind: derived
+    rationale: "Único bounded context com split real de camada (API+Domain+Infra, clean architecture) — CQRS/MediatR, cálculo de valor com invariante anti-fraude (recalculo servidor-side confirmado), OrderStatus com estados órfãos (Refused/Delivered sem transição). 39 arquivos, 3 projetos, padrão distinto de todos os outros."
+    trees: ["src/services/DevStore.Orders.API/", "src/services/DevStore.Orders.Domain/", "src/services/DevStore.Orders.Infra/"]
+    model_hint: sonnet
+
+  - name: dev-billing
+    kind: derived
+    rationale: "Bounded context Billing+DevsPay — 100% mensageria (Controller HTTP vazio), simulador de gateway in-process via Bogus, ProjectReference direto (não HTTP) a DevsPay. Três achados críticos confirmados nesta fronteira (enum mismatch, PII/PCI no bus, falta de idempotência) — justifica especialista full-time, não fusão com Orders (stack e padrão de acesso divergem: Orders é CQRS+HTTP, Billing é consumer-only)."
+    trees: ["src/services/DevStore.Billing.API/", "src/services/DevStore.Billing.DevsPay/"]
+    model_hint: sonnet
+    effort: high
+
+  - name: dev-cart
+    kind: derived
+    rationale: "Bounded context ShoppingCart — único serviço com Minimal API (sem Controllers) E único com superfície gRPC própria (Protos/shoppingcart.proto). Padrão de acesso a dados distinto (ShoppingCart.cs concentra lógica + persistência, sem Repository separado)."
+    trees: ["src/services/DevStore.ShoppingCart.API/"]
+    model_hint: sonnet
+
+  - name: dev-checkout-bff
+    kind: derived
+    rationale: "BFF de Checkout — orquestra Catalog+Cart+Order+Customer via HTTP E gRPC (dois caminhos para o mesmo serviço dev-cart), padrão de client tipado (Service abstract base) distinto dos serviços de domínio. Camada de composição, não de domínio — contexto próprio."
+    trees: ["src/api-gateways/DevStore.Bff.Checkout/"]
+    model_hint: sonnet
+
+  - name: dev-web
+    kind: derived
+    rationale: "Frontend MVC — 100% consumidor HTTP (zero acesso a domínio de backend), Views Razor + ViewModels próprios (OrderViewModel é o arquivo mais central do repo por PageRank). Padrão de autenticação distinto (Cookie, não Bearer direto) dos serviços de API."
+    trees: ["src/web/DevStore.WebApp.MVC/"]
+    model_hint: sonnet
+
+  # --- Especialista de stack complexa (C2) — proposto STANDBY, decisão do founder no Estágio 3 ---
+  - name: dev-messaging
+    kind: derived
+    status: standby
+    rationale: "MassTransit/RabbitMQ é cross-cutting (dev-orders/dev-billing/dev-catalog/dev-customers/dev-identity/dev-cart têm IConsumer<T> próprios) — sinal de mensageria complexa (C2), mas a superfície de código por fronteira é pequena (1-3 arquivos de consumer cada) e majoritariamente já cabe no dono de cada bounded context. Proposto STANDBY: ativa-se por pedido do founder ou se a complexidade de saga/consumer crescer (ex.: introdução de MassTransit Saga/State Machine, hoje ausente — confirmado por grep '*Saga*/*StateMachine*' vazio em todo o repo). PATCH v2 (harness-lint territorio-obrigatorio): possui território REAL (DevStore.MessageBus/, 2 arquivos) mesmo em standby — standby significa 'não roteado automaticamente pelo tech-lead', não 'sem território para os guards escoparem'. Não sobrepõe dev-core (que cobre só Core/+WebAPI.Core/)."
+    trees: ["src/building-blocks/DevStore.MessageBus/"]
+    model_hint: sonnet
+
+  # PATCH mesa redonda (Estágio 3.2, persona Economia): gatilho de revisão de fusão cruzado.
+  # 9 dev-* plenos (core, catalog, customers, identity, orders, billing, cart, checkout-bff, web)
+  # ultrapassam o limiar "~8 dev-*, revisar fusão legítima" do framework (02-derive.md).
+  # Decisão registrada: revisão feita, nenhuma fusão adicional além de dev-core (3 projetos→1 agente)
+  # e dev-status (0 dev-* pleno→absorvido pelo gate devops). Founder confirmou manter os 9 separados
+  # (Estágio 3.1) — cada contexto tem stack/padrão/risco divergente (ver rationale individual +
+  # sondas de maestria 2b.6, todas passed:true). fusion_review_triggered: true.
+
+  # --- Gates condicionais (1 por sinal gate_signals=true, evidência citada) ---
+  - name: security
+    kind: gate
+    rationale: "gate_signals.security=true — evidência: PAN+CVV em claro no bus RabbitMQ (dev-billing, violação PCI-DSS confirmada), enum mismatch em transação de pagamento (dev-billing), CPF+Email em claro (dev-customers), emissão de JWT/hashing Argon2 (dev-identity). Acorda em toda mudança tocando essas 3 fronteiras."
+    model_hint: sonnet
+    effort: high
+
+  - name: devops
+    kind: gate
+    rationale: "gate_signals.devops=true — evidência: docker-compose com 8 serviços + SQL Server + RabbitMQ + Seq + nginx/TLS; CI builda+testa+builda imagens+push; DevStore.WebApp.Status é 100% infraestrutura de observabilidade (0 Controllers/Models, 1 arquivo, bug de config real já encontrado em appsettings.Production.json). Absorve dev-status — 2 análises independentes do scan concluíram que é gate, não dev-* pleno (ausência total de lógica de domínio)."
+    trees: ["docker/", ".github/workflows/", "src/web/DevStore.WebApp.Status/"]
+    model_hint: sonnet
+
+custom_agents_dialogue: none   # founder aprovou o roster derivado sem pedir agente customizado adicional (Estágio 3.1, 2026-07-01)
+
+# --- Compromissos para o Estágio 4 (persona Verificabilidade, mesa redonda 3.2) ---
+# Não mudam artefato existente — vinculam COMO o Estágio 4 deve gerar briefs/layer rules:
+stage4_commitments:
+  - "Ao materializar os checks idiomáticos (2b.4) nas layer rules, cruzar knowledge/stack/dotnet-9.yaml[].applies_to
+     com o trees: de cada agente — todo check aplicável à fronteira entra como critério idiomático citável
+     (id da fatia), não fica só no conhecimento passivo."
+  - "Para os 10 dev-* fora de dev-catalog (sem suíte automatizada), o brief-template inicial de cada layer rule
+     inclui pelo menos 1 exemplo de verification_command LITERAL (endpoint HTTP real + payload esperado, ou
+     query pós-side-effect) derivado do anchors_gold da fronteira — não deixar 'dotnet test' genérico como
+     único exemplo, já que verified:false bloquearia o probe D6."

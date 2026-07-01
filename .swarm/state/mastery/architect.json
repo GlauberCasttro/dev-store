@@ -1,0 +1,42 @@
+{
+  "agent": "architect",
+  "probed_at": "2026-07-01T15:48:00Z",
+  "score": "4/4",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/architect.yaml",
+  "questions": [
+    {
+      "q": "Padrão de camadas real: Orders é excepcional?",
+      "answer_blind": "Orders.Domain (puro) → Orders.Infra (IOrderRepository) é o único contrato de camada formal; os outros 8 serviços são monolíticos-por-serviço.",
+      "sustained_by": "DOMAIN-ARCHITECT-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "find src/services -maxdepth 1 -type d — Orders com 3 .csproj, demais com 1 cada",
+      "proof": "find src/services -maxdepth 1 -type d — Orders com 3 .csproj, demais com 1 cada"
+    },
+    {
+      "q": "Dois caminhos de comunicação cross-serviço?",
+      "answer_blind": "Síncrono (MassTransit Request<>, Orders→Billing) e assíncrono (Publish/Consume).",
+      "sustained_by": "DOMAIN-ARCHITECT-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderCommandHandler.cs:147, AuthController.cs:117 (Request<>); 5 *IntegrationHandler.cs (assíncrono)",
+      "proof": "OrderCommandHandler.cs:147, AuthController.cs:117 (Request<>); 5 *IntegrationHandler.cs (assíncrono)"
+    },
+    {
+      "q": "Existe ADR pré-existente?",
+      "answer_blind": "Não — docs/ vazio.",
+      "sustained_by": "DOMAIN-ARCHITECT-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "find docs -type f → vazio",
+      "proof": "find docs -type f → vazio"
+    },
+    {
+      "q": "Exemplo real de arbitragem esperada?",
+      "answer_blind": "OrderStatus.Refused/Delivered sem transição implementada.",
+      "sustained_by": "DOMAIN-ARCHITECT-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderStatus.cs — Authorized=1,Paid=2,Refused=3,Delivered=4,Canceled=5",
+      "proof": "OrderStatus.cs — Authorized=1,Paid=2,Refused=3,Delivered=4,Canceled=5"
+    }
+  ],
+  "proof_summary": "4/4 certas-com-evidência."
+}

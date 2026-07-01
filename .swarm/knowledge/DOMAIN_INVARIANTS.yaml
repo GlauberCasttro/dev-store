@@ -1,0 +1,76 @@
+# Estágio 2c — Entrevista Guiada de Domínio · DOMAIN_INVARIANTS.yaml
+# Dirigida por gate_signals do Estágio 1: security=true, devops=true, perf=false (no-op),
+# git=false (no-op) + entidade com regra de negócio forte (Order, detectada pelo scan).
+# Decisões do founder confirmadas nesta sessão (2026-07-01) reconciliando memória de
+# sessão anterior perdida (project_fable_init.md) contra a realidade do código atual.
+
+security:
+  - id: SEC-1
+    invariant: "Todo recurso escopado por usuário (pedido, endereço, carrinho) nunca revela a outro usuário nem sua existência."
+    block_if: "endpoint retorna 200/403 para recurso de outro usuário (IDOR) — esperado 404"
+    source: founder
+    source_note: "confirmado 2026-07-01, reconciliando decisão SEC-I-001 de sessão anterior (memória de projeto)"
+    verifiable_as: "teste de acesso cruzado (usuário A tenta acessar recurso de usuário B) retorna 404"
+    owner_agent: "security"
+
+  - id: SEC-2
+    invariant: "Email, SocialNumber (CPF), CardNumber e SecurityCode (CVV) nunca aparecem em log ou resposta de erro."
+    block_if: "log/exception/resposta HTTP expõe qualquer um desses 4 campos em texto plano"
+    source: founder
+    source_note: "confirmado 2026-07-01 (SEC-I-002 de sessão anterior). ACHADO DO SCAN (Estágio 1) já confirma violação ATUAL fora do escopo desta invariante (log/resposta): CardNumber+SecurityCode trafegam em claro no bus RabbitMQ (OrderInitiatedIntegrationEvent) e CPF+Email são persistidos em claro (CustomerMapping.cs) — esta invariante rege código NOVO/log/resposta HTTP, não retroage sobre o achado de bus/persistência, que fica registrado como débito de segurança separado (ver security.yaml #DOMAIN-SECURITY-001/003)."
+    verifiable_as: "grep em logs de teste de integração não encontra os 4 padrões; teste de erro 500 não ecoa esses campos no body"
+    owner_agent: "security"
+
+  - id: SEC-3
+    invariant: "Fluxo de pagamento (Orders→Billing) precisa de proteção de idempotência antes de qualquer nova funcionalidade que reprocesse eventos de pagamento."
+    block_if: "novo consumer/handler de pagamento não verifica se o evento já foi processado antes de agir"
+    source: scan
+    source_note: "ACHADO DO SCAN — ausência de idempotência confirmada em BillingService.Authorize/Capture/Cancel (ver DOMAIN-BILLING-004). Promovido a invariante porque é superfície de risco real, não hipotética."
+    verifiable_as: "teste de redelivery do mesmo evento de integração não duplica efeito (captura/autorização/cancelamento)"
+    owner_agent: "security"
+
+devops:
+  - id: OPS-1
+    invariant: "Todo deploy exige /healthz e /healthz-infra verdes em todos os serviços envolvidos antes de promover."
+    block_if: "pipeline de deploy avança com qualquer /healthz ou /healthz-infra vermelho"
+    source: founder
+    source_note: "confirmado 2026-07-01 (OPS-I-001/002 de sessão anterior). NOTA: não há gate automatizado disso no .github/workflows/build.yml atual (o CI builda/testa/builda imagem, mas não verifica health check pós-deploy) — a invariante é a POLÍTICA desejada, implementação do gate fica como item de trabalho futuro, não fato já implementado."
+    verifiable_as: "checklist de deploy manual ou step de CI que consulta /healthz-infra dos serviços afetados"
+    owner_agent: "devops"
+
+business:
+  - id: BIZ-1
+    entity: Order
+    invariant: "Order.Amount = soma(OrderItem.Quantity * OrderItem.Price) - desconto de Voucher (percentual ou fixo, nunca negativo)."
+    source: scan
+    source_note: "ACHADO DO SCAN, verificado por leitura direta: Order.CalculateOrderAmount()/CalculateAmount() (Order.cs:72-104) + confirmado pela sonda de maestria de dev-orders (score 7/7)."
+    verifiable_as: "cenário qa obrigatório: pedido com voucher percentual e outro com voucher fixo, comparar Amount calculado"
+    owner_agent: "dev-orders"
+
+  - id: BIZ-2
+    entity: Order
+    invariant: "O valor/desconto enviado pelo cliente no AddOrderCommand é usado só para comparação anti-fraude — o servidor SEMPRE recalcula e rejeita divergência."
+    block_if: "pedido é aceito com Amount/Discount que diverge do recalculado a partir dos itens"
+    source: scan
+    source_note: "ACHADO DO SCAN: OrderCommandHandler.IsOrderValid (linhas 110-130) rejeita divergência — invariante anti-fraude já implementada e confirmada, não é gap."
+    verifiable_as: "teste que envia Amount manipulado (menor que o real) e espera rejeição"
+    owner_agent: "dev-orders"
+
+  - id: BIZ-3
+    entity: Order
+    invariant: "OrderStatus.Authorize()→Finish()→Cancel() são as ÚNICAS transições implementadas hoje (Authorized→Paid, e →Canceled). Refused e Delivered existem no enum mas SEM transição implementada nesta fronteira."
+    source: founder
+    source_note: "confirmado 2026-07-01 — reconciliação MATERIAL com a memória de sessão anterior, que registrava incorretamente 'avança em sequência DRAFT→AUTHORIZED→PAID' (não há estado DRAFT no código real; a entidade nasce sem status nomeado até Authorize() ser chamado). Founder decidiu: registrar como invariante PARCIAL + item de backlog, não bloquear nada agora."
+    verifiable_as: "grep confirma ausência de OrderStatus.Refused/Delivered em qualquer atribuição no código; item de backlog: decidir se/quando implementar as transições faltantes"
+    owner_agent: "dev-orders"
+    status: "[REVISAR-BACKLOG] — gap conhecido e aceito, não é invariante violada, é feature ausente"
+
+perf: []   # gate_signals.perf=false — no-op declarado, sem sinal de benchmark/hot-path no scan
+
+git: []    # gate_signals.git=false — no-op declarado, sem convenção estrita de commit detectada
+
+no_op_declarations:
+  - signal: perf
+    reason: "PROJECT_PROFILE.yaml#gate_signals.perf=false — nenhum benchmark, meta de SLO ou hot-path documentado no scan (docs/ vazio, 0 ADRs)."
+  - signal: git
+    reason: "PROJECT_PROFILE.yaml#gate_signals.git=false — prefixos de commit convencionais usados na prática mas sem enforcement mecânico (sem commitlint/husky no repo)."

@@ -1,0 +1,52 @@
+{
+  "agent": "dev-identity",
+  "probed_at": "2026-07-01T15:40:00Z",
+  "score": "5/6",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-identity.yaml",
+  "questions": [
+    {
+      "q": "Único emissor de JWT, JWKS e KeepFor?",
+      "sustained_by": "DOMAIN-IDENTITY-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs:22 (path corrigido)",
+      "proof": "building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs:22 (path corrigido)"
+    },
+    {
+      "q": "Storage de chaves ISecurityKeyContext?",
+      "sustained_by": "DOMAIN-IDENTITY-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ApplicationDbContext.cs:8,14",
+      "proof": "ApplicationDbContext.cs:8,14"
+    },
+    {
+      "q": "Quantos serviços consomem JWT?",
+      "sustained_by": "DOMAIN-IDENTITY-001",
+      "verified_against_code": "errada→corrigido",
+      "evidence": "eram citados 9, real é 7 — CORRIGIDO na fatia",
+      "proof": "eram citados 9, real é 7 — CORRIGIDO na fatia"
+    },
+    {
+      "q": "Saga de compensação no Register?",
+      "sustained_by": "DOMAIN-IDENTITY-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "AuthController.cs:42-58,117-124",
+      "proof": "AuthController.cs:42-58,117-124"
+    },
+    {
+      "q": "Argon2 centralizado?",
+      "sustained_by": "DOMAIN-IDENTITY-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "IdentityConfig.cs:38-40",
+      "proof": "IdentityConfig.cs:38-40"
+    },
+    {
+      "q": "ValidateJwt disponível em produção?",
+      "sustained_by": "DOMAIN-IDENTITY-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "AuthController.cs:155-177 #if DEBUG",
+      "proof": "AuthController.cs:155-177 #if DEBUG"
+    }
+  ],
+  "proof_summary": "5/6 (83%) PASSOU. 1 claim corrigida (contagem de serviços consumidores e path de arquivo) — fatia atualizada."
+}

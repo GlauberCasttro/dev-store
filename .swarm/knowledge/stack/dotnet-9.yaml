@@ -1,0 +1,172 @@
+# Estágio 2b.1/2b.2 — fatia de stack .NET 9 (DevStore)
+# Gerado por mesa adversarial (3 vozes: Advogado da versão, Caçador de footguns, Idiomata)
+# especializando a combinação exata: .NET 9.0.302 + EF Core 9.0.7 (SqlServer/Sqlite/MySql/Npgsql)
+# + MassTransit.RabbitMQ 8.5.1 + MediatR 13.0.0 + FluentValidation 12.0.0 + Polly 8.6.2.
+# Gate de evidência aplicado (2b.2): todo item com source real (path:linha ou URL oficial).
+# Consenso entre vozes NÃO promove confiança — só a evidência decide.
+
+- id: NET9-STACK-001
+  kind: breaking_change
+  claim: "MediatR 13.0.0 mudou para licenciamento dual comercial/RPL-1.5 e espera cfg.LicenseKey em AddMediatR; sem ela, emite warning de log em runtime — comportamento inexistente em MediatR ≤12 (o que a maioria dos tutoriais/pesos assume)."
+  applies_to: "MediatR 13.0.0 + .NET 9"
+  source: "https://github.com/LuckyPennySoftware/MediatR/releases"
+  confidence: verified
+  check: "Rodar Orders.API/Customers.API e observar o log de startup por 'valid license key' warning"
+
+- id: NET9-STACK-002
+  kind: footgun
+  claim: "O repo NÃO configura cfg.LicenseKey em nenhuma chamada AddMediatR — Orders.API e Customers.API ficam expostos ao warning de licenciamento do MediatR 13 em produção."
+  applies_to: "MediatR 13.0.0"
+  source: "src/services/DevStore.Orders.API/Program.cs:18, src/services/DevStore.Customers.API/Program.cs:20"
+  confidence: verified
+  check: "Inspecionar os dois Program.cs — nenhum lambda de AddMediatR seta LicenseKey"
+
+- id: NET9-STACK-003
+  kind: breaking_change
+  claim: "EF Core 9 lança exceção (PendingModelChangesWarning) ao chamar Migrate()/MigrateAsync() se o modelo divergir da última migration, e também ao aplicar migrations dentro de transação externa explícita (MigrationsUserTransactionWarning) — ambos inexistentes no EF Core 8."
+  applies_to: "Microsoft.EntityFrameworkCore.Relational 9.0.7"
+  source: "https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-9.0/breaking-changes"
+  confidence: verified
+  check: "Chamar Migrate()/MigrateAsync() com modelo divergente da última migration e observar a exceção"
+
+- id: NET9-STACK-004
+  kind: footgun
+  claim: "NENHUM dos 6 serviços com banco (Catalog/Billing/Customers/Identity/Orders/ShoppingCart) chama Migrate()/MigrateAsync() — todos usam Database.EnsureCreatedAsync() em DbMigrationHelpers, então NET9-STACK-003 nunca dispara, MAS as pastas Migrations/*.cs versionadas são código morto em Development/Docker: o schema é criado direto do modelo atual, sem histórico __EFMigrationsHistory, e qualquer alteração de modelo sem gerar nova migration passa sem aviso."
+  applies_to: "EF Core 9.0.7 + EnsureCreatedAsync() vs migrations versionadas não usadas em runtime"
+  source: "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs:38 (e equivalentes em Billing.API:33, Customers.API:34, Identity.API:35, Orders.API:37, ShoppingCart.API:29 — todos EnsureCreatedAsync, zero Migrate)"
+  confidence: verified
+  check: "grep -rn '\\.Migrate(\\|MigrateAsync(' src --include='*.cs' fora de /Migrations/ → vazio; grep -rn 'EnsureCreatedAsync' → 6 ocorrências"
+
+- id: NET9-STACK-005
+  kind: footgun
+  claim: "O guard de bootstrap `env.IsDevelopment() || env.IsEnvironment(\"Docker\")` em DbMigrationHelpers é a ÚNICA rota que cria o schema (via EnsureCreatedAsync) — um deploy em qualquer ambiente com nome diferente (ex.: 'Staging', 'Production' real fora do docker-compose) sobe sem tabelas e falha na primeira query, silenciosamente até a primeira request."
+  applies_to: "EF Core 9.0.7 (SqlServer) + guard de ambiente do DbMigrationHelpers"
+  source: "docker/docker-compose.yml:4 (ASPNETCORE_ENVIRONMENT: Docker); src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs:36"
+  confidence: verified
+  check: "Rodar o serviço com ASPNETCORE_ENVIRONMENT=Staging contra banco vazio e observar ausência de schema"
+
+- id: NET9-STACK-006
+  kind: footgun
+  claim: "As migrations versionadas (quando existem) usam HasColumnType(\"decimal(18,2)\") hardcoded — sintaxe nativa SqlServer — sem equivalente para Sqlite/MySql/Npgsql; se o fluxo de Migrate() real for reativado, a precisão decimal diverge silenciosamente entre providers."
+  applies_to: "EF Core 9.0.7 multi-provider + migrations geradas só contra SqlServer"
+  source: "src/services/DevStore.Orders.Infra/Migrations/OrdersContextModelSnapshot.cs:32,46,74,113,122"
+  confidence: verified
+  check: "dotnet ef migrations script com DatabaseType=Sqlite e comparar com o SQL gerado para SqlServer"
+
+- id: NET9-STACK-007
+  kind: api_shift
+  claim: "MySql.EntityFrameworkCore 9.0.6 é o provider oficial da Oracle (não Pomelo) e reaproveita a MESMA MigrationsAssembly gerada implicitamente para SqlServer (ProviderConfiguration.cs:23-24) — qualquer feature específica de SqlServer na migration pode falhar só em runtime ao trocar para MySql."
+  applies_to: "EF Core 9.0.7 + MySql.EntityFrameworkCore 9.0.6 + MigrationsAssembly compartilhada"
+  source: "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs:23-24"
+  confidence: unverified
+  check: "Rodar dotnet ef database update com AppSettings:DatabaseType=MySql e comparar erros"
+
+- id: NET9-STACK-008
+  kind: footgun
+  claim: "MassTransit 8.x Request<> chamado direto no IBus (não via IRequestClient<T> dedicado com timeout customizado) usa o RequestTimeout default (30s); OrderCommandHandler.DoPayment não tem try/catch para RequestTimeoutException, então Billing.API fora do ar propaga exceção não tratada (500) em vez de ValidationResult de erro de negócio."
+  applies_to: "MassTransit.RabbitMQ 8.5.1 (_bus.Request<> síncrono sem IRequestClient dedicado)"
+  source: "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:146-147"
+  confidence: verified
+  check: "Derrubar o container do Billing.API, disparar AddOrderCommand, cronometrar ~30s até 500 não tratado"
+
+- id: NET9-STACK-009
+  kind: footgun
+  claim: "O orçamento de retry do Polly no HttpClient do BFF/MVC (1s+5s+10s=16s de espera entre tentativas) é inferior ao timeout default de 30s do MassTransit Request<> encadeado (BFF→Orders.API→Billing.API) — uma chamada pode expirar no cliente HTTP ANTES do backend terminar de esperar o pagamento, sem idempotência visível nesse trecho."
+  applies_to: "Polly (WaitAndRetryAsync 1s/5s/10s) + MassTransit.RabbitMQ 8.5.1 Request<> síncrono encadeado"
+  source: "src/building-blocks/DevStore.WebAPI.Core/Extensions/PollyExtensions.cs:17-19, src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:146-147"
+  confidence: verified   # promovido pela sonda de maestria de dev-orders (2b.6) — números confirmados concretamente no código (1s+5s+10s=16s vs timeout default MassTransit 30s)
+  check: "Simular latência artificial no consumer do Billing.API e medir qual camada estoura primeiro"
+
+- id: NET9-STACK-010
+  kind: footgun
+  claim: "Sem nenhum MediatR IPipelineBehavior<TRequest,TResponse> de validação automática no repo inteiro — a validação depende 100% de cada Handler chamar message.IsValid() manualmente no início do Handle(); um novo Command Handler que esqueça essa chamada bypassa toda a validação do FluentValidation sem erro nem aviso."
+  applies_to: "MediatR 13.0.0 (sem pipeline behaviors) + FluentValidation 12.0.0 usado só imperativamente"
+  source: "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs (SendCommand sem behaviors); grep -rn 'IPipelineBehavior' src → vazio"
+  confidence: verified
+  check: "Criar um Handler novo sem chamar IsValid() e confirmar que dados inválidos passam sem erro"
+
+- id: NET9-STACK-011
+  kind: footgun
+  claim: "Command.ValidationResult (FluentValidation, setter público) e CommandHandler.ValidationResult (campo protected acumulado via AddError) são DOIS objetos distintos com o mesmo nome não-qualificado — em OrderCommandHandler.Handle, a linha 36 retorna o do Command (FluentValidation) mas as linhas 42/45/48 retornam o do CommandHandler (AddError); fácil de confundir ao escrever um novo Handler."
+  applies_to: "FluentValidation 12.0.0 ValidationResult duplicado + MediatR 13.0.0 IRequest<ValidationResult>"
+  source: "src/building-blocks/DevStore.Core/Messages/Command.cs:10, src/building-blocks/DevStore.Core/Messages/CommandHandler.cs:9-14, src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:36 vs 42,45,48"
+  confidence: verified
+  check: "AddError() antes de 'if (!message.IsValid())' e confirmar que o erro não aparece no retorno da linha 36"
+
+- id: NET9-STACK-012
+  kind: api_shift
+  claim: "FluentValidation 12.0 removeu InjectValidator (injeção implícita via Service Provider, deprecado desde 11.x) e o método de teste ShouldHaveAnyValidationError foi renomeado para ShouldHaveValidationErrors — padrões comuns em tutoriais/pesos de FluentValidation ≤11 que não compilam mais."
+  applies_to: "FluentValidation 12.0.0"
+  source: "https://docs.fluentvalidation.net/en/latest/upgrading-to-12.html"
+  confidence: verified
+  check: "grep -rn 'InjectValidator|ShouldHaveAnyValidationError' src → vazio no repo atual, mas quebra código copiado de docs antigas"
+
+- id: NET9-STACK-013
+  kind: idiom
+  claim: "O projeto configura QueryTrackingBehavior.NoTracking + AutoDetectChangesEnabled=false globalmente no construtor do DbContext em Customers/Billing/ShoppingCart — idiomático para APIs majoritariamente leitura no EF Core 9 — MAS OrdersContext é o único que NÃO faz isso, compensando com .AsNoTracking() manual por query no OrderRepository (mistura os dois estilos)."
+  applies_to: "EF Core 9.0.7 QueryTrackingBehavior — inconsistente entre DbContexts do mesmo repo"
+  source: "src/services/DevStore.Customers.API/Data/CustomerContext.cs:22-23, src/services/DevStore.Billing.API/Data/BillingContext.cs:16-17, src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs:12-13 (têm) vs src/services/DevStore.Orders.Infra/Context/OrdersContext.cs (não tem) + OrderRepository.cs:38 (AsNoTracking manual)"
+  confidence: verified
+  check: "grep -n 'QueryTrackingBehavior' nos 4 DbContexts — só 3 dos 4 configuram"
+
+- id: NET9-STACK-014
+  kind: idiom
+  claim: "DevStore.ShoppingCart.API/Program.cs é o ÚNICO dos 9 serviços que usa Minimal API (top-level statements + MapGet/Post/Put/Delete); os outros 8 usam Controllers clássicos com atributos — divergência arquitetural real, não erro, mas exige que o especialista saiba que este serviço não tem pasta Controllers/."
+  applies_to: ".NET 9 Minimal APIs vs ASP.NET Core MVC Controllers no mesmo monorepo"
+  source: "src/services/DevStore.ShoppingCart.API/Program.cs:40-81"
+  confidence: verified
+  check: "find src/services/DevStore.ShoppingCart.API -iname Controllers → não existe"
+
+- id: NET9-STACK-015
+  kind: idiom
+  claim: "Nenhuma classe do projeto (Order, Product, Customer, Commands, Controllers) usa primary constructors de C# 12/13 nem records, apesar de LangVersion=latest em todos os .csproj — todo o projeto usa construtores clássicos, estilo consistente mas 'datado' para a versão de linguagem habilitada."
+  applies_to: "C# LangVersion=latest sobre .NET 9 (C# 13)"
+  source: "src/services/DevStore.Orders.Domain/Orders/Order.cs:9-27, src/services/DevStore.Customers.API/Models/Customer.cs:9-20, src/tests/DevStore.Tests/DevStore.Tests.csproj (LangVersion=latest)"
+  confidence: verified
+  check: "grep -rn 'class.*Controller(' src --include=*.cs → nenhuma sintaxe de primary constructor"
+
+- id: NET9-STACK-016
+  kind: footgun
+  claim: "CustomerContext.MediatorExtension.PublishEvents usa foreach sequencial (com um Task.WhenAll comentado como código morto), enquanto o equivalente em OrdersContext usa Select(async...)+Task.WhenAll paralelo — duas implementações divergentes do MESMO padrão de publicação de eventos de domínio dentro do mesmo repo."
+  applies_to: "MediatR 13.0.0 + padrão de publicação de eventos via ChangeTracker — inconsistente entre contexts"
+  source: "src/services/DevStore.Customers.API/Data/CustomerContext.cs:68-73 (foreach sequencial, WhenAll comentado) vs src/services/DevStore.Orders.Infra/Context/OrdersContext.cs:90-93 (Task.WhenAll ativo)"
+  confidence: verified
+  check: "diff MediatorExtension.PublishEvents entre os dois arquivos"
+
+- id: NET9-STACK-017
+  kind: idiom
+  claim: "ProductRepository usa AsNoTrackingWithIdentityResolution() (evita duplicação de instância em queries com relacionamento) enquanto os demais repositórios (Payment, etc.) usam apenas AsNoTracking() simples — uso mais avançado mas isolado, não replicado onde também se aplicaria."
+  applies_to: "EF Core 9.0.7 AsNoTrackingWithIdentityResolution — uso isolado"
+  source: "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs:26,32 vs src/services/DevStore.Billing.API/Data/Repository/PaymentRepository.cs:34,40"
+  confidence: verified
+  check: "grep -rn 'AsNoTrackingWithIdentityResolution' src → só ocorre em ProductRepository.cs"
+
+- id: NET9-STACK-018
+  kind: idiom
+  claim: "Product.cs é o ÚNICO aggregate root do projeto com TODAS as propriedades em setter público ({ get; set; }), sem construtor customizado nem encapsulamento de invariantes — Order.cs e Customer.cs usam construtor + { get; private set; } (DDD-lite consistente). Product trata o modelo como anêmico onde o resto do projeto não."
+  applies_to: "Modelagem de domínio (DDD-lite) — inconsistente entre agregados do mesmo repo"
+  source: "src/services/DevStore.Catalog.API/Models/Product.cs:8-14 (setters públicos) vs src/services/DevStore.Customers.API/Models/Customer.cs:22-26 e src/services/DevStore.Orders.Domain/Orders/Order.cs:31-38 (private set)"
+  confidence: verified
+  check: "Comparar visibilidade de setters nos 3 arquivos"
+
+- id: NET9-STACK-019
+  kind: idiom
+  claim: "Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 exige AppContext.SetSwitch('Npgsql.EnableLegacyTimestampBehavior', true) para manter o comportamento antigo de timestamp (mudança introduzida nas versões 6/7 do Npgsql, mantida em 9.x) — o projeto JÁ configura esse switch corretamente."
+  applies_to: "Npgsql.EntityFrameworkCore.PostgreSQL 9.0.4 — mitigação já presente (achado positivo)"
+  source: "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs:30"
+  confidence: verified
+  check: "Remover a linha e rodar query com DateTime.Now contra Postgres — deve mudar de comportamento"
+
+- id: NET9-STACK-020
+  kind: idiom
+  claim: ".NET 9 tornou canônico X509CertificateLoader.LoadPkcs12/LoadCertificateFromFile em vez dos construtores de X509Certificate2 (obsoletos, SYSLIB0057) — o projeto JÁ adota esse idioma no path de certificado customizado. Achado exclusivo da passada single-context de comparação A-013 (nenhuma das 3 vozes da mesa cobriu)."
+  applies_to: ".NET 9 X509CertificateLoader — achado positivo"
+  source: "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs:31, https://learn.microsoft.com/en-us/dotnet/core/compatibility/cryptography/9.0/x509-certificates"
+  confidence: verified
+  check: "grep -rn 'new X509Certificate2(' src → deve estar ausente; confirmar uso de X509CertificateLoader em HttpExtensions.cs:31"
+
+fingerprint_inputs:
+  - "global.json"
+  - "src/building-blocks/DevStore.Core/DevStore.Core.csproj"
+  - "src/building-blocks/DevStore.MessageBus/DevStore.MessageBus.csproj"
+  - "src/building-blocks/DevStore.WebAPI.Core/DevStore.WebAPI.Core.csproj"

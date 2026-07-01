@@ -1,0 +1,32 @@
+# Fatia de domínio — po (core, conhece o sistema inteiro)
+- id: DOMAIN-PO-001
+  kind: principle
+  claim: "O domínio do produto é e-commerce clássico com 6 conceitos centrais e nomenclatura FIXA (nunca traduzir/sinonimizar em novas stories): Order (não Pedido), ShoppingCart (não Basket/Cart), Voucher (não Coupon), Customer (não Client), Product (não Item), SocialNumber (não CPF como nome de campo)."
+  applies_to: "po · glossário de negócio obrigatório em toda story"
+  source: "knowledge/CONVENTIONS.md#Glossário"
+  confidence: verified
+  check: "ver CONVENTIONS.md"
+
+- id: DOMAIN-PO-002
+  kind: bound_decision
+  claim: "Fluxo de checkout real tem 5 passos visíveis ao usuário (WebApp.MVC): ShoppingCart → DeliveryAddress → Payment → FinishOrder → OrderDone/MyOrders. Toda story de mudança de checkout precisa mapear em qual desses passos a mudança se encaixa — não são intercambiáveis (ex.: endereço é resolvido ANTES do pagamento, não depois)."
+  applies_to: "po · fluxo de checkout do usuário final"
+  source: "src/web/DevStore.WebApp.MVC/Controllers/OrderController.cs:21-73"
+  confidence: verified
+  check: "seguir as rotas /delivery-address → /payment → /finish-order → /order-done"
+
+- id: DOMAIN-PO-003
+  kind: bound_decision
+  claim: "A cobertura de teste real (1/11 fronteiras) é um fato que toda story de 'nova feature em X' precisa considerar no critério de aceite — se X não é Catalog, não há suíte de regressão automatizada existente; o critério de aceite precisa ser mais explícito sobre verificação manual/exploratória."
+  applies_to: "po · critério de aceite realista dado o gap de QA"
+  source: "ver DOMAIN-QA-001"
+  confidence: verified
+  check: "ver DOMAIN-QA-001"
+
+- id: DOMAIN-PO-004
+  kind: principle
+  claim: "Há 3 achados de segurança/PII confirmados e não-triviais (PAN/CVV em claro, CPF/Email em claro, enum mismatch de pagamento) que pré-existem a qualquer nova story — se uma story tocar dev-billing/dev-orders/dev-customers, o PO deve considerar se o escopo inclui mitigar (ou ao menos não agravar) esses achados, mesmo que não peça explicitamente."
+  applies_to: "po · débito de segurança conhecido ao redigir critérios"
+  source: "ver DOMAIN-SECURITY-001/002/003"
+  confidence: verified
+  check: "ver DOMAIN-SECURITY-*"

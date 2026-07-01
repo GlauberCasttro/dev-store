@@ -1,0 +1,32 @@
+# Fatia de domínio — dev-checkout-bff (Bff.Checkout)
+- id: DOMAIN-BFF-001
+  kind: project_pattern
+  claim: "Existem DOIS caminhos para o MESMO serviço dev-cart: HTTP REST (IShoppingCartService) e gRPC (IShoppingCartGrpcService) — a escolha de qual usar depende do endpoint do BFF chamado, não é substituível livremente. Confirmar qual caminho uma task específica já usa antes de trocar."
+  applies_to: "dev-checkout-bff · dois protocolos para dev-cart"
+  source: "src/api-gateways/DevStore.Bff.Checkout/Services/ShoppingCartService.cs:11,20; src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs:8,13"
+  confidence: verified
+  check: "grep -rn 'IShoppingCartService\\|IShoppingCartGrpcService' Controllers/*.cs — usos distintos por endpoint"
+
+- id: DOMAIN-BFF-002
+  kind: project_pattern
+  claim: "IPaymentService está declarado mas SEM métodos implementados (interface vazia) — não é um client funcional. Task que precisa orquestrar pagamento do BFF tem que ou implementar isso do zero, ou confirmar que o fluxo real passa por Order (que já orquestra pagamento via Orders.API→Billing.API)."
+  applies_to: "dev-checkout-bff · client de pagamento incompleto"
+  source: "src/api-gateways/DevStore.Bff.Checkout/Services/PaymentService.cs:8,12"
+  confidence: verified
+  check: "ler PaymentService.cs — interface sem métodos"
+
+- id: DOMAIN-BFF-003
+  kind: project_pattern
+  claim: "Todo client HTTP herda de Service (abstract base) com GetContent/DeserializeResponse/ManageHttpResponse — novo client de serviço deve seguir esse padrão, não reimplementar HttpClient cru."
+  applies_to: "dev-checkout-bff · padrão de client HTTP"
+  source: "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs:10"
+  confidence: verified
+  check: "confirmar que CatalogService/ShoppingCartService/OrderService/CustomerService herdam de Service"
+
+- id: DOMAIN-BFF-004
+  kind: project_pattern
+  claim: "OrderDto carrega os MESMOS campos sensíveis de cartão (CardNumber/Holder/ExpirationDate/SecurityCode) que trafegam via dev-billing — o BFF é outro ponto onde esses dados em claro passam. Qualquer mitigação de PCI feita em dev-billing precisa considerar esta fronteira também."
+  applies_to: "dev-checkout-bff · superfície adicional de PCI"
+  source: "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs:34,38,44,48"
+  confidence: verified
+  check: "grep -n 'CardNumber\\|SecurityCode' OrderDto.cs"

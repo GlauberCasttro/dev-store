@@ -1,0 +1,23 @@
+{
+  "id": "SPRINT-00",
+  "name": "Bootstrap smoke — INIT Estágio 7",
+  "status": "DRAFT",
+  "status_vocab_nota": "DRAFT | ACTIVE | ARCHIVED — nada além disso; validate-all bloqueia",
+  "branch": "sprint-00-bootstrap-smoke",
+  "baseline": {
+    "verification_global": "dotnet build --configuration Release --no-restore (unverified — SDK 9.0.302 não instalado no host; smoke usa verification_command escopado via grep, não build global)",
+    "tests_passing_at_start": null
+  },
+  "tasks": ["TASK-00-01-DEV"],
+  "waves": [
+    { "wave": 1, "tasks": ["TASK-00-01-DEV"], "note": "única task de smoke — sem paralelismo" }
+  ],
+  "definition_of_done": [
+    "todas as tasks COMMITTED (ACCEPTED sem commit = ciclo aberto, não fecha)",
+    "toda onda DEV/ARCH tem onda QA correspondente verificada",
+    "adiadas com sprint-destino; bloqueadas resolvidas (BLOCKED nunca é final)",
+    "verificação global verde ou falha formalmente aceita pelo usuário",
+    "encerramento via transition.py --sprint --to ARCHIVED (ferramenta valida) + archive + índices"
+  ],
+  "pre_migration": false
+}

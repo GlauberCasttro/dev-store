@@ -1,0 +1,40 @@
+# Fatia de domínio — dev-orders (Orders.API + Orders.Domain + Orders.Infra)
+- id: DOMAIN-ORDERS-001
+  kind: project_pattern
+  claim: "Order.CalculateOrderAmount() SEMPRE recalcula o valor no servidor a partir dos itens + desconto de voucher — o valor enviado pelo cliente no AddOrderCommand é usado só para COMPARAÇÃO anti-fraude (IsOrderValid rejeita se divergir), nunca é persistido diretamente. Qualquer alteração no fluxo de pagamento tem que preservar esse recálculo."
+  applies_to: "dev-orders · invariante de negócio BIZ (recálculo anti-fraude)"
+  source: "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:110-130 (IsOrderValid); src/services/DevStore.Orders.Domain/Orders/Order.cs:72-104 (CalculateOrderAmount/CalculateAmount)"
+  confidence: verified
+  check: "enviar AddOrderCommand com Amount divergente do calculável pelos itens e confirmar rejeição"
+
+- id: DOMAIN-ORDERS-002
+  kind: project_pattern
+  claim: "OrderStatus é um enum com 5 valores (Authorized/Paid/Refused/Delivered/Canceled) mas SÓ 3 têm transição implementada nesta fronteira (Authorize/Finish/Cancel) — Refused e Delivered são estados órfãos. Antes de assumir que o pedido tem máquina de estados completa, verificar se a task em questão precisa implementar a transição faltante."
+  applies_to: "dev-orders · gap de máquina de estados"
+  source: "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs:3-9; src/services/DevStore.Orders.Domain/Orders/Order.cs:45-58"
+  confidence: verified
+  check: "grep -rn 'OrderStatus.Refused\\|OrderStatus.Delivered' src/services/DevStore.Orders* — nenhuma atribuição encontrada, só declaração no enum"
+
+- id: DOMAIN-ORDERS-003
+  kind: project_pattern
+  claim: "Voucher é um AGGREGATE ROOT PRÓPRIO (não uma entidade filha de Order) — a associação é fraca via VoucherId nullable + navegação EF. Nunca modelar Voucher como parte do agregado Order; qualquer alteração de desconto passa por VoucherRepository.GetVoucherByCode + VoucherValidation (Specification pattern), não por acesso direto via Order.Voucher."
+  applies_to: "dev-orders · Domain/Vouchers"
+  source: "src/services/DevStore.Orders.Domain/Vouchers/Voucher.cs:7; src/services/DevStore.Orders.Domain/Orders/Order.cs:32,43,60-65"
+  confidence: verified
+  check: "ler IVoucherRepository.cs e VoucherValidation.cs (Specs/) — confirmar Specification pattern isolado de Order"
+
+- id: DOMAIN-ORDERS-004
+  kind: bound_decision
+  claim: "O pagamento é um Request/Response SÍNCRONO via MassTransit (_bus.Request<OrderInitiatedIntegrationEvent, ResponseMessage>) que BLOQUEIA o fluxo do comando esperando Billing responder — não é fire-and-forget. Timeout default é 30s (MassTransit 8.x) e NÃO HÁ try/catch para RequestTimeoutException hoje (gap real, NET9-STACK-008)."
+  applies_to: "dev-orders · integração síncrona com dev-billing"
+  source: "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:146-147; knowledge/stack/dotnet-9.yaml#NET9-STACK-008"
+  confidence: verified
+  check: "derrubar Billing.API e cronometrar ~30s até exceção não tratada no Orders.API"
+
+- id: DOMAIN-ORDERS-005
+  kind: project_pattern
+  claim: "IOrderRepository.GetConnection() expõe DbConnection para uso com Dapper, mas NENHUM código real usa Dapper nesta fronteira (dependência declarada e vestigial, grep vazio) — toda leitura E escrita passa por EF Core. Não copiar esse padrão de exposição de conexão para novos repositórios sem uso real."
+  applies_to: "dev-orders · Infra/Repository — dependência vestigial"
+  source: "src/services/DevStore.Orders.API/Domain/Orders/IOrderRepository.cs:15 (interface); grep vazio para Dapper QueryAsync/ExecuteAsync em Orders.*"
+  confidence: verified
+  check: "grep -rn 'QueryAsync\\|ExecuteAsync' src/services/DevStore.Orders* → vazio"

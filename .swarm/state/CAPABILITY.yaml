@@ -1,0 +1,29 @@
+# Estágio 0 — Platform Probe
+# Sondado em 2026-07-01, sessão fa562f7d... (INIT completo, clone fresco de
+# desenvolvedor-io/dev-store.git — harness anterior nunca foi commitado).
+platform: claude-code
+protocol_version: 7
+enforcement:
+  E1_config: true                # tools/disallowedTools/permissionMode por agente — confirmado (adapter-claude-code.md)
+  E2_hooks: true                 # PreToolUse/PostToolUse/SessionStart/Stop executáveis
+  E3_external: true              # lefthook instalado (/opt/homebrew/bin/lefthook) + CI existente (.github/workflows/build.yml)
+runtime_deps:                    # sondado com `command -v`
+  bash: true
+  jq: true
+  python3: true
+  git: true
+subagents:
+  isolated_context: true
+  frontmatter_tools: true        # claude-code: campo tools/disallowedTools por subagente (adapter-claude-code.md)
+  frontmatter_hooks: true        # claude-code: hooks escopados no frontmatter do agente, além do global
+  nested_delegation: false       # ADR-F1 — política do Fable, não limite de plataforma
+parallel_dispatch: true
+notes: []                        # nenhuma degradação detectada — teto E3 completo disponível
+
+# Versionabilidade do harness (§8.2)
+harness_versioning:
+  scripts_dir: .swarm/scripts-harness
+  git_check_ignore_exit: 1        # 1 = NÃO ignorado (confirmado via `git check-ignore`)
+  gitignore_dotnet_patterns_present: true   # bin/ e obj/ presentes no .gitignore do projeto
+  risk: "scripts-harness (não bin/) evita colisão com os padrões bin/ e obj/ do .gitignore .NET — lição registrada na memória do projeto após perda do INIT anterior"
+  action_taken: "nenhuma correção necessária — .swarm/scripts-harness/ confirmado fora do .gitignore"

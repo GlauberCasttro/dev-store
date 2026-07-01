@@ -1,0 +1,45 @@
+{
+  "agent": "dev-catalog",
+  "probed_at": "2026-07-01T15:38:00Z",
+  "score": "5/5",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-catalog.yaml",
+  "questions": [
+    {
+      "q": "Product.cs segue DDD-lite como Order/Customer?",
+      "sustained_by": "DOMAIN-CATALOG-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Product.cs:8-14 setters públicos vs Order/Customer private set",
+      "proof": "Product.cs:8-14 setters públicos vs Order/Customer private set"
+    },
+    {
+      "q": "Existe CQRS na fronteira Catalog?",
+      "sustained_by": "DOMAIN-CATALOG-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CatalogController.cs:13-18 injeta repository direto",
+      "proof": "CatalogController.cs:13-18 injeta repository direto"
+    },
+    {
+      "q": "Estratégia de tracking do ProductRepository?",
+      "sustained_by": "DOMAIN-CATALOG-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ProductRepository.cs:26,32 AsNoTrackingWithIdentityResolution",
+      "proof": "ProductRepository.cs:26,32 AsNoTrackingWithIdentityResolution"
+    },
+    {
+      "q": "Baixa de estoque é síncrona ou reativa?",
+      "sustained_by": "DOMAIN-CATALOG-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CatalogIntegrationHandler.cs Consume→WriteDownInventory",
+      "proof": "CatalogIntegrationHandler.cs Consume→WriteDownInventory"
+    },
+    {
+      "q": "Fluxo completo do consumer de estoque?",
+      "sustained_by": "DOMAIN-CATALOG-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "sequência confirmada linha a linha",
+      "proof": "sequência confirmada linha a linha"
+    }
+  ],
+  "proof_summary": "5/5 certas-com-evidência."
+}

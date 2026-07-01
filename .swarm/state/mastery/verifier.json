@@ -1,0 +1,42 @@
+{
+  "agent": "verifier",
+  "probed_at": "2026-07-01T15:48:00Z",
+  "score": "4/4",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/verifier.yaml",
+  "questions": [
+    {
+      "q": "Ambiente atual roda dotnet build/test?",
+      "answer_blind": "Não — SDK 9.0.302 exigido, só 8.0.125 instalado; FAIL de build/test não é erro do dev, é degradação de ambiente.",
+      "sustained_by": "DOMAIN-VERIFIER-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "dotnet --version — erro real de SDK ausente",
+      "proof": "dotnet --version — erro real de SDK ausente"
+    },
+    {
+      "q": "Como calibrar ceticismo dado 1/11 fronteiras testadas?",
+      "answer_blind": "Exigir verification_command mais literal para as 10 fronteiras sem suíte.",
+      "sustained_by": "DOMAIN-VERIFIER-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep [Fact] → 1 ocorrência só em Catalog",
+      "proof": "grep [Fact] → 1 ocorrência só em Catalog"
+    },
+    {
+      "q": "Classe de bug de enum já confirmada a procurar?",
+      "answer_blind": "Cast posicional entre enums análogos-mas-diferentes (Billing vs DevsPay TransactionStatus).",
+      "sustained_by": "DOMAIN-VERIFIER-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "TransactionStatus.cs comparação + CreditCardPaymentFacade.cs:73,88",
+      "proof": "TransactionStatus.cs comparação + CreditCardPaymentFacade.cs:73,88"
+    },
+    {
+      "q": "FAIL de build hoje é sempre bug do dev?",
+      "answer_blind": "Não — checar degradação de SDK antes de julgar.",
+      "sustained_by": "DOMAIN-VERIFIER-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "reexecução de dotnet --version confirma persistência do erro",
+      "proof": "reexecução de dotnet --version confirma persistência do erro"
+    }
+  ],
+  "proof_summary": "4/4 certas-com-evidência."
+}

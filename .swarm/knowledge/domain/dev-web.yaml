@@ -1,0 +1,32 @@
+# Fatia de domínio — dev-web (WebApp.MVC)
+- id: DOMAIN-WEB-001
+  kind: project_pattern
+  claim: "É 100% consumidor HTTP — zero acesso a domínio de backend (nenhuma ProjectReference a serviço de negócio). Nunca propor acesso direto a um DbContext ou repositório de serviço aqui; tudo passa por Service tipado (CatalogService/CheckoutBffService/CustomerService/AuthService) contra as URLs configuradas."
+  applies_to: "dev-web · fronteira de composição, não de domínio"
+  source: "src/web/DevStore.WebApp.MVC/DevStore.WebApp.MVC.csproj:32-34 (só Core+WebAPI.Core)"
+  confidence: verified
+  check: "confirmar ausência de ProjectReference a qualquer *.API/*.Domain de serviço"
+
+- id: DOMAIN-WEB-002
+  kind: project_pattern
+  claim: "Autenticação real é via COOKIE (CookieAuthenticationDefaults), não Bearer direto — o JWT é obtido do AuthService e parseado manualmente (JwtSecurityTokenHandler) para extrair claims, mas o transporte de sessão do browser é cookie. Não confundir com o padrão Bearer dos outros serviços."
+  applies_to: "dev-web · padrão de auth distinto dos serviços de API"
+  source: "src/web/DevStore.WebApp.MVC/Configuration/IdentityConfig.cs:12-18; src/web/DevStore.WebApp.MVC/Services/AuthService.cs:149-152"
+  confidence: verified
+  check: "ler IdentityConfig.cs:12 — CookieAuthenticationDefaults.AuthenticationScheme"
+
+- id: DOMAIN-WEB-003
+  kind: project_pattern
+  claim: "Refit está no .csproj mas NÃO é usado como client ativo — só para capturar ValidationApiException/ApiException no ExceptionMiddleware. Todo client real é HttpClient tipado com Polly (retry 1s/5s/10s + circuit breaker 5x/30s) e um DelegatingHandler que propaga o Bearer token. Nunca introduzir uma interface Refit nova sem confirmar que essa decisão foi revisitada deliberadamente."
+  applies_to: "dev-web · Refit é vestigial, HttpClient é o padrão real"
+  source: "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs:8,34,38; src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs"
+  confidence: verified
+  check: "grep -rn 'interface I.*Refit\\|\\[Get\\(\\|\\[Post\\(' Services/*.cs → vazio"
+
+- id: DOMAIN-WEB-004
+  kind: project_pattern
+  claim: "OrderViewModel/AddressViewModel/TransactionViewModel são populados 100% via resposta HTTP do BFF de Checkout — não há lógica de cálculo/validação de negócio duplicada aqui. Se um valor parece errado na View, o bug está no BFF ou nos serviços de origem, não na camada de apresentação."
+  applies_to: "dev-web · ViewModels são espelho passivo do BFF"
+  source: "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs:112-154"
+  confidence: verified
+  check: "confirmar que MapToOrder/GetLastOrder só mapeiam campos, sem recálculo"

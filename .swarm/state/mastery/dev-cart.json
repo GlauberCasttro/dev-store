@@ -1,0 +1,45 @@
+{
+  "agent": "dev-cart",
+  "probed_at": "2026-07-01T15:33:00Z",
+  "score": "5/5",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-cart.yaml",
+  "questions": [
+    {
+      "q": "Como são definidas as rotas em dev-cart?",
+      "sustained_by": "DOMAIN-CART-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Program.cs:40-81 Minimal API, sem Controllers/",
+      "proof": "Program.cs:40-81 Minimal API, sem Controllers/"
+    },
+    {
+      "q": "Contrato gRPC com dev-checkout-bff?",
+      "sustained_by": "DOMAIN-CART-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "shoppingcart.proto:7-9 + Bff.Checkout.csproj:27 <Protobuf Include>",
+      "proof": "shoppingcart.proto:7-9 + Bff.Checkout.csproj:27 <Protobuf Include>"
+    },
+    {
+      "q": "Limite de itens no carrinho?",
+      "sustained_by": "DOMAIN-CART-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CustomerShoppingCart.cs:8 MAX_ITEMS=5",
+      "proof": "CustomerShoppingCart.cs:8 MAX_ITEMS=5"
+    },
+    {
+      "q": "Remoção do carrinho é síncrona ou reativa?",
+      "sustained_by": "DOMAIN-CART-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ShoppingCartIntegrationHandler.cs:8,23-31",
+      "proof": "ShoppingCartIntegrationHandler.cs:8,23-31"
+    },
+    {
+      "q": "O que acontece se o evento de finalização falhar?",
+      "sustained_by": "DOMAIN-CART-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ausência de caminho síncrono alternativo confirmada",
+      "proof": "ausência de caminho síncrono alternativo confirmada"
+    }
+  ],
+  "proof_summary": "5/5 certas-com-evidência."
+}

@@ -1,0 +1,244 @@
+# Assumption Ledger — toda peça do harness existe para compensar uma fraqueza
+# de modelo, e fraquezas expiram. /reaudit percorre este arquivo ao trocar de modelo.
+# status: active | relaxed | retired (retired mantém a entrada com data e motivo)
+
+baseline_model: "claude-sonnet-5"
+last_reaudit: null
+
+assumptions:
+  - id: A-001
+    component: verifier isolado (tríade P2)
+    assumption: executores inflam a própria avaliação mesmo com critérios verificáveis
+    load_test: aceitar 3 tasks via self-report e re-verificar de forma independente; comparar
+    status: active
+
+  - id: A-002
+    component: brief inline (anti-exploração)
+    assumption: agente com contexto aberto desperdiça orçamento explorando e erra paths
+    load_test: 1 task com brief por referência; medir reads extras e erros
+    status: active
+
+  - id: A-003
+    component: guard-allowed-paths fail-closed
+    assumption: executores vazam escopo sob pressão de "fazer funcionar"
+    load_test: revisar events.jsonl — houve bloqueio real do guard nas últimas N tasks?
+    status: active
+
+  - id: A-004
+    component: contract handshake (tasks não-triviais)
+    assumption: critérios de aceite escritos só pelo dev tendem a ser não-testáveis
+    load_test: comparar taxa de REJECTED entre tasks com e sem handshake
+    status: active
+
+  - id: A-005
+    component: granularidade por contexto (sem teto fixo de dev-*)
+    assumption: um especialista por contexto real reduz re-varredura, erro de rota e output genérico; fusão de contextos só é segura quando compartilham stack, fluxo e padrões. Substitui o antigo limite fixo de quatro dev-* (regra fixa, não derivada do scan — aposentada na v9)
+    load_test: comparar um dev-services fundido vs dev-orders/dev-billing separados; medir reads extras, REJECTED, lead time e erros de stack
+    status: active
+
+  - id: A-006
+    component: RESUME.md a cada task aceita
+    assumption: retomada em janela nova sem âncora gera re-derivação e alucinação
+    load_test: retomar 1 sessão só com git log (sem RESUME) e comparar tempo/erros
+    status: active
+
+  - id: A-007
+    component: estado decisório em JSON (não Markdown)
+    assumption: o modelo corrompe/reescreve Markdown com mais frequência que JSON
+    load_test: histórico de diffs no estado — houve edição manual indevida?
+    status: active
+  - id: A-008
+    component: persistência mecânica do gate_report (transition --gate) + detector de edição manual
+    assumption: sob pressão de "fechar a sprint", o tech-lead edita estado na mão e racionaliza ("os dados estão no events.jsonl") em vez de usar a ferramenta
+    load_test: auditar divergências status × status_history no validate-all dos últimos N commits; zero ocorrências por 3 sprints = candidata a relaxar
+    status: active
+    origem: bug real no primeiro INIT de produção (estudo-kafkalib, 2026-06-10)
+
+  - id: A-009
+    component: máquina de sprint ferramentada (transition --sprint) + invariante COMMITTED
+    assumption: sem ferramenta, sprints são arquivadas com tasks em ACCEPTED (ciclo aberto) e o kernel omite o passo --to COMMITTED; o tech-lead trata "ACCEPTED ou COMMITTED" como equivalentes
+    load_test: auditar archives — alguma sprint ARCHIVED com task não-COMMITTED? events.jsonl tem task.committed para toda task entregue?
+    status: active
+    origem: post-mortem do INIT estudo-kafkalib (2026-06-10) — itens 1.1–1.3 e 8
+
+  # --- v4: Especialização Profunda (Estágio 2b, ADR-F7) ---
+
+  - id: A-010
+    component: persona-versão (vínculo stack+major na seção 0 do agente)
+    assumption: os pesos condicionam a distribuição de saída ao enquadramento explícito de versão/papel; sem ele, regridem à mistura de versões do treino (código de tutorial)
+    load_test: mesma task com e sem persona-versão; contar erros de API de versão e desvios idiomáticos no output
+    status: active
+
+  - id: A-011
+    component: âncoras gold (seção 5 aponta para o espécime exemplar, não o mediano)
+    assumption: o modelo imita exemplo em contexto com mais força do que segue instrução; âncora medíocre propaga mediocridade com selo de "Baseado em"
+    load_test: mesma task ancorada no melhor arquivo vs num arquivo mediano; comparar idiomaticidade do output
+    status: active
+
+  - id: A-012
+    component: fatia de versão (knowledge/stack/) + extrato no brief e no despacho do verifier
+    assumption: os pesos têm cutoff e misturam versões; para a combinação exata do projeto, o modelo (dev E verifier) afirma APIs com confiança e erra
+    load_test: quizar o modelo baseline com N itens da fatia ANTES de mostrá-la; item que ele acerta seco é candidato a SAIR da fatia (a fatia ideal contém só o que ele erra) — rodar no /reaudit a cada troca de modelo
+    status: active
+
+  - id: A-013
+    component: eliciação adversarial multi-contexto (modo roundtable do Estágio 2b)
+    assumption: 1 contexto único elicia o conhecimento médio dos pesos; 3 contextos isolados com papéis adversariais eliciam mais itens de cauda únicos e verificáveis — mas sem gate de evidência convergem para consenso plausível não-verificado (erro correlacionado entre instâncias dos mesmos pesos)
+    load_test: gerar candidatos para a mesma stack com 1 contexto vs 3 isolados; comparar itens únicos que sobrevivem ao gate de evidência e taxa de falso positivo; mesa não rende ≥30% a mais ⇒ retired com a medição
+    status: active
+
+  - id: A-014
+    component: checklist idiomático contratual (layer rule → acceptance_criteria)
+    assumption: o verifier calibrado julga só o contratado (anti-padrão 3 dele); sem critério idiomático promovido a contrato, idiomaticidade é sistematicamente não-julgada e código genérico que compila passa
+    load_test: taxa de defeito idiomático em tasks aceitas com vs sem checks promovidos a critério
+    status: active
+
+  # --- v5: memória, grafo, entrevista de domínio, D6, D7 ---
+
+  - id: A-015
+    component: store de memória entre sessões (P7) + Curator + inject-memory
+    assumption: o modelo não tem estado entre sessões e re-deriva decisões já firmadas pelo projeto, gastando contexto e divergindo do que foi decidido antes
+    load_test: rodar a mesma classe de task em 2 sessões SEM o store e medir divergência de decisão e re-descoberta de padrão; se um modelo futuro mantiver decisões estáveis sem memória injetada, relaxar
+    status: active
+    origem: sistema de memória do Encante, generalizado na v5
+
+  - id: A-016
+    component: âncora por centralidade de grafo (P8, repo-map) + assinatura + boost
+    assumption: em codebase denso o modelo, sem o mapa dos arquivos load-bearing, amostra âncoras irrelevantes — cria o que já existe, usa a API errada, ou gasta turnos redescobrindo estrutura
+    load_test: dar ao agente âncoras por centralidade+assinatura vs amostra do ls; medir "criou duplicado" e erro de API na mesma task; PageRank deixa de render ⇒ voltar a in-degree
+    status: active
+    origem: graphify do Encante + repo-map estilo aider (pesquisa web v5)
+
+  - id: A-017
+    component: entrevista guiada de domínio (Estágio 2c) com procedência
+    assumption: invariantes de segurança, SLOs e regras de negócio não estão no scan nem nos pesos (são conhecimento do founder); sem eliciá-las o gerador inventa genérico (falso senso de cobertura) ou omite
+    load_test: comparar invariantes geradas COM e SEM entrevista contra as reais do projeto; medir taxa de generic-default que o founder corrige
+    status: active
+
+  - id: A-018
+    component: D6 — probe de runnability do verification_command no despacho
+    assumption: o tech-lead (modelo) marca o verification_command como "pronto" sem rodá-lo, racionalizando que "o verifier roda depois"; comando quebrado só falha tarde, após o dev já ter trabalhado
+    load_test: amostrar briefs e medir % de verification_command que falham no PRIMEIRO uso do verifier; com D6 ativo deve cair a ~0; persistir em 0 por 3 sprints ⇒ candidata a relaxar
+    status: active
+
+  - id: A-019
+    component: D7 — arbitragem do architect na não-convergência dev↔verifier
+    assumption: dev e verifier são instâncias do mesmo modelo e podem travar em loop (cada um defende sua leitura do mesmo critério) sem um terceiro que decida ou reformule o critério
+    load_test: contar tasks com 2+ REJECTED no mesmo critério; medir quantas o architect resolve (reformulando critério) vs quantas viram BLOCKED; arbitragem sem ganho sobre BLOCKED direto ⇒ retired
+    status: active
+
+  - id: A-020
+    component: conhecimento amplo do sistema para os core (tech-lead/architect/po) + capacidade ≠ escrita (ADR-F11)
+    assumption: o agente escopado por cartão estreito confunde superfície de escrita com capacidade e RECUSA pedidos legítimos de briefing/visão/diagrama do sistema — e, sem o mapa do todo, arbitra contrato entre fronteiras que não enxerga
+    load_test: pedir a um architect/po um briefing do sistema e um diagrama; ele responde sem recusa e cobre os módulos reais? cruzar com ARCHITECTURE_TREE — cegueira de módulo reaparece sem o instrumento de pé?
+    status: active
+    origem: cenário real do usuário (v4) — architect recusou briefing com "só faço ADR"
+
+  - id: A-021
+    component: pesquisa com proveniência em consultoria/especialização (ADR-F12, modo de §13)
+    assumption: os pesos têm cutoff e lacunas; sem poder pesquisar na própria área (com proveniência), o agente de design/especialização TRAVA na lacuna ou afirma por palpite — mas com fetch livre em execução, puxa padrão de tutorial que contradiz a convenção
+    load_test: dar uma decisão de design que depende de comportamento de versão fora da fatia; o architect pesquisa, marca source/confidence e leva ao checkpoint? medir afirmações sem proveniência que escapam ao verifier (deve ser zero); fetch em execução continua bloqueado?
+    status: active
+    origem: pedido do usuário por especialização profunda que aprofunda em vez de travar
+
+  # --- v5.2: profundidade medida (gate de maestria + fatia de domínio) ---
+
+  - id: A-022
+    component: Gate de Profundidade — sonda de maestria por especialista (2b.6, bloqueante)
+    assumption: especialização montada (persona-versão + fatia) é ASSUMIDA profunda e nunca verificada; um agente com rótulo de especialista mas raso passa despercebido até falhar em produção
+    load_test: rodar a sonda contra o especialista e medir score; comparar defeito em tasks de especialistas que passaram a sonda vs baseline sem sonda; se um modelo futuro acerta a sonda seco sem fatia, a fatia (não o gate) é que relaxa
+    status: active
+    origem: pedido do usuário — "especialista mesmo", maestria medida não assumida
+
+  - id: A-023
+    component: fatia de domínio (knowledge/domain/<agent>) simétrica à de stack (2b.5)
+    assumption: o modelo erra não só na VERSÃO (fatia de stack) mas na DELEGAÇÃO — princípios da especialidade e padrões do projeto que um generalista ignora; sem fatia de domínio, esse eixo fica mais raso que o de stack
+    load_test: quizar o baseline em princípios/padrões da delegação ANTES da fatia; item que ele já acerta seco SAI (anti-inflação, igual A-012); medir defeito de domínio em tasks com vs sem a fatia
+    status: active
+
+  # --- v6: memória (consolidação, recuperação semântica, esquecimento) ---
+
+  - id: A-024
+    component: recuperação por LLM-as-retriever sobre índice compacto (vs keyword grep)
+    assumption: keyword-match perde sinônimo/paráfrase (lição certa não é recuperada por não casar termo); embeddings resolvem mas pesam; o próprio modelo é bom recuperador semântico sobre um índice pequeno
+    load_test: dar uma task cuja lição relevante usa termos diferentes da query; o grep recupera? o LLM-as-retriever recupera? medir recall; se um modelo futuro recuperar bem via grep, relaxar
+    status: active
+
+  - id: A-025
+    component: consolidação episódica → semântica (consolidate-memory, /fechar-sprint)
+    assumption: o modelo não percebe "isso falha repetidamente" sem minerar o log estruturado; lição destilada da narrativa da sessão perde o padrão recorrente que só aparece agregando events.jsonl
+    load_test: rodar N sprints sem consolidação e contar falhas repetidas que viraram lição; com consolidação, a recorrência cai? lição candidata com evidência episódica é aceita pela curadoria?
+    status: active
+
+  - id: A-026
+    component: decay/esquecimento de memória (consolidate-memory propõe; curadoria decide)
+    assumption: memória que só cresce degrada a recuperação (ruído, conselho contraditório, conselho velho); sem esquecer, o store envenena o contexto em vez de ajudar
+    load_test: medir precisão de recuperação conforme o store cresce, com e sem decay; entrada nunca consultada em N sprints atrapalha mais do que ajuda?
+    status: active
+
+  # --- v9: auditoria estrutural (cada gate novo carrega a premissa de fraqueza que compensa) ---
+
+  - id: A-027
+    component: verdade-terreno do fluxo (orchestration-map cruzado com graph.json, M1)
+    assumption: o modelo afirma fluxo com símbolos/arquivos que NÃO existem, com confiança (CheckoutController fantasma); o gate v8 só pegava ignorância declarada ("(inferido)"), não erro-confiante
+    load_test: dar um ORCHESTRATION_MAP com entry_point inexistente; o gate reprova cruzando com o grafo? se um modelo futuro parar de inventar símbolos, o gate fica silencioso sozinho (sem custo)
+    status: active
+
+  - id: A-028
+    component: kernel forte (gate de seções operacionais do tech-lead, M4/F0A.1)
+    assumption: o kernel degrada para ponteiro raso e o main perde roteamento/decomposição/recuperação — vira executor e o verifier vira formalidade; "enxuto" é confundido com "incompleto"
+    load_test: gerar kernel sem as seções e medir se o main roteia/decompõe certo; comparar com kernel completo; se o modelo rotear bem sem as seções, o gate (não o kernel) relaxa
+    status: active
+
+  - id: A-029
+    component: guards derivados do PROJECT_PROFILE (zones.conf, M3/F3.1-3.2)
+    assumption: regex de produto fixa (src|app|lib) vaza em repo com layout não-padrão (modules/Orders); o modelo não percebe que o guard não cobre a zona real e escreve produto como main
+    load_test: repo com produto em modules/; o guard gerado bloqueia o main lá? medir escrita indevida com regex fixa vs zones.conf derivado
+    status: active
+
+  - id: A-030
+    component: D7 mecânico — arbitragem do architect (M2/F2.3)
+    assumption: dev e verifier não convergem sozinhos; em loop, o ciclo oscila ou aceita por cansaço sem decisão de terceiro; o aviso de tentativas não bloqueava nada
+    load_test: forçar 2 rejeições no mesmo critério; o REJECTED→READY bloqueia até arbitragem? medir ciclos abertos com e sem o gate
+    status: active
+
+  - id: A-031
+    component: evidência de maestria persistida (M4/F1.3)
+    assumption: passed:true é carimbável sem prova; sem evidência persistida (perguntas/veredito/exit-code), a sonda 2b.6 vira cerimônia e o especialista raso passa
+    load_test: aceitar maestria só com passed:true vs com evidência; medir defeito em produção de especialistas "carimbados" vs "provados"
+    status: active
+
+  - id: A-032
+    component: escrita em knowledge por papel (M3/F3.3)
+    assumption: subagente sob pressão de "fazer funcionar" escreve conhecimento global fora do seu papel (dev gravando ADR/memória), poluindo o estado compartilhado que outro agente lê como verdade
+    load_test: dispatch de dev tentando escrever .swarm/knowledge; o guard bloqueia por papel? revisar quem escreveu o quê no histórico
+    status: active
+
+  - id: A-033
+    component: backstop comportamental — leituras de src/ no dispatch (M5/Fase 5)
+    assumption: todo gate estático mede um PROXY; o sintoma real (o agente varre src/ em vez de ler o conhecimento pré-computado) só aparece medindo as leituras no dispatch vivo
+    load_test: despachar o architect em "mapeie o fluxo X" numa fronteira verified e contar arquivos de src/ abertos (limiar ≤1); a degradação reaparece sem o ORCHESTRATION_MAP na mão?
+    status: active
+
+  # --- dev-store INIT: componentes reais instalados no Estágio 5 (guards/hooks/E3) ---
+
+  - id: A-034
+    component: protect-harness.sh (harness imutável fora de modo manutenção, PreToolUse Write|Edit)
+    assumption: sob pressão de "corrigir rápido", o modelo (main ou subagente) edita `.claude/agents/*`, `CLAUDE.md` ou `.swarm/scripts-harness/*` fora de `SWARM_MAINT=1`, tratando isso como refactor comum em vez de mudança estrutural do harness
+    load_test: tentar Write/Edit em `.claude/agents/dev-orders.md` sem `SWARM_MAINT=1` (main e subagente) e confirmar exit 2 nos dois casos (`test-guards.sh`, casos "agente s/ maint"); se um modelo futuro nunca tentar essa edição sem confirmação explícita do usuário, o guard (não a regra) relaxa
+    status: active
+    origem: instalado no Estágio 5 deste INIT (dev-store) — `.swarm/scripts-harness/protect-harness.sh`, wired em `.claude/settings.json`
+
+  - id: A-035
+    component: inject-memory.sh (PreToolUse em Agent — injeção de memória ANTES do despacho)
+    assumption: sem a injeção automática antes do despacho, o subagente redescobre uma lição já registrada (ex. o footgun MediatR sem LicenseKey, NET9-STACK-001/002) porque não sabe que precisa consultar `.swarm/state/memory-cache/<agent>.md`
+    load_test: despachar dev-billing numa task de pagamento sem o hook ativo vs com o hook ativo; medir se a lição de idempotência (DOMAIN-BILLING-004) é redescoberta do zero ou já chega no cache; hook silenciosamente não populando o cache (arquivo vazio sempre) é falha silenciosa a monitorar
+    status: active
+    origem: instalado no Estágio 5 deste INIT (dev-store) — `.swarm/scripts-harness/inject-memory.sh` + `query-memory.sh`, wired em `.claude/settings.json` (matcher Agent)
+
+  - id: A-036
+    component: E3 via lefthook (accept-check.sh no pre-commit, não só harness-lint)
+    assumption: um pre-commit que só roda `harness-lint.sh` deixa passar harness estruturalmente válido mas com ledger de fase incompleto ou roster não-integrado — exatamente o furo que perdeu os 2 INITs anteriores deste mesmo projeto (nunca comitados)
+    load_test: staged change que quebra `verify-artifacts.sh` mas passa `harness-lint.sh` (ex. remover uma seção do SWARM_DIAGRAM) — o commit é bloqueado? (`lefthook.yml:accept-check` deve capturar isso mesmo com lint verde)
+    status: active
+    origem: instalado no Estágio 5 deste INIT (dev-store) — `lefthook.yml` (repo root) + `.git/hooks/pre-commit`; ver `accept-check.sh` v9-fix S1 no comentário do próprio script

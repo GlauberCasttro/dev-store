@@ -1,0 +1,38 @@
+{
+  "agent": "curator",
+  "probed_at": "2026-07-01T15:44:00Z",
+  "score": "4/4",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/curator.yaml (pós-correção de paths)",
+  "questions": [
+    {
+      "q": "Curator reescreve knowledge/ do INIT em conhecimento.jsonl automaticamente?",
+      "sustained_by": "DOMAIN-CURATOR-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "core-spec.md §11 linhas 386-389",
+      "proof": "core-spec.md §11 linhas 386-389"
+    },
+    {
+      "q": "Subagente pode gravar achado crítico direto na memória durante a task?",
+      "sustained_by": "DOMAIN-CURATOR-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "SKILL.md linhas 343-345, anti-padrão 24, texto bate literalmente",
+      "proof": "SKILL.md linhas 343-345, anti-padrão 24, texto bate literalmente"
+    },
+    {
+      "q": "Prioridade da primeira entrada do próximo /salvar-sessao?",
+      "sustained_by": "DOMAIN-CURATOR-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "consistente com memória de projeto (project_fable_init.md)",
+      "proof": "consistente com memória de projeto (project_fable_init.md)"
+    },
+    {
+      "q": "As três regras são compatíveis entre si?",
+      "sustained_by": "DOMAIN-CURATOR-001;002;003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "core-spec.md §11-§12, sem conflito lógico",
+      "proof": "core-spec.md §11-§12, sem conflito lógico"
+    }
+  ],
+  "proof_summary": "4/4 (100%) PASSOU na re-sonda. Reprova anterior (2/4) foi por paths de fonte sem caminho absoluto — corrigido, e as claims resistiram à verificação com os arquivos corretos."
+}

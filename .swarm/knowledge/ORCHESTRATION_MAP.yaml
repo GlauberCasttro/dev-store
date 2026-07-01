@@ -1,0 +1,178 @@
+# Estágio 1 — Scan⁺ · ORCHESTRATION_MAP.yaml
+# O COMPORTAMENTO de cada fronteira. Todo entry_point/typical_flow abaixo foi lido
+# diretamente do código (arquivo:linha citado nos subagentes de scan) — verified:true
+# em todas as entradas onde o fluxo foi confirmado por leitura real, não inferência.
+
+- frontier: dev-core
+  trees: ["src/building-blocks/DevStore.Core", "src/building-blocks/DevStore.WebAPI.Core"]
+  entry_points:
+    - "Entity.cs — base de domínio (Id, eventos) herdada por toda entidade/aggregate root do repo (src/building-blocks/DevStore.Core/DomainObjects/Entity.cs:7)"
+    - "ApiCoreConfig.AddApiCoreConfiguration/UseApiCoreConfiguration — bootstrap padrão que TODA API chama no Program.cs (src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs:23,53)"
+    - "AddMessageBus — ponto de entrada de configuração do MassTransit/RabbitMQ para cada serviço (src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs:9)"
+  typical_flow: "Serviço registra MediatR próprio no Program.cs e liga IMediatorHandler→MediatorHandler (src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs:17-25, SendCommand/PublishEvent delegam a IMediator.Send/Publish) → serviço chama AddApiCoreConfiguration().WithDbContext<TContext>() → ApiCoreConfig.cs:48 chama ConfigureProviderForContext → ProviderConfiguration.DetectDatabase lê AppSettings:DatabaseType (src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs:51-56) → ProviderSelector escolhe SqlServer/MySql/Postgre/Sqlite (ProviderSelector.cs:10-24) → UseApiCoreConfiguration ativa JWT (JwtConfig) + health checks /healthz e /healthz-infra (GenericHealthCheck.cs:33-47) → serviço chama AddMessageBus(configuration) → MassTransit configurado com consumers da assembly + RabbitMQ (DependencyInjectionExtensions.cs:17-30)."
+  key_abstractions:
+    - "Entity/IAggregateRoot — base de toda entidade de domínio, com AddEvent/Notificacoes (DomainObjects/Entity.cs:7,17)"
+    - "Command : IRequest<ValidationResult> / Event : INotification — base de CQRS in-process via MediatR (Messages/Command.cs:7, Messages/Event.cs:6)"
+    - "IntegrationEvent e subtipos (OrderPaidIntegrationEvent, OrderInitiatedIntegrationEvent, UserRegisteredIntegrationEvent, etc.) — contratos cross-serviço via bus (Messages/Integration/*.cs)"
+    - "MainController : Controller — base HTTP com CustomResponse padronizado (WebAPI.Core/Controllers/MainController.cs:11)"
+    - "IAspNetUser/AspNetUser — abstração de identidade autenticada sobre HttpContext, expõe Email/UserId/Token (WebAPI.Core/User/IAspNetUser.cs:8)"
+  depends_on: []
+  density: "42 arquivos .cs · 1157 linhas · 9 IntegrationEvent · zero ProjectReference de saída (raiz da árvore de dependências — 8 dos 9 outros projetos de serviço dependem de pelo menos um destes 3)"
+  verified: true
+
+- frontier: dev-catalog
+  trees: ["src/services/DevStore.Catalog.API"]
+  entry_points:
+    - "GET catalog/products — Controllers/CatalogController.cs:20-25 (Index)"
+    - "GET catalog/products/{id} — Controllers/CatalogController.cs:27-31 (Details)"
+    - "GET catalog/products/list/{ids} — Controllers/CatalogController.cs:33-37 (GetManyById)"
+  typical_flow: "CatalogController.Index (Controllers/CatalogController.cs:21-25) chama ProductRepository.GetAll(ps,page,q) (Data/Repository/ProductRepository.cs:22-45) que monta IQueryable<Product> sobre CatalogContext.Products com AsNoTrackingWithIdentityResolution + EF.Functions.Like, retorna PagedResult<Product> → CatalogContext (Data/CatalogContext.cs:11, DbContext+IUnitOfWork) resolve provider em runtime via building-block ProviderSelector. Fluxo secundário (evento): CatalogIntegrationHandler consome OrderAuthorizedIntegrationEvent (Services/CatalogIntegrationHandler.cs:13,24) → WriteDownInventory → Product.TakeFromInventory (Models/Product.cs) → productRepository.Update + Commit → publica OrderLoweredStockIntegrationEvent."
+  key_abstractions:
+    - "Product : Entity, IAggregateRoot — campos Price/Stock/Active, TakeFromInventory/IsAvailable (Models/Product.cs:6,16-25)"
+    - "IProductRepository : IRepository<Product> (Models/IProductRepository.cs:8)"
+    - "PagedResult<T> — DTO de paginação (Models/PagedResult.cs:5)"
+  depends_on: ["dev-core"]
+  density: "17 arquivos .cs · 1 controller (3 endpoints) · 1 consumer de evento · 1 migration"
+  verified: true
+
+- frontier: dev-customers
+  trees: ["src/services/DevStore.Customers.API"]
+  entry_points:
+    - "GET customers/address — Controllers/CustomerController.cs:25-31 (GetAddress)"
+    - "POST customers/address — Controllers/CustomerController.cs:33-38 (AddAddress)"
+  typical_flow: "CustomerController.AddAddress injeta CustomerId do usuário autenticado e despacha AddAddressCommand via _mediator.Send (Controllers/CustomerController.cs:33-38) → CustomerCommandHandler.Handle valida (AddressValidation, AbstractValidator) e cria Address (Application/Commands/CustomerCommandHandler.cs:22-31) → CustomerRepository.AddAddress → _context.Addresses.Add (Data/Repository/CustomerRepository.cs:41-44) → PersistData→UnitOfWork.Commit→CustomerContext.SaveChangesAsync + PublishEvents (Data/CustomerContext.cs:29-35). Fluxo secundário (criação de cliente, NÃO via HTTP): NewCustomerIntegrationHandler consome UserRegisteredIntegrationEvent (Services/NewCustomerIntegrationHandler.cs:11,21) → monta NewCustomerCommand → CustomerCommandHandler cria Customer, checa duplicidade por SocialNumber, levanta NewCustomerAddedEvent (Application/Commands/CustomerCommandHandler.cs:33-52)."
+  key_abstractions:
+    - "Customer : Entity, IAggregateRoot (Models/Customer.cs:6) — Name/Email(owned)/SocialNumber/Deleted"
+    - "Address : Entity (Models/Address.cs:6) — entidade filha de Customer, não é aggregate root próprio"
+    - "ICustomerRepository : IRepository<Customer> (Models/ICustomerRepository.cs:8)"
+  depends_on: ["dev-core"]
+  density: "23 arquivos .cs · 2 endpoints HTTP · 1 consumer de evento (criação via UserRegisteredIntegrationEvent) · 1 migration"
+  verified: true
+
+- frontier: dev-identity
+  trees: ["src/services/DevStore.Identity.API"]
+  entry_points:
+    - "POST api/identity/new-account — Controllers/AuthController.cs:37-38 (Register)"
+    - "POST api/identity/auth — Controllers/AuthController.cs:77-78 (Login)"
+    - "POST api/identity/refresh-token — Controllers/AuthController.cs:127-128 (RefreshToken)"
+    - "POST api/identity/validate-jwt — Controllers/AuthController.cs:155-157 (ValidateJwt, compilado só em #if DEBUG)"
+  typical_flow: "Register (AuthController.cs:38-75): valida ModelState → UserManager<IdentityUser>.CreateAsync (linha 49) → RegisterUser (linha 107) busca o usuário e publica UserRegisteredIntegrationEvent via IBus.Request esperando confirmação do serviço de Customers (linhas 113-118); falha → desfaz criação (DeleteAsync, linhas 122-123); sucesso → IJwtBuilder fluente (WithEmail→WithJwtClaims→WithUserClaims→WithUserRoles→WithRefreshToken→BuildUserResponse, linhas 61-67) → CustomResponse(jwt). Login (linhas 78-105): SignInManager.PasswordSignInAsync → mesmo IJwtBuilder fluente. RefreshToken (linhas 128-153): _jwtBuilder.ValidateRefreshToken → reconstrói JWT via WithUserId."
+  key_abstractions:
+    - "IdentityUser (Microsoft.AspNetCore.Identity, sem subclasse própria) — conta de usuário via UserManager/SignInManager"
+    - "ApplicationDbContext : IdentityDbContext, ISecurityKeyContext — expõe DbSet<KeyMaterial> SecurityKeys, armazenamento de chaves de assinatura JWT (Data/ApplicationDbContext.cs:8,14)"
+    - "IJwtBuilder (NetDevPack.Security.Jwt) — builder fluente de emissão/validação de token com JWKS rotativo (KeepFor=15min)"
+  depends_on: ["dev-core"]
+  density: "12 arquivos .cs · 4 endpoints (1 debug-only) · 1 controller · 1 migration (861 linhas, inclui tabela SecurityKeys)"
+  verified: true
+
+- frontier: dev-orders
+  trees: ["src/services/DevStore.Orders.API", "src/services/DevStore.Orders.Domain", "src/services/DevStore.Orders.Infra"]
+  entry_points:
+    - "POST /orders — Controllers/OrderController.cs:31-36 (AddOrder), [Authorize]"
+    - "GET /orders/last — Controllers/OrderController.cs:38-44 (LastOrder)"
+    - "GET /orders/customers — Controllers/OrderController.cs:46-52 (Customers)"
+    - "GET /voucher/{code} — Controllers/VoucherController.cs:21-31 (ObterPorCodigo) — rota efetiva sem [Route] de classe, NÃO CONFIRMADO se é /voucher/{code} ou /vouchers/voucher/{code} sem executar"
+  typical_flow: "OrderController.AddOrder envia AddOrderCommand via IMediatorHandler.SendCommand (OrderController.cs:32-36) → MediatorHandler delega a IMediator.Send (Core/Mediator/MediatorHandler.cs:17-20) → OrderCommandHandler.Handle (Application/Commands/OrderCommandHandler.cs:33-61): valida, MapOrder cria new Order (Domain/Orders/Order.cs:13-23), aplica voucher se houver (VoucherRepository.GetVoucherByCode + VoucherValidation Specification, linhas 84-108), recalcula IsOrderValid via order.CalculateOrderAmount() e REJEITA se o Amount/Discount enviado pelo cliente divergir do recalculado no servidor (linhas 110-130 — invariante anti-fraude confirmada) → DoPayment monta OrderInitiatedIntegrationEvent com dados de cartão e faz _bus.Request<...> síncrono esperando resposta do Billing (linhas 132-154) → se OK: order.Authorize() + AddEvent(OrderDoneEvent) → orderRepository.Add → PersistData→OrdersContext.Commit() (SaveChangesAsync + PublishEvents via ChangeTracker, Infra/Context/OrdersContext.cs:34-94) → OrderEventHandler consome OrderDoneEvent e publica OrderDoneIntegrationEvent assíncrono no bus (Application/Events/OrderEventHandler.cs:18-21). Consumers: OrderIntegrationHandler trata OrderCanceledIntegrationEvent/OrderPaidIntegrationEvent chamando order.Cancel()/order.Finish() (Services/OrderIntegrationHandler.cs:11-60). OrderOrchestratorIntegrationHandler é um IHostedService com polling de 15s que publica OrderAuthorizedIntegrationEvent para pedidos autorizados (Services/OrderOrchestratorIntegrationHandler.cs:14,36-65)."
+  key_abstractions:
+    - "Order : Entity, IAggregateRoot — CalculateOrderAmount/CalculateAmount (soma itens - desconto de voucher, trava em zero), Authorize/Finish/Cancel (Domain/Orders/Order.cs:9,45-104)"
+    - "OrderStatus enum — Authorized=1,Paid=2,Refused=3,Delivered=4,Canceled=5; SÓ Authorized/Paid/Canceled têm transição implementada nesta fronteira — Refused/Delivered existem no enum mas SEM código que os produza aqui (gap confirmado)"
+    - "Voucher : Entity, IAggregateRoot — aggregate root próprio, associado a Order via VoucherId nullable + navegação EF (Domain/Vouchers/Voucher.cs:7, Order.cs:32,43,60-65)"
+    - "IOrderRepository : IRepository<Order> — expõe GetConnection() para Dapper mas SEM uso real confirmado (dependência vestigial, ver never_use)"
+  depends_on: ["dev-core", "dev-billing"]
+  density: "Orders.API 887 linhas + Orders.Domain 298 + Orders.Infra 830 · 2 commands · 4 handlers · 2 controllers · 10 entidades de domínio · 1 migration"
+  verified: true
+
+- frontier: dev-billing
+  trees: ["src/services/DevStore.Billing.API", "src/services/DevStore.Billing.DevsPay"]
+  entry_points:
+    - "PaymentController — Controllers/PaymentController.cs:5 — classe VAZIA, sem endpoints HTTP reais"
+    - "BillingIntegrationHandler : IConsumer<OrderInitiatedIntegrationEvent>, IConsumer<OrderLoweredStockIntegrationEvent>, IConsumer<OrderCanceledIntegrationEvent> — Services/BillingIntegrationHandler.cs:11-14 — ÚNICA superfície real da fronteira, 100% mensageria"
+  typical_flow: "BillingIntegrationHandler.Consume(OrderInitiatedIntegrationEvent) (Services/BillingIntegrationHandler.cs:32-35) → AuthorizeTransaction monta Payment+CreditCard → BillingService.AuthorizeTransaction (Services/BillingService.cs:24-52) → CreditCardPaymentFacade.AuthorizePayment (Facade/CreditCardPaymentFacade.cs:20-46) instancia DevsPay.Transaction EM MEMÓRIA (ProjectReference direto, sem HTTP) → Transaction.AuthorizeCardTransaction() (Billing.DevsPay/Transaction.cs:99-135) usa Bogus faker.Random.Bool(0.7f) — 70% de sucesso SIMULADO, sem gateway real → resultado convertido de volta via cast (TransactionStatus)transaction.Status (CreditCardPaymentFacade.cs:73) → BillingIntegrationHandler responde via context.RespondAsync ao Request<> do Orders.API. Consume(OrderLoweredStockIntegrationEvent) (linhas 37-40) → CapturePayment busca transação Authorized existente e chama CapturePayment/DevsPay.CaptureCardTransaction (sempre Paid, sem simulação de falha) → publica OrderPaidIntegrationEvent. Consume(OrderCanceledIntegrationEvent) → CancelTransaction → DevsPay.CancelAuthorization (sempre Cancelled)."
+  key_abstractions:
+    - "Payment/Transaction/CreditCard (Models/*.cs) — CreditCard NUNCA persistida (PaymentMapping.cs Ignore), mas trafega em claro no bus antes disso"
+    - "TransactionStatus enum (Billing.API): Authorized=1,Paid=2,Denied=3,Refund=4,Canceled=5 — INDEPENDENTE do TransactionStatus (DevsPay): Authorized=1,Paid=2,Refused=3,Chargeback=4,Cancelled=5"
+    - "IPaymentFacade/CreditCardPaymentFacade — encapsula Authorize/Capture/Cancel delegando à lib simuladora DevsPay, com conversão de enum por CAST POSICIONAL sem tabela de tradução"
+  depends_on: ["dev-core", "dev-orders", "dev-catalog"]
+  density: "Billing.API 928 linhas (25 arquivos, controller vazio) + Billing.DevsPay 235 linhas (5 arquivos) · 3 IConsumer · 1 migration"
+  verified: true
+  findings_criticos:
+    - "BUG CONFIRMADO (enum mismatch): cast (TransactionStatus)transaction.Status em CreditCardPaymentFacade.cs:73 mapeia DevsPay.Chargeback(4)→Billing.API.Refund(4) — mistura silenciosamente dois conceitos de negócio distintos (estorno forçado por operadora vs reembolso voluntário), sem log/validação/exceção."
+    - "BUG CONFIRMADO (PII/PCI no bus): OrderInitiatedIntegrationEvent (building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs:12-15) carrega Holder/CardNumber/ExpirationDate/SecurityCode EM CLARO pelo RabbitMQ — violação PCI-DSS (CVV nunca deveria transitar) e sem mascaramento/tokenização antes da publicação (origem: OrderCommandHandler.cs:140-143)."
+    - "AUSÊNCIA CONFIRMADA de idempotência: nenhuma chave de deduplicação/MessageId-seen em Authorize/Capture/Cancel (BillingService.cs:24-118) — redelivery do RabbitMQ do mesmo evento de captura/autorização/cancelamento executaria a operação de novo (cobrança simulada duplicada)."
+
+- frontier: dev-cart
+  trees: ["src/services/DevStore.ShoppingCart.API"]
+  entry_points:
+    - "GET/POST/PUT/DELETE /shopping-cart, POST /shopping-cart/apply-voucher — Minimal API em Program.cs:40-81 (sem Controllers, [Authorize])"
+    - "gRPC ShoppingCartOrders.GetShoppingCart — Protos/shoppingcart.proto:7-9, implementado em Services/gRPC/ShoppingCartGrpcService.cs:11,28"
+  typical_flow: "Program.cs:45-52 mapeia POST /shopping-cart → ShoppingCart.AddItem(CartItem) (ShoppingCart.cs:26) → GetShoppingCartClient() (linhas 91-96) via ShoppingCartContext.CustomerShoppingCart.Include(Items) (Data/ShoppingCartContext.cs:7) → ManageCart chama cart.AddItem(item) (lógica de domínio em Model/CustomerShoppingCart.cs:82) → persiste via _context.CartItems.Add + SaveChangesAsync (ShoppingCart.cs:107-148). gRPC: ShoppingCartGrpcService.GetShoppingCart (linha 28) → mesmo acesso a ShoppingCartContext → MapShoppingCartClientToProtoResponse (linhas 45-78) converte CustomerShoppingCart+Voucher+CartItem para o proto response. Consumer: ShoppingCartIntegrationHandler consome OrderDoneIntegrationEvent (Services/ShoppingCartIntegrationHandler.cs:8,23) → remove o CustomerShoppingCart do cliente."
+  key_abstractions:
+    - "CustomerShoppingCart — MAX_ITEMS=5 (const), Total/Discount/HasVoucher/Voucher (Model/CustomerShoppingCart.cs:6-29)"
+    - "CartItem — ProductId/Name/Quantity/Price/Image (Model/CartItem.cs:6-22)"
+    - "Voucher — Percentage/Discount/Code/DiscountType (Model/Voucher.cs:3-15)"
+  depends_on: ["dev-core"]
+  density: "16 arquivos .cs · 5 endpoints HTTP + 1 método gRPC · 1 consumer de evento · 1 migration"
+  verified: true
+
+- frontier: dev-checkout-bff
+  trees: ["src/api-gateways/DevStore.Bff.Checkout"]
+  entry_points:
+    - "GET/POST/PUT/DELETE orders/shopping-cart/* — Controllers/ShoppingCartController.cs:12-128 ([Authorize], [Route(\"orders/shopping-cart\")])"
+    - "POST orders/, GET orders/last, GET orders/customers — Controllers/OrderController.cs:12-61 ([Authorize], [Route(\"orders\")])"
+  typical_flow: "ShoppingCartController.AddItem (linha 47) recebe ShoppingCartItemDto → chama ICatalogService.GetById (CatalogService.cs:27-34, HttpClient puro contra CatalogUrl) → chama IShoppingCartService.AddItem (ShoppingCartService.cs:39-48, HttpClient puro contra ShoppingCartUrl, POST /shopping-cart) → desserializa ResponseResult via Service.DeserializeResponse<T>. Alternativa gRPC para leitura: GrpcConfig registra ShoppingCartOrders.ShoppingCartOrdersClient (GrpcConfig.cs:18-23, endereço=ShoppingCartUrl) → ShoppingCartGrpcService chama _shoppingCartClient.GetShoppingCartAsync (linha 24) → MapShoppingCartProtoResponseDto converte para ShoppingCartDto. Dois caminhos (HTTP e gRPC) para o MESMO serviço dev-cart, dependendo do endpoint do BFF chamado."
+  key_abstractions:
+    - "OrderDto — Code/Status/Amount/Discount/Items/Address + dados de cartão (CardNumber/Holder/ExpirationDate/SecurityCode) — MESMOS campos sensíveis que trafegam via dev-billing (Models/OrderDto.cs:9-48)"
+    - "ICatalogService/IShoppingCartService/IOrderService/IPaymentService/ICustomerService — clients HTTP tipados, um por serviço de plataforma consumido; IPaymentService está declarado mas SEM métodos implementados (Services/PaymentService.cs:8,12)"
+    - "Service (abstract base) — GetContent/DeserializeResponse/ManageHttpResponse comuns a todos os clients (Services/Service.cs:10)"
+  depends_on: ["dev-core", "dev-catalog", "dev-cart", "dev-orders", "dev-customers"]
+  density: "24 arquivos .cs · 10 endpoints HTTP · 1 client gRPC · zero testes"
+  verified: true
+
+- frontier: dev-web
+  trees: ["src/web/DevStore.WebApp.MVC"]
+  entry_points:
+    - "GET /, /showcase, /products/{id} — Controllers/CatalogController.cs:18-31"
+    - "GET/POST /shopping-cart[/add-item|/update-item|/remove-item|/apply-voucher] — Controllers/ShoppingCartController.cs:11-63"
+    - "GET /delivery-address, /payment; POST /finish-order; GET /order-done, /my-orders — Controllers/OrderController.cs:21-73"
+    - "GET/POST users[/login|/logout] — Controllers/IdentityController.cs:8-68"
+  typical_flow: "CatalogController.Index chama ICatalogService.ListAll (CatalogService.cs:37-44, HttpClient contra CatalogUrl) → View(products). Fluxo de checkout completo: ShoppingCartController.Index → ICheckoutBffService.GetShoppingCart (CheckoutBffService.cs:40-47, HttpClient contra CheckoutBffUrl=BFF de Checkout, NÃO o dev-cart direto) → OrderController.DeliveryAddress agrega GetShoppingCart + ICustomerService.GetAddress (CustomerService.cs:28-37, contra CustomerUrl) → CheckoutBffService.MapToOrder monta TransactionViewModel (linhas 130-154) → OrderController.FinishOrder → CheckoutBffService.FinishOrder faz POST /orders no BFF (linhas 101-110) → sucesso → OrderDone → GetLastOrder (GET /orders/last no BFF). Todos os HttpClient são tipados com Polly retry+circuit breaker (Configuration/DependencyInjectionConfig.cs) e um DelegatingHandler propaga o Bearer token (Services/Handlers/HttpClientAuthorizationDelegatingHandler.cs)."
+  key_abstractions:
+    - "OrderViewModel/AddressViewModel/TransactionViewModel — os 3 arquivos mais centrais do repo por PageRank; populados 100% via HTTP contra o BFF de Checkout/Customer, sem acesso a domínio de backend (Models/*.cs)"
+    - "CheckoutBffService/CatalogService/CustomerService/AuthService — clients HTTP tipados, HttpClient puro (Refit está no .csproj mas só é usado para capturar exceções, não como client ativo)"
+  depends_on: ["dev-core", "dev-catalog", "dev-checkout-bff", "dev-customers", "dev-identity"]
+  density: "42 arquivos .cs · 7 controllers · 23 Views · 9 ViewModels · zero testes"
+  verified: true
+
+- frontier: devops
+  trees: ["src/web/DevStore.WebApp.Status"]
+  entry_points:
+    - "GET / — Program.cs:61-66 (MapHealthChecksUI, UIPath=\"/\") — dashboard agregador de health checks"
+  typical_flow: "Program.cs:14 lê ENDPOINTS de appsettings.*.json (string 'Nome|URL;Nome|URL' em Development/Docker) → Split(';')/Split('|') → setup.AddHealthCheckEndpoint por serviço (linhas 16-22), fazendo polling HTTP em https://<serviço>/healthz-infra de 8 serviços remotos → cada serviço expõe esse endpoint via building-block GenericHealthCheck.UseDefaultHealthcheck (WebAPI.Core/Configuration/GenericHealthCheck.cs:33-47). Storage do HISTÓRICO de checks (não do próprio serviço) escolhido em runtime via DetectDatabase (Program.cs:26-48). BUG CONFIRMADO: appsettings.Production.json define ENDPOINTS como array JSON, mas Program.cs:14 espera string única via Get<string>() — inconsistência de formato entre ambientes, nunca exercitada/testada."
+  key_abstractions:
+    - "Nenhuma classe customizada IHealthCheck própria — 100% composição dos pacotes AspNetCore.HealthChecks.UI.*"
+  depends_on: ["dev-core"]
+  density: "1 arquivo .cs (Program.cs, 66 linhas) · 10 arquivos totais · zero Controllers/Models/lógica de negócio"
+  verified: true
+  classificacao_recomendada: "gate devops/observabilidade — não dev-* pleno (confirmado por 2 análises independentes: ausência total de Controllers/Models/Domain, único ProjectReference é WebAPI.Core, e o único bug encontrado é justamente um footgun de config de ambiente)."
+
+- frontier: qa-dotnet
+  trees: ["src/tests/DevStore.Tests"]
+  entry_points:
+    - "CatalogTests.GetTests.NoParameters_Success — CatalogApi/CatalogTests.cs:11 ([Fact]) — ÚNICO teste [Fact]/[Theory] de todo o repositório"
+  typical_flow: "IntegrationTest<TProgram> (IntegrationTest.cs:8-75) implementa IClassFixture<WebApplicationFactory<TProgram>>+IAsyncLifetime, cria HttpClient real por teste → CatalogIntegrationTests (CatalogApi/CatalogIntegrationTests.cs:6-21) fixa TProgram=Catalog.API.Program e baseUrl='http://localhost/catalog/', expõe AddProducts (helper de seed via EF Core direto, NÃO usado pelo único teste existente) → CatalogTests.NoParameters_Success chama HttpClient.GetAsync('products') contra SQL Server REAL em localhost:1433 (appsettings.Test.json), valida 8 produtos incluindo 'Mug Batman'=50.00m via seed automático da aplicação, não via builder de dados do teste."
+  key_abstractions:
+    - "IntegrationTest<TProgram> — fixture genérica reutilizável (ExecuteInScope, ShouldEventuallyAssert nunca chamado)"
+  depends_on: ["dev-catalog"]
+  density: "3 arquivos .cs · 121 linhas · 1 teste real · cobertura 1/11 fronteiras (9%) · zero mocks (Moq/NSubstitute/FluentAssertions/Bogus ausentes) · zero teste unitário puro"
+  verified: true
+
+- frontier: dev-messaging
+  trees: ["src/building-blocks/DevStore.MessageBus"]
+  entry_points:
+    - "AddMessageBus(configuration, assembly) — DependencyInjectionExtensions.cs:9 — chamado 1x por serviço, ponto de entrada de todo bootstrap MassTransit/RabbitMQ"
+  typical_flow: "AddMessageBus faz bind de RabbitMqTransportOptions (linhas 13-15) → services.AddMassTransit(busRegistration => { busRegistration.AddConsumers(consumerAssemblies) (linha 25) → busRegistration.UsingRabbitMq((busContext, busConfiguration) => { busConfiguration.ConfigureEndpoints(busContext) (linhas 26-29) }) }) → health check de infra registrado com tag 'infra' (linhas 19-23). GetMessagingConnectionString (ConfigurationExtensions.cs:8-16) lê a MESMA seção RabbitMqTransportOptions para montar a connection string usada por AddMessagingHealthCheck (WebAPI.Core/Configuration/MessagingExtensions.cs) — que por sua vez NUNCA é chamada em nenhum Program.cs dos 6 serviços (código morto, achado confirmado DOMAIN-MESSAGING-003)."
+  key_abstractions:
+    - "RabbitMqTransportOptions — opções tipadas bindadas da configuração, fonte única para bind do MassTransit e para GetMessagingConnectionString (ConfigurationExtensions.cs:8-16, DependencyInjectionExtensions.cs:13-15)"
+  depends_on: []
+  density: "2 arquivos .cs · standby (trees ativo para guards, mas tech-lead não roteia automaticamente sem confirmação de mensageria cross-cutting nova) · zero Saga/StateMachine no repo (grep confirmado)"
+  verified: true

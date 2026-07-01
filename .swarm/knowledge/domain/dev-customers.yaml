@@ -1,0 +1,32 @@
+# Fatia de domínio — dev-customers (Customers.API)
+- id: DOMAIN-CUSTOMERS-001
+  kind: project_pattern
+  claim: "A criação de Customer NUNCA acontece via HTTP direto — só via consumer de UserRegisteredIntegrationEvent (NewCustomerIntegrationHandler), que checa duplicidade por SocialNumber antes de criar. Nunca propor um endpoint POST /customers direto sem entender essa decisão de design (saga de registro em duas etapas com Identity)."
+  applies_to: "dev-customers · criação de cliente é reativa a evento"
+  source: "src/services/DevStore.Customers.API/Services/NewCustomerIntegrationHandler.cs:11,21,28-52"
+  confidence: verified
+  check: "grep -rn 'HttpPost' src/services/DevStore.Customers.API/Controllers — só existe POST customers/address, nunca POST customers"
+
+- id: DOMAIN-CUSTOMERS-002
+  kind: project_pattern
+  claim: "SocialNumber (CPF) e Email são PII persistida em claro (varchar, sem hash/encriptação) — CustomerMapping.cs. Qualquer task de compliance/LGPD nesta fronteira parte desse fato; não presumir que já há proteção."
+  applies_to: "dev-customers · PII sem proteção"
+  source: "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs:18-27"
+  confidence: verified
+  check: "ler CustomerMapping.cs:18-27 — SocialNumber varchar(50), Email owned type varchar, sem conversor de hash"
+
+- id: DOMAIN-CUSTOMERS-003
+  kind: project_pattern
+  claim: "CustomerContext desliga tracking global (QueryTrackingBehavior.NoTracking + AutoDetectChangesEnabled=false) — CORRETO e consistente (ao contrário de OrdersContext). MAS a publicação de eventos de domínio (MediatorExtension.PublishEvents) usa foreach SEQUENCIAL com um Task.WhenAll comentado como código morto — se performance de publicação for relevante, essa é a lacuna a resolver, não reinventar do zero."
+  applies_to: "dev-customers · CustomerContext.cs"
+  source: "src/services/DevStore.Customers.API/Data/CustomerContext.cs:22-23,68-73; knowledge/stack/dotnet-9.yaml#NET9-STACK-016"
+  confidence: verified
+  check: "comparar CustomerContext.cs:68-73 (foreach sequencial) com OrdersContext.cs:90-93 (Task.WhenAll)"
+
+- id: DOMAIN-CUSTOMERS-004
+  kind: project_pattern
+  claim: "Address é entidade FILHA de Customer (Entity simples, não IAggregateRoot) — relação 1:1 por FK CustomerId. Nunca modelar Address como aggregate root independente; toda alteração de endereço passa pelo agregado Customer."
+  applies_to: "dev-customers · Models/Address.cs"
+  source: "src/services/DevStore.Customers.API/Models/Address.cs:6; src/services/DevStore.Customers.API/Models/Customer.cs:26"
+  confidence: verified
+  check: "confirmar Address : Entity (não IAggregateRoot) e a FK CustomerId na migration"

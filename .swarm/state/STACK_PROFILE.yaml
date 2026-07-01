@@ -1,0 +1,103 @@
+# Estágio 2b — STACK_PROFILE.yaml
+generated_at: "2026-07-01"
+online_init: true                 # rede disponível — WebFetch confirmado contra learn.microsoft.com, github.com, docs.fluentvalidation.net
+specialize_mode: roundtable       # escolhido pelo usuário (pergunta obrigatória do 2b) — mantém decisão de sessão anterior
+
+stacks:
+  - ecosystem: dotnet
+    runtime_version: "9.0.302"
+    version_evidence: "global.json"
+    libs:
+      - {name: "Microsoft.EntityFrameworkCore.*", version: "9.0.7", evidence: "src/services/*/​*.csproj (SqlServer/Sqlite/Design/Tools/Relational)"}
+      - {name: "Npgsql.EntityFrameworkCore.PostgreSQL", version: "9.0.4", evidence: "src/building-blocks/DevStore.WebAPI.Core/DevStore.WebAPI.Core.csproj"}
+      - {name: "MySql.EntityFrameworkCore", version: "9.0.6", evidence: "src/building-blocks/DevStore.WebAPI.Core/DevStore.WebAPI.Core.csproj"}
+      - {name: "MassTransit.RabbitMQ", version: "8.5.1", evidence: "src/building-blocks/DevStore.MessageBus/DevStore.MessageBus.csproj"}
+      - {name: "mediatr", version: "13.0.0", evidence: "src/building-blocks/DevStore.Core/DevStore.Core.csproj"}
+      - {name: "FluentValidation", version: "12.0.0", evidence: "src/building-blocks/DevStore.Core/DevStore.Core.csproj"}
+      - {name: "Polly", version: "8.6.2", evidence: "src/building-blocks/DevStore.WebAPI.Core/DevStore.WebAPI.Core.csproj"}
+      - {name: "NetDevPack.Security.Jwt.AspNetCore", version: "8.2.2", evidence: "src/services/DevStore.Identity.API/DevStore.Identity.API.csproj"}
+      - {name: "NetDevPack.Security.PasswordHasher.Argon2", version: "7.1.0", evidence: "src/services/DevStore.Identity.API/DevStore.Identity.API.csproj"}
+      - {name: "Grpc.AspNetCore", version: "2.71.0", evidence: "src/services/DevStore.ShoppingCart.API/DevStore.ShoppingCart.API.csproj"}
+    slice: "knowledge/stack/dotnet-9.yaml"
+    confidence_stats: {verified: 18, unverified: 2}   # 20 entradas na fatia final (após gate 2b.2 + item exclusivo da A-013)
+
+fingerprint_inputs:
+  - "global.json"
+  - "src/building-blocks/DevStore.Core/DevStore.Core.csproj"
+  - "src/building-blocks/DevStore.MessageBus/DevStore.MessageBus.csproj"
+  - "src/building-blocks/DevStore.WebAPI.Core/DevStore.WebAPI.Core.csproj"
+source_fingerprint: "sha256:ffa28ecf01974698ecd8a57ae5890e91dcdba570ffa4e1cf0aaafa628756d625"
+
+degradations: []   # rede disponível neste INIT — nenhuma degradação por offline
+
+# --- Medição A-013 (obrigatória quando specialize_mode: roundtable) ---
+a013_measurement:
+  measured_at: "2026-07-01"
+  stack: "dotnet-9"
+  mesa_raw_candidates: 32          # 11 (Advogado) + 11 (Idiomata) + 10 (Caçador da mesa)
+  mesa_unique_verified_after_gate: 19   # após dedup + gate de evidência 2b.2 (curadoria em knowledge/stack/dotnet-9.yaml)
+  single_context_raw_candidates: 10
+  single_context_unique_verified: 6
+  overlap_analysis: "De 6 itens verified do single-context, 5 duplicam achado já coberto por alguma voz da mesa (MediatR licensing, MassTransit AddConsumers/ConfigureEndpoints idiom, EF Core 9 TargetFramework, MediatR AppDomain.GetAssemblies risk — mesmo tópico do Advogado NET9-003 — e IAsyncLifetime+IDisposable — coberto com mais profundidade pelo Advogado NET9-011). 1 item (X509CertificateLoader, NET9-SINGLE-003) era GENUINAMENTE exclusivo do single-context — incorporado à fatia final como NET9-STACK-020."
+  delta_pct: 183   # (19-6)/6 * 100 — muito acima do critério de aposentadoria (≥30%)
+  false_positive_rate_mesa: "0/19 confirmados errados nas amostras cross-checadas manualmente pelo tech-lead (MediatR licensing, EF Core breaking changes, FluentValidation upgrade guide — todos com URL oficial verificável); os 2 itens unverified da mesa (NET9-STACK-007, NET9-STACK-009) foram marcados honestamente como hipótese, não como fato."
+  decision: "Mesa MANTIDA ativa — delta de 183% neste run é ainda maior que o 44% medido na sessão anterior (memória de projeto). Critério de aposentadoria (ADR-F5, A-013) não atingido. Single-context tem valor residual (achou 1 item exclusivo) — considerar rodar como passada COMPLEMENTAR barata após a mesa em specializações futuras, não como substituto."
+  ledger_entry: "registrado em .swarm/state/init-validation.jsonl junto ao veredito semântico da fase 2b"
+
+# --- 2b.3 — Âncoras gold (exemplares avaliados contra os critérios idiomáticos do 2b.1/2b.2,
+# NÃO o arquivo mais central por padrão — "espécime exemplar" pode diferir de "o que havia") ---
+anchors_gold:
+  entity_aggregate_root: {path: "src/services/DevStore.Orders.Domain/Orders/Order.cs", why: "DDD-lite consistente (construtor + { get; private set; } + métodos de invariante Authorize/Finish/Cancel) — Product.cs foi AVALIADO e REJEITADO como gold por ser anêmico (setters públicos, NET9-STACK-018)"}
+  controller_cqrs: {path: "src/services/DevStore.Orders.API/Controllers/OrderController.cs", why: "delegação limpa Controller→IMediatorHandler.SendCommand, sem lógica de negócio no controller"}
+  command_handler: {path: "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs", why: "exemplar mais completo do padrão validar→domínio→persistir→publicar; contém a confusão de ValidationResult (NET9-STACK-011) — citada como CAUTION no check idiomático, não desqualifica o exemplar estrutural"}
+  dbcontext_tracking: {path: "src/services/DevStore.Customers.API/Data/CustomerContext.cs", why: "configura QueryTrackingBehavior.NoTracking global corretamente — OrdersContext.cs foi AVALIADO e REJEITADO (inconsistente, NET9-STACK-013)"}
+  repository_query_otimizado: {path: "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs", why: "único uso de AsNoTrackingWithIdentityResolution() do repo — exemplar de query, independente do Product.cs (entidade) não ser gold"}
+  integration_consumer: {path: "src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs", why: "exemplar mais rico de IConsumer<T> + Facade; contém o bug de enum mismatch (NET9-STACK security) — citado como CAUTION, não desqualifica a estrutura do consumer"}
+  messagebus_bootstrap: {path: "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs", why: "padrão AddMassTransit+AddConsumers+UsingRabbitMq+ConfigureEndpoints confirmado idiomático por 2 análises independentes (mesa Advogado + single-context A-013)"}
+  validator_nested: {path: "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs", why: "AbstractValidator<T> aninhado no Command, padrão limpo e replicável"}
+  minimal_api: {path: "src/services/DevStore.ShoppingCart.API/Program.cs", why: "único exemplar de Minimal API do repo (NET9-STACK-014) — lacuna: nenhum outro serviço adota o mesmo estilo, registrar como padrão isolado, não convenção dominante"}
+  viewmodel_dto: {path: "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs", why: "arquivo mais central do repo por PageRank; contrato mais completo entre BFF e apresentação"}
+  healthcheck_multiprovider: {path: "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs", why: "único ponto que resolve /healthz e /healthz-infra para os 4 providers de banco corretamente"}
+
+# --- 2b.5 — Fatias de domínio por agente (ponteiros; conteúdo em knowledge/domain/<agente>.yaml) ---
+domain_slices:
+  architect: "knowledge/domain/architect.yaml"
+  po: "knowledge/domain/po.yaml"
+  curator: "knowledge/domain/curator.yaml"
+  verifier: "knowledge/domain/verifier.yaml"
+  qa-dotnet: "knowledge/domain/qa-dotnet.yaml"
+  dev-core: "knowledge/domain/dev-core.yaml"
+  dev-catalog: "knowledge/domain/dev-catalog.yaml"
+  dev-customers: "knowledge/domain/dev-customers.yaml"
+  dev-identity: "knowledge/domain/dev-identity.yaml"
+  dev-orders: "knowledge/domain/dev-orders.yaml"
+  dev-billing: "knowledge/domain/dev-billing.yaml"
+  dev-cart: "knowledge/domain/dev-cart.yaml"
+  dev-checkout-bff: "knowledge/domain/dev-checkout-bff.yaml"
+  dev-web: "knowledge/domain/dev-web.yaml"
+  dev-messaging: "knowledge/domain/dev-messaging.yaml"
+  security: "knowledge/domain/security.yaml"
+  devops: "knowledge/domain/devops.yaml"
+
+# --- 2b.6 — Gate de Profundidade (sonda de maestria, BLOQUEANTE) ---
+# Todos os 17 especialistas do roster passaram (score >= 70%). 2 reprovações no primeiro ciclo
+# (curator 2/4, dev-messaging 2/4) foram corrigidas na fatia de domínio e re-sondadas com sucesso —
+# ver .swarm/state/mastery/<agente>.json para evidência completa de cada sonda.
+mastery:
+  architect:        {probed_at: "2026-07-01T15:48:00Z", score: "4/4", passed: true, domain_slice: "knowledge/domain/architect.yaml"}
+  po:               {probed_at: "2026-07-01T15:48:00Z", score: "4/4", passed: true, domain_slice: "knowledge/domain/po.yaml"}
+  curator:          {probed_at: "2026-07-01T15:44:00Z", score: "4/4", passed: true, domain_slice: "knowledge/domain/curator.yaml", note: "re-sonda; 1a tentativa 2/4 por path de fonte incorreto, corrigido"}
+  verifier:         {probed_at: "2026-07-01T15:48:00Z", score: "4/4", passed: true, domain_slice: "knowledge/domain/verifier.yaml"}
+  qa-dotnet:        {probed_at: "2026-07-01T15:48:00Z", score: "4/4", passed: true, domain_slice: "knowledge/domain/qa-dotnet.yaml", note: "1 claim corrigida (ExecuteInScope tem uso real); re-sonda estruturada após rejeição de formato pelo init-verify"}
+  dev-core:         {probed_at: "2026-07-01T15:38:00Z", score: "5/6", passed: true, domain_slice: "knowledge/domain/dev-core.yaml", note: "2 claims corrigidas (licenciamento MediatR não centralizado hoje; DomainException não restrita a Value Objects)"}
+  dev-catalog:      {probed_at: "2026-07-01T15:38:00Z", score: "5/5", passed: true, domain_slice: "knowledge/domain/dev-catalog.yaml"}
+  dev-customers:    {probed_at: "2026-07-01T15:38:00Z", score: "5/5", passed: true, domain_slice: "knowledge/domain/dev-customers.yaml"}
+  dev-identity:     {probed_at: "2026-07-01T15:40:00Z", score: "5/6", passed: true, domain_slice: "knowledge/domain/dev-identity.yaml", note: "1 claim corrigida (contagem de serviços consumidores de JWT: 9→7; path de arquivo corrigido)"}
+  dev-orders:       {probed_at: "2026-07-01T15:34:00Z", score: "7/7", passed: true, domain_slice: "knowledge/domain/dev-orders.yaml"}
+  dev-billing:      {probed_at: "2026-07-01T15:30:00Z", score: "6/7", passed: true, domain_slice: "knowledge/domain/dev-billing.yaml"}
+  dev-cart:         {probed_at: "2026-07-01T15:33:00Z", score: "5/5", passed: true, domain_slice: "knowledge/domain/dev-cart.yaml"}
+  dev-checkout-bff: {probed_at: "2026-07-01T15:33:00Z", score: "5/5", passed: true, domain_slice: "knowledge/domain/dev-checkout-bff.yaml"}
+  dev-web:          {probed_at: "2026-07-01T15:36:00Z", score: "5/5", passed: true, domain_slice: "knowledge/domain/dev-web.yaml"}
+  dev-messaging:    {probed_at: "2026-07-01T15:42:00Z", score: "4/4", passed: true, domain_slice: "knowledge/domain/dev-messaging.yaml", note: "re-sonda; 1a tentativa 2/4 por claim de split-brain refutada, corrigida para o achado real (health check morto)"}
+  security:         {probed_at: "2026-07-01T15:40:00Z", score: "6/6", passed: true, domain_slice: "knowledge/domain/security.yaml"}
+  devops:           {probed_at: "2026-07-01T15:36:00Z", score: "5/5", passed: true, domain_slice: "knowledge/domain/devops.yaml"}

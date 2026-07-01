@@ -1,0 +1,2565 @@
+{
+  "method": "tree-sitter+pagerank",
+  "root": ".",
+  "files": [
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/ApiConfig.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/DependencyInjectionConfig.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/GrpcConfig.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/MessageBusConfig.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/SwaggerConfig.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/OrderController.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/ShoppingCartController.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/AppServicesSettings.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/HttpClientAuthorizationDelegatingHandler.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Models/AddressDto.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ProductDto.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartDto.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartItemDto.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Models/VoucherDTO.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Program.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CatalogService.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CustomerService.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/OrderService.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/PaymentService.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/ShoppingCartService.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/GrpcServiceInterceptor.cs",
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs",
+    "src/building-blocks/DevStore.Core/Communication/ResponseResult.cs",
+    "src/building-blocks/DevStore.Core/Data/IRepository.cs",
+    "src/building-blocks/DevStore.Core/Data/IUnitOfWork.cs",
+    "src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs",
+    "src/building-blocks/DevStore.Core/DomainObjects/Email.cs",
+    "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "src/building-blocks/DevStore.Core/DomainObjects/IAggregateRoot.cs",
+    "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs",
+    "src/building-blocks/DevStore.Core/Mediator/IMediatorHandler.cs",
+    "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs",
+    "src/building-blocks/DevStore.Core/Messages/Command.cs",
+    "src/building-blocks/DevStore.Core/Messages/CommandHandler.cs",
+    "src/building-blocks/DevStore.Core/Messages/Event.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/IntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderAuthorizedIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderCanceledIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderDoneIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderLoweredStockIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderPaidIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/ResponseMessage.cs",
+    "src/building-blocks/DevStore.Core/Messages/Integration/UserRegisteredIntegrationEvent.cs",
+    "src/building-blocks/DevStore.Core/Messages/Message.cs",
+    "src/building-blocks/DevStore.Core/Validation/CreditCardExpiredAttribute.cs",
+    "src/building-blocks/DevStore.MessageBus/ConfigurationExtensions.cs",
+    "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/MessagingExtensions.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Controllers/MainController.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/PollyExtensions.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/CustomAuthorize.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/User/AspNetUser.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/User/ClaimsPrincipalExtensions.cs",
+    "src/building-blocks/DevStore.WebAPI.Core/User/IAspNetUser.cs",
+    "src/services/DevStore.Billing.API/Configuration/ApiConfig.cs",
+    "src/services/DevStore.Billing.API/Configuration/DbMigrationHelpers.cs",
+    "src/services/DevStore.Billing.API/Configuration/DependencyInjectionConfig.cs",
+    "src/services/DevStore.Billing.API/Configuration/MessageBusConfig.cs",
+    "src/services/DevStore.Billing.API/Controllers/PaymentController.cs",
+    "src/services/DevStore.Billing.API/Data/BillingContext.cs",
+    "src/services/DevStore.Billing.API/Data/Mappings/PaymentMapping.cs",
+    "src/services/DevStore.Billing.API/Data/Mappings/TransactionMapping.cs",
+    "src/services/DevStore.Billing.API/Data/Repository/PaymentRepository.cs",
+    "src/services/DevStore.Billing.API/Facade/BillingConfig.cs",
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs",
+    "src/services/DevStore.Billing.API/Facade/IPaymentFacade.cs",
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.Designer.cs",
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.cs",
+    "src/services/DevStore.Billing.API/Migrations/BillingContextModelSnapshot.cs",
+    "src/services/DevStore.Billing.API/Models/CreditCard.cs",
+    "src/services/DevStore.Billing.API/Models/IPaymentRepository.cs",
+    "src/services/DevStore.Billing.API/Models/Payment.cs",
+    "src/services/DevStore.Billing.API/Models/Transaction.cs",
+    "src/services/DevStore.Billing.API/Models/TransactionStatus.cs",
+    "src/services/DevStore.Billing.API/Models/TransactionType.cs",
+    "src/services/DevStore.Billing.API/Program.cs",
+    "src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs",
+    "src/services/DevStore.Billing.API/Services/BillingService.cs",
+    "src/services/DevStore.Billing.API/Services/IBillingService.cs",
+    "src/services/DevStore.Billing.DevsPay/Card.cs",
+    "src/services/DevStore.Billing.DevsPay/DevsPayService.cs",
+    "src/services/DevStore.Billing.DevsPay/PaymentMethod.cs",
+    "src/services/DevStore.Billing.DevsPay/Transaction.cs",
+    "src/services/DevStore.Billing.DevsPay/TransactionStatus.cs",
+    "src/services/DevStore.Catalog.API/Configuration/ApiConfig.cs",
+    "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs",
+    "src/services/DevStore.Catalog.API/Configuration/DependencyInjectionConfig.cs",
+    "src/services/DevStore.Catalog.API/Configuration/MessageBusConfig.cs",
+    "src/services/DevStore.Catalog.API/Configuration/SwaggerConfig.cs",
+    "src/services/DevStore.Catalog.API/Controllers/CatalogController.cs",
+    "src/services/DevStore.Catalog.API/Data/CatalogContext.cs",
+    "src/services/DevStore.Catalog.API/Data/Mappings/ProductMapping.cs",
+    "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs",
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.Designer.cs",
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.cs",
+    "src/services/DevStore.Catalog.API/Migrations/CatalogContextModelSnapshot.cs",
+    "src/services/DevStore.Catalog.API/Models/IProductRepository.cs",
+    "src/services/DevStore.Catalog.API/Models/PagedResult.cs",
+    "src/services/DevStore.Catalog.API/Models/Product.cs",
+    "src/services/DevStore.Catalog.API/Program.cs",
+    "src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs",
+    "src/services/DevStore.Customers.API/Application/Commands/AddAddressCommand.cs",
+    "src/services/DevStore.Customers.API/Application/Commands/CustomerCommandHandler.cs",
+    "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs",
+    "src/services/DevStore.Customers.API/Application/Events/CustomerEventHandler.cs",
+    "src/services/DevStore.Customers.API/Application/Events/NewCustomerAddedEvent.cs",
+    "src/services/DevStore.Customers.API/Configuration/ApiConfig.cs",
+    "src/services/DevStore.Customers.API/Configuration/DbMigrationHelpers.cs",
+    "src/services/DevStore.Customers.API/Configuration/DependencyInjectionConfig.cs",
+    "src/services/DevStore.Customers.API/Configuration/MessageBusConfig.cs",
+    "src/services/DevStore.Customers.API/Configuration/SwaggerConfig.cs",
+    "src/services/DevStore.Customers.API/Controllers/CustomerController.cs",
+    "src/services/DevStore.Customers.API/Data/CustomerContext.cs",
+    "src/services/DevStore.Customers.API/Data/Mappings/AddressMapping.cs",
+    "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs",
+    "src/services/DevStore.Customers.API/Data/Repository/CustomerRepository.cs",
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.Designer.cs",
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.cs",
+    "src/services/DevStore.Customers.API/Migrations/CustomerContextModelSnapshot.cs",
+    "src/services/DevStore.Customers.API/Models/Address.cs",
+    "src/services/DevStore.Customers.API/Models/Customer.cs",
+    "src/services/DevStore.Customers.API/Models/ICustomerRepository.cs",
+    "src/services/DevStore.Customers.API/Program.cs",
+    "src/services/DevStore.Customers.API/Services/NewCustomerIntegrationHandler.cs",
+    "src/services/DevStore.Identity.API/Configuration/ApiConfig.cs",
+    "src/services/DevStore.Identity.API/Configuration/DbMigrationHelpers.cs",
+    "src/services/DevStore.Identity.API/Configuration/IdentityConfig.cs",
+    "src/services/DevStore.Identity.API/Configuration/MessageBusConfig.cs",
+    "src/services/DevStore.Identity.API/Configuration/SwaggerConfig.cs",
+    "src/services/DevStore.Identity.API/Controllers/AuthController.cs",
+    "src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs",
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.Designer.cs",
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.cs",
+    "src/services/DevStore.Identity.API/Migrations/ApplicationDbContextModelSnapshot.cs",
+    "src/services/DevStore.Identity.API/Models/UserViewModels.cs",
+    "src/services/DevStore.Identity.API/Program.cs",
+    "src/services/DevStore.Orders.API/Application/Commands/AddOrderCommand.cs",
+    "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs",
+    "src/services/DevStore.Orders.API/Application/DTO/AddressDto.cs",
+    "src/services/DevStore.Orders.API/Application/DTO/OrderDTO.cs",
+    "src/services/DevStore.Orders.API/Application/DTO/OrderItemDTO.cs",
+    "src/services/DevStore.Orders.API/Application/DTO/VoucherDTO.cs",
+    "src/services/DevStore.Orders.API/Application/Events/OrderDoneEvent.cs",
+    "src/services/DevStore.Orders.API/Application/Events/OrderEventHandler.cs",
+    "src/services/DevStore.Orders.API/Application/Queries/OrderQueries.cs",
+    "src/services/DevStore.Orders.API/Application/Queries/VoucherQueries.cs",
+    "src/services/DevStore.Orders.API/Configuration/ApiConfig.cs",
+    "src/services/DevStore.Orders.API/Configuration/DbMigrationHelpers.cs",
+    "src/services/DevStore.Orders.API/Configuration/DependencyInjectionConfig.cs",
+    "src/services/DevStore.Orders.API/Configuration/MessageBusConfig.cs",
+    "src/services/DevStore.Orders.API/Configuration/SwaggerConfig.cs",
+    "src/services/DevStore.Orders.API/Controllers/OrderController.cs",
+    "src/services/DevStore.Orders.API/Controllers/VoucherController.cs",
+    "src/services/DevStore.Orders.API/Program.cs",
+    "src/services/DevStore.Orders.API/Services/OrderIntegrationHandler.cs",
+    "src/services/DevStore.Orders.API/Services/OrderOrchestratorIntegrationHandler.cs",
+    "src/services/DevStore.Orders.Domain/Orders/Address.cs",
+    "src/services/DevStore.Orders.Domain/Orders/IOrderRepository.cs",
+    "src/services/DevStore.Orders.Domain/Orders/Order.cs",
+    "src/services/DevStore.Orders.Domain/Orders/OrderItem.cs",
+    "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs",
+    "src/services/DevStore.Orders.Domain/Vouchers/IVoucherRepository.cs",
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherSpec.cs",
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherValidation.cs",
+    "src/services/DevStore.Orders.Domain/Vouchers/Voucher.cs",
+    "src/services/DevStore.Orders.Domain/Vouchers/VoucherDiscountType.cs",
+    "src/services/DevStore.Orders.Infra/Context/OrdersContext.cs",
+    "src/services/DevStore.Orders.Infra/Mappings/OrderItemMapping.cs",
+    "src/services/DevStore.Orders.Infra/Mappings/OrderMapping.cs",
+    "src/services/DevStore.Orders.Infra/Mappings/VoucherMapping.cs",
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.Designer.cs",
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.cs",
+    "src/services/DevStore.Orders.Infra/Migrations/OrdersContextModelSnapshot.cs",
+    "src/services/DevStore.Orders.Infra/Repository/OrderRepository.cs",
+    "src/services/DevStore.Orders.Infra/Repository/VoucherRepository.cs",
+    "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs",
+    "src/services/DevStore.ShoppingCart.API/Configuration/DbMigrationHelpers.cs",
+    "src/services/DevStore.ShoppingCart.API/Configuration/DependencyInjectionConfig.cs",
+    "src/services/DevStore.ShoppingCart.API/Configuration/MessageBusConfig.cs",
+    "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs",
+    "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs",
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.Designer.cs",
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.cs",
+    "src/services/DevStore.ShoppingCart.API/Migrations/ShoppingCartContextModelSnapshot.cs",
+    "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs",
+    "src/services/DevStore.ShoppingCart.API/Program.cs",
+    "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs",
+    "src/services/DevStore.ShoppingCart.API/Services/gRPC/ShoppingCartGrpcService.cs",
+    "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs",
+    "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs",
+    "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs",
+    "src/web/DevStore.WebApp.MVC/Configuration/IdentityConfig.cs",
+    "src/web/DevStore.WebApp.MVC/Configuration/WebAppConfig.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/CatalogController.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/CustomerController.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/HomeController.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/IdentityController.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/MainController.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/OrderController.cs",
+    "src/web/DevStore.WebApp.MVC/Controllers/ShoppingCartController.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/AppSettings.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/CustomHttpRequestException.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/PagingViewComponent.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/RazorHelpers.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/ShoppingCartViewComponent.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/SocialNumberAnnotation.cs",
+    "src/web/DevStore.WebApp.MVC/Extensions/SummaryViewComponent.cs",
+    "src/web/DevStore.WebApp.MVC/Models/AddressViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/ErrorViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/PagedViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/ProductViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/ShoppingCartViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/UserViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Models/VoucherViewModel.cs",
+    "src/web/DevStore.WebApp.MVC/Program.cs",
+    "src/web/DevStore.WebApp.MVC/Properties/AssemblyInfo.cs",
+    "src/web/DevStore.WebApp.MVC/Services/AuthService.cs",
+    "src/web/DevStore.WebApp.MVC/Services/CatalogService.cs",
+    "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "src/web/DevStore.WebApp.MVC/Services/CustomerService.cs",
+    "src/web/DevStore.WebApp.MVC/Services/Handlers/HttpClientAuthorizationDelegatingHandler.cs",
+    "src/web/DevStore.WebApp.MVC/Services/Service.cs",
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/creditcardvalidator.js",
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.js",
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.min.js",
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/script.js",
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/site.js",
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
+    "src/web/DevStore.WebApp.Status/Program.cs"
+  ],
+  "defs": {
+    "src/api-gateways/DevStore.Bff.Checkout/Program.cs": [
+      "Program"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/SwaggerConfig.cs": [
+      "SwaggerConfig"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/GrpcConfig.cs": [
+      "GrpcConfig"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/ApiConfig.cs": [
+      "ApiConfig"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/MessageBusConfig.cs": [
+      "MessageBusConfig"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartItemDto.cs": [
+      "ShoppingCartItemDto"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartDto.cs": [
+      "ShoppingCartDto"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Models/VoucherDTO.cs": [
+      "VoucherDTO"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ProductDto.cs": [
+      "ProductDto"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs": [
+      "Address",
+      "Amount",
+      "CardNumber",
+      "Code",
+      "Date",
+      "DevStore.Bff.Checkout.Models",
+      "Discount",
+      "ExpirationDate",
+      "HasVoucher",
+      "Holder",
+      "OrderDto",
+      "OrderItems",
+      "SecurityCode",
+      "Status",
+      "Voucher",
+      "get",
+      "set"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Models/AddressDto.cs": [
+      "AddressDto"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/HttpClientAuthorizationDelegatingHandler.cs": [
+      "HttpClientAuthorizationDelegatingHandler"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/AppServicesSettings.cs": [
+      "AppServicesSettings"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/OrderController.cs": [
+      "OrderController"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/ShoppingCartController.cs": [
+      "ShoppingCartController"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/PaymentService.cs": [
+      "PaymentService"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs": [
+      "Service"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/OrderService.cs": [
+      "OrderService"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/ShoppingCartService.cs": [
+      "ShoppingCartService"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CustomerService.cs": [
+      "CustomerService"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CatalogService.cs": [
+      "CatalogService"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs": [
+      "ShoppingCartGrpcService"
+    ],
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/GrpcServiceInterceptor.cs": [
+      "GrpcServiceInterceptor"
+    ],
+    "src/web/DevStore.WebApp.Status/Program.cs": [
+      "Program"
+    ],
+    "src/web/DevStore.WebApp.MVC/Program.cs": [
+      "Program"
+    ],
+    "src/web/DevStore.WebApp.MVC/Configuration/IdentityConfig.cs": [
+      "IdentityConfig"
+    ],
+    "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig",
+      "DevStore.WebApp.MVC.Configuration",
+      "PollyExtensions",
+      "RegisterServices",
+      "WaitAndRetry"
+    ],
+    "src/web/DevStore.WebApp.MVC/Configuration/WebAppConfig.cs": [
+      "WebAppConfig"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/script.js": [
+      "script"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.js": [
+      "CreditCard"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.min.js": [
+      "CreditCard"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/site.js": [
+      "CreditCard"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/creditcardvalidator.js": [
+      "Range",
+      "Trie"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js": [
+      "appendModelPrefix",
+      "escapeAttributeValue",
+      "getModelPrefix",
+      "onError",
+      "onErrors",
+      "onReset",
+      "onSuccess",
+      "setValidationValues",
+      "splitAndTrim",
+      "validationInfo"
+    ],
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js": [
+      "d",
+      "e",
+      "i",
+      "l",
+      "n",
+      "o",
+      "r",
+      "s",
+      "t",
+      "u"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/VoucherViewModel.cs": [
+      "VoucherViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/ShoppingCartViewModel.cs": [
+      "ShoppingCartViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/ProductViewModel.cs": [
+      "ProductViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/UserViewModel.cs": [
+      "UserViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/ErrorViewModel.cs": [
+      "ErrorViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/AddressViewModel.cs": [
+      "AddressViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/PagedViewModel.cs": [
+      "PagedViewModel"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs": [
+      "Address",
+      "Amount",
+      "Code",
+      "Date",
+      "DevStore.WebApp.MVC.Models",
+      "Discount",
+      "HasVoucher",
+      "Image",
+      "Name",
+      "OrderId",
+      "OrderItemViewModel",
+      "OrderItems",
+      "OrderViewModel",
+      "Price",
+      "Quantity",
+      "Status",
+      "get",
+      "set"
+    ],
+    "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs": [
+      "Address",
+      "Amount",
+      "CardNumber",
+      "DevStore.WebApp.MVC.Models",
+      "Discount",
+      "ExpirationDate",
+      "HasVoucher",
+      "Holder",
+      "Items",
+      "SecurityCode",
+      "TransactionViewModel",
+      "Voucher",
+      "get",
+      "set"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/ShoppingCartViewComponent.cs": [
+      "ShoppingCartViewComponent"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/RazorHelpers.cs": [
+      "RazorHelpers"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/AppSettings.cs": [
+      "AppSettings"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/CustomHttpRequestException.cs": [
+      "CustomHttpRequestException"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs": [
+      "ExceptionMiddleware"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/SocialNumberAnnotation.cs": [
+      "SocialNumberAnnotation"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/SummaryViewComponent.cs": [
+      "SummaryViewComponent"
+    ],
+    "src/web/DevStore.WebApp.MVC/Extensions/PagingViewComponent.cs": [
+      "PagingViewComponent"
+    ],
+    "src/web/DevStore.WebApp.MVC/Properties/AssemblyInfo.cs": [
+      "AssemblyInfo"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/CatalogController.cs": [
+      "CatalogController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/MainController.cs": [
+      "MainController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/OrderController.cs": [
+      "OrderController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/ShoppingCartController.cs": [
+      "ShoppingCartController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/IdentityController.cs": [
+      "IdentityController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/HomeController.cs": [
+      "HomeController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Controllers/CustomerController.cs": [
+      "CustomerController"
+    ],
+    "src/web/DevStore.WebApp.MVC/Services/Service.cs": [
+      "Service"
+    ],
+    "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs": [
+      "AddShoppingCartItem",
+      "ApplyVoucher",
+      "CheckoutBffService",
+      "DevStore.WebApp.MVC.Services",
+      "FinishOrder",
+      "GetCustomersById",
+      "GetLastOrder",
+      "GetShoppingCart",
+      "GetShoppingCartItemsQuantity",
+      "ICheckoutBffService",
+      "MapToOrder",
+      "RemoveItemFromShoppingCart",
+      "UpdateShoppingCartItem"
+    ],
+    "src/web/DevStore.WebApp.MVC/Services/CustomerService.cs": [
+      "CustomerService"
+    ],
+    "src/web/DevStore.WebApp.MVC/Services/AuthService.cs": [
+      "AuthService"
+    ],
+    "src/web/DevStore.WebApp.MVC/Services/CatalogService.cs": [
+      "CatalogService"
+    ],
+    "src/web/DevStore.WebApp.MVC/Services/Handlers/HttpClientAuthorizationDelegatingHandler.cs": [
+      "HttpClientAuthorizationDelegatingHandler"
+    ],
+    "src/tests/DevStore.Tests/IntegrationTest.cs": [
+      "DevStore.Tests",
+      "Dispose",
+      "DisposeAsync",
+      "ExecuteInScope",
+      "InitializeAsync",
+      "IntegrationTest",
+      "ShouldEventuallyAssert"
+    ],
+    "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs": [
+      "AddProducts",
+      "CatalogIntegrationTests",
+      "DevStore.Tests.CatalogApi"
+    ],
+    "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs": [
+      "CatalogTests",
+      "DevStore.Tests.CatalogApi",
+      "GetTests",
+      "NoParameters_Success"
+    ],
+    "src/services/DevStore.Identity.API/Program.cs": [
+      "Program"
+    ],
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.Designer.cs": [
+      "BuildTargetModel",
+      "DevStore.Identity.API.Migrations",
+      "Initial"
+    ],
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.cs": [
+      "DevStore.Identity.API.Migrations",
+      "Down",
+      "Initial",
+      "Up"
+    ],
+    "src/services/DevStore.Identity.API/Migrations/ApplicationDbContextModelSnapshot.cs": [
+      "ApplicationDbContextModelSnapshot",
+      "BuildModel",
+      "DevStore.Identity.API.Migrations"
+    ],
+    "src/services/DevStore.Identity.API/Configuration/IdentityConfig.cs": [
+      "IdentityConfig"
+    ],
+    "src/services/DevStore.Identity.API/Configuration/SwaggerConfig.cs": [
+      "SwaggerConfig"
+    ],
+    "src/services/DevStore.Identity.API/Configuration/DbMigrationHelpers.cs": [
+      "DbMigrationHelpers",
+      "DevStore.Identity.API.Configuration",
+      "EnsureSeedData"
+    ],
+    "src/services/DevStore.Identity.API/Configuration/ApiConfig.cs": [
+      "ApiConfig"
+    ],
+    "src/services/DevStore.Identity.API/Configuration/MessageBusConfig.cs": [
+      "MessageBusConfig"
+    ],
+    "src/services/DevStore.Identity.API/Models/UserViewModels.cs": [
+      "UserViewModels"
+    ],
+    "src/services/DevStore.Identity.API/Controllers/AuthController.cs": [
+      "AuthController"
+    ],
+    "src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs": [
+      "ApplicationDbContext"
+    ],
+    "src/services/DevStore.Orders.API/Program.cs": [
+      "Program"
+    ],
+    "src/services/DevStore.Orders.API/Configuration/SwaggerConfig.cs": [
+      "SwaggerConfig"
+    ],
+    "src/services/DevStore.Orders.API/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig"
+    ],
+    "src/services/DevStore.Orders.API/Configuration/DbMigrationHelpers.cs": [
+      "DbMigrationHelpers",
+      "DevStore.Orders.API.Configuration",
+      "EnsureSeedData",
+      "EnsureSeedVouchers"
+    ],
+    "src/services/DevStore.Orders.API/Configuration/ApiConfig.cs": [
+      "ApiConfig"
+    ],
+    "src/services/DevStore.Orders.API/Configuration/MessageBusConfig.cs": [
+      "MessageBusConfig"
+    ],
+    "src/services/DevStore.Orders.API/Application/DTO/OrderItemDTO.cs": [
+      "OrderItemDTO"
+    ],
+    "src/services/DevStore.Orders.API/Application/DTO/VoucherDTO.cs": [
+      "VoucherDTO"
+    ],
+    "src/services/DevStore.Orders.API/Application/DTO/OrderDTO.cs": [
+      "OrderDTO"
+    ],
+    "src/services/DevStore.Orders.API/Application/DTO/AddressDto.cs": [
+      "AddressDto"
+    ],
+    "src/services/DevStore.Orders.API/Application/Queries/OrderQueries.cs": [
+      "OrderQueries"
+    ],
+    "src/services/DevStore.Orders.API/Application/Queries/VoucherQueries.cs": [
+      "VoucherQueries"
+    ],
+    "src/services/DevStore.Orders.API/Application/Commands/AddOrderCommand.cs": [
+      "AddOrderCommand"
+    ],
+    "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs": [
+      "OrderCommandHandler"
+    ],
+    "src/services/DevStore.Orders.API/Application/Events/OrderDoneEvent.cs": [
+      "OrderDoneEvent"
+    ],
+    "src/services/DevStore.Orders.API/Application/Events/OrderEventHandler.cs": [
+      "OrderEventHandler"
+    ],
+    "src/services/DevStore.Orders.API/Controllers/OrderController.cs": [
+      "OrderController"
+    ],
+    "src/services/DevStore.Orders.API/Controllers/VoucherController.cs": [
+      "VoucherController"
+    ],
+    "src/services/DevStore.Orders.API/Services/OrderOrchestratorIntegrationHandler.cs": [
+      "OrderOrchestratorIntegrationHandler"
+    ],
+    "src/services/DevStore.Orders.API/Services/OrderIntegrationHandler.cs": [
+      "OrderIntegrationHandler"
+    ],
+    "src/services/DevStore.Billing.API/Program.cs": [
+      "Program"
+    ],
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.Designer.cs": [
+      "BuildTargetModel",
+      "DevStore.Billing.API.Migrations",
+      "Initial"
+    ],
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.cs": [
+      "DevStore.Billing.API.Migrations",
+      "Down",
+      "Initial",
+      "Up"
+    ],
+    "src/services/DevStore.Billing.API/Migrations/BillingContextModelSnapshot.cs": [
+      "BillingContextModelSnapshot",
+      "BuildModel",
+      "DevStore.Billing.API.Migrations"
+    ],
+    "src/services/DevStore.Billing.API/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig"
+    ],
+    "src/services/DevStore.Billing.API/Configuration/DbMigrationHelpers.cs": [
+      "DbMigrationHelpers",
+      "DevStore.Billing.API.Configuration",
+      "EnsureSeedData"
+    ],
+    "src/services/DevStore.Billing.API/Configuration/ApiConfig.cs": [
+      "ApiConfig"
+    ],
+    "src/services/DevStore.Billing.API/Configuration/MessageBusConfig.cs": [
+      "MessageBusConfig"
+    ],
+    "src/services/DevStore.Billing.API/Facade/BillingConfig.cs": [
+      "BillingConfig"
+    ],
+    "src/services/DevStore.Billing.API/Facade/IPaymentFacade.cs": [
+      "IPaymentFacade"
+    ],
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs": [
+      "CreditCardPaymentFacade"
+    ],
+    "src/services/DevStore.Billing.API/Models/Transaction.cs": [
+      "Transaction"
+    ],
+    "src/services/DevStore.Billing.API/Models/TransactionType.cs": [
+      "TransactionType"
+    ],
+    "src/services/DevStore.Billing.API/Models/TransactionStatus.cs": [
+      "TransactionStatus"
+    ],
+    "src/services/DevStore.Billing.API/Models/IPaymentRepository.cs": [
+      "IPaymentRepository"
+    ],
+    "src/services/DevStore.Billing.API/Models/CreditCard.cs": [
+      "CreditCard"
+    ],
+    "src/services/DevStore.Billing.API/Models/Payment.cs": [
+      "Payment"
+    ],
+    "src/services/DevStore.Billing.API/Controllers/PaymentController.cs": [
+      "PaymentController"
+    ],
+    "src/services/DevStore.Billing.API/Data/BillingContext.cs": [
+      "BillingContext"
+    ],
+    "src/services/DevStore.Billing.API/Data/Repository/PaymentRepository.cs": [
+      "PaymentRepository"
+    ],
+    "src/services/DevStore.Billing.API/Data/Mappings/TransactionMapping.cs": [
+      "TransactionMapping"
+    ],
+    "src/services/DevStore.Billing.API/Data/Mappings/PaymentMapping.cs": [
+      "PaymentMapping"
+    ],
+    "src/services/DevStore.Billing.API/Services/BillingService.cs": [
+      "BillingService"
+    ],
+    "src/services/DevStore.Billing.API/Services/IBillingService.cs": [
+      "IBillingService"
+    ],
+    "src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs": [
+      "BillingIntegrationHandler"
+    ],
+    "src/services/DevStore.Customers.API/Program.cs": [
+      "Program"
+    ],
+    "src/services/DevStore.Customers.API/Migrations/CustomerContextModelSnapshot.cs": [
+      "BuildModel",
+      "CustomerContextModelSnapshot",
+      "DevStore.Customers.API.Migrations"
+    ],
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.Designer.cs": [
+      "BuildTargetModel",
+      "DevStore.Customers.API.Migrations",
+      "Initial"
+    ],
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.cs": [
+      "DevStore.Customers.API.Migrations",
+      "Down",
+      "Initial",
+      "Up"
+    ],
+    "src/services/DevStore.Customers.API/Configuration/SwaggerConfig.cs": [
+      "SwaggerConfig"
+    ],
+    "src/services/DevStore.Customers.API/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig"
+    ],
+    "src/services/DevStore.Customers.API/Configuration/DbMigrationHelpers.cs": [
+      "DbMigrationHelpers",
+      "DevStore.Customers.API.Configuration",
+      "EnsureSeedData"
+    ],
+    "src/services/DevStore.Customers.API/Configuration/ApiConfig.cs": [
+      "ApiConfig"
+    ],
+    "src/services/DevStore.Customers.API/Configuration/MessageBusConfig.cs": [
+      "MessageBusConfig"
+    ],
+    "src/services/DevStore.Customers.API/Models/Address.cs": [
+      "Address"
+    ],
+    "src/services/DevStore.Customers.API/Models/Customer.cs": [
+      "Customer"
+    ],
+    "src/services/DevStore.Customers.API/Models/ICustomerRepository.cs": [
+      "ICustomerRepository"
+    ],
+    "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs": [
+      "NewCustomerCommand"
+    ],
+    "src/services/DevStore.Customers.API/Application/Commands/AddAddressCommand.cs": [
+      "AddAddressCommand"
+    ],
+    "src/services/DevStore.Customers.API/Application/Commands/CustomerCommandHandler.cs": [
+      "CustomerCommandHandler"
+    ],
+    "src/services/DevStore.Customers.API/Application/Events/NewCustomerAddedEvent.cs": [
+      "NewCustomerAddedEvent"
+    ],
+    "src/services/DevStore.Customers.API/Application/Events/CustomerEventHandler.cs": [
+      "CustomerEventHandler"
+    ],
+    "src/services/DevStore.Customers.API/Controllers/CustomerController.cs": [
+      "CustomerController"
+    ],
+    "src/services/DevStore.Customers.API/Data/CustomerContext.cs": [
+      "CustomerContext"
+    ],
+    "src/services/DevStore.Customers.API/Data/Repository/CustomerRepository.cs": [
+      "CustomerRepository"
+    ],
+    "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs": [
+      "CustomerMapping"
+    ],
+    "src/services/DevStore.Customers.API/Data/Mappings/AddressMapping.cs": [
+      "AddressMapping"
+    ],
+    "src/services/DevStore.Customers.API/Services/NewCustomerIntegrationHandler.cs": [
+      "NewCustomerIntegrationHandler"
+    ],
+    "src/services/DevStore.Catalog.API/Program.cs": [
+      "DevStore.Catalog.API",
+      "Program"
+    ],
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.Designer.cs": [
+      "BuildTargetModel",
+      "DevStore.Catalog.API.Migrations",
+      "Initial"
+    ],
+    "src/services/DevStore.Catalog.API/Migrations/CatalogContextModelSnapshot.cs": [
+      "BuildModel",
+      "CatalogContextModelSnapshot",
+      "DevStore.Catalog.API.Migrations"
+    ],
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.cs": [
+      "DevStore.Catalog.API.Migrations",
+      "Down",
+      "Initial",
+      "Up"
+    ],
+    "src/services/DevStore.Catalog.API/Configuration/SwaggerConfig.cs": [
+      "SwaggerConfig"
+    ],
+    "src/services/DevStore.Catalog.API/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig"
+    ],
+    "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs": [
+      "DbMigrationHelpers",
+      "DevStore.Catalog.API.Configuration",
+      "EnsureSeedData",
+      "EnsureSeedProducts"
+    ],
+    "src/services/DevStore.Catalog.API/Configuration/ApiConfig.cs": [
+      "ApiConfig"
+    ],
+    "src/services/DevStore.Catalog.API/Configuration/MessageBusConfig.cs": [
+      "MessageBusConfig"
+    ],
+    "src/services/DevStore.Catalog.API/Models/PagedResult.cs": [
+      "PagedResult"
+    ],
+    "src/services/DevStore.Catalog.API/Models/IProductRepository.cs": [
+      "IProductRepository"
+    ],
+    "src/services/DevStore.Catalog.API/Models/Product.cs": [
+      "Product"
+    ],
+    "src/services/DevStore.Catalog.API/Controllers/CatalogController.cs": [
+      "CatalogController"
+    ],
+    "src/services/DevStore.Catalog.API/Data/CatalogContext.cs": [
+      "CatalogContext"
+    ],
+    "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs": [
+      "ProductRepository"
+    ],
+    "src/services/DevStore.Catalog.API/Data/Mappings/ProductMapping.cs": [
+      "ProductMapping"
+    ],
+    "src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs": [
+      "CatalogIntegrationHandler"
+    ],
+    "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs": [
+      "AddErrorToStack",
+      "AddItem",
+      "ApplyVoucher",
+      "CustomResponse",
+      "DevStore.ShoppingCart.API",
+      "GetShoppingCart",
+      "GetShoppingCartClient",
+      "GetValidItem",
+      "ManageCart",
+      "ManageNewCart",
+      "Persist",
+      "RemoveItem",
+      "ShoppingCart",
+      "UpdateItem",
+      "ValidateShoppingCart"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Program.cs": [
+      "Program"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.cs": [
+      "DevStore.ShoppingCart.API.Migrations",
+      "Down",
+      "Initial",
+      "Up"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.Designer.cs": [
+      "BuildTargetModel",
+      "DevStore.ShoppingCart.API.Migrations",
+      "Initial"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Migrations/ShoppingCartContextModelSnapshot.cs": [
+      "BuildModel",
+      "DevStore.ShoppingCart.API.Migrations",
+      "ShoppingCartContextModelSnapshot"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs": [
+      "AddSwaggerConfiguration",
+      "DevStore.ShoppingCart.API.Configuration",
+      "SwaggerConfig",
+      "UseSwaggerConfiguration"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Configuration/DependencyInjectionConfig.cs": [
+      "DependencyInjectionConfig",
+      "DevStore.ShoppingCart.API.Configuration",
+      "RegisterServices"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Configuration/DbMigrationHelpers.cs": [
+      "DbMigrationHelpers",
+      "DevStore.ShoppingCart.API.Configuration",
+      "EnsureSeedData"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs": [
+      "AddApiConfiguration",
+      "ApiConfig",
+      "DevStore.ShoppingCart.API.Configuration",
+      "UseApiConfiguration"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Configuration/MessageBusConfig.cs": [
+      "AddMessageBusConfiguration",
+      "DevStore.ShoppingCart.API.Configuration",
+      "MessageBusConfig"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs": [
+      "AddUnit",
+      "CalculatePrice",
+      "CartItem",
+      "CustomerShoppingCart",
+      "DevStore.ShoppingCart.API.Model",
+      "Id",
+      "Image",
+      "IsValid",
+      "Name",
+      "Price",
+      "ProductId",
+      "Quantity",
+      "SetShoppingCart",
+      "ShoppingCartId",
+      "ShoppingCartItemValidation",
+      "UpdateUnit",
+      "get",
+      "set"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs": [
+      "Code",
+      "DevStore.ShoppingCart.API.Model",
+      "Discount",
+      "DiscountType",
+      "Percentage",
+      "Value",
+      "Voucher",
+      "get",
+      "set"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs": [
+      "AddItem",
+      "ApplyVoucher",
+      "CalculateDiscountPrice",
+      "CalculateShoppingCartPrice",
+      "CustomerId",
+      "CustomerShoppingCart",
+      "CustomerShoppingCartValidation",
+      "DevStore.ShoppingCart.API.Model",
+      "Discount",
+      "GetProductById",
+      "HasItem",
+      "HasVoucher",
+      "Id",
+      "IsValid",
+      "Items",
+      "RemoveItem",
+      "Total",
+      "UpdateItem",
+      "UpdateUnit",
+      "ValidationResult",
+      "Voucher",
+      "get",
+      "set"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs": [
+      "CartItems",
+      "CustomerShoppingCart",
+      "DevStore.ShoppingCart.API.Data",
+      "OnModelCreating",
+      "ShoppingCartContext",
+      "get",
+      "set"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs": [
+      "Consume",
+      "DevStore.ShoppingCart.API.Services",
+      "RemoveShoppingCart",
+      "ShoppingCartIntegrationHandler"
+    ],
+    "src/services/DevStore.ShoppingCart.API/Services/gRPC/ShoppingCartGrpcService.cs": [
+      "DevStore.ShoppingCart.API.Services.gRPC",
+      "GetShoppingCart",
+      "GetShoppingCartClient",
+      "MapShoppingCartClientToProtoResponse",
+      "ShoppingCartGrpcService"
+    ],
+    "src/services/DevStore.Orders.Infra/Migrations/OrdersContextModelSnapshot.cs": [
+      "BuildModel",
+      "DevStore.Orders.Infra.Migrations",
+      "OrdersContextModelSnapshot"
+    ],
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.Designer.cs": [
+      "BuildTargetModel",
+      "DevStore.Orders.Infra.Migrations",
+      "Initial"
+    ],
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.cs": [
+      "DevStore.Orders.Infra.Migrations",
+      "Down",
+      "Initial",
+      "Up"
+    ],
+    "src/services/DevStore.Orders.Infra/Repository/VoucherRepository.cs": [
+      "VoucherRepository"
+    ],
+    "src/services/DevStore.Orders.Infra/Repository/OrderRepository.cs": [
+      "OrderRepository"
+    ],
+    "src/services/DevStore.Orders.Infra/Context/OrdersContext.cs": [
+      "OrdersContext"
+    ],
+    "src/services/DevStore.Orders.Infra/Mappings/OrderMapping.cs": [
+      "OrderMapping"
+    ],
+    "src/services/DevStore.Orders.Infra/Mappings/VoucherMapping.cs": [
+      "VoucherMapping"
+    ],
+    "src/services/DevStore.Orders.Infra/Mappings/OrderItemMapping.cs": [
+      "OrderItemMapping"
+    ],
+    "src/services/DevStore.Orders.Domain/Vouchers/VoucherDiscountType.cs": [
+      "VoucherDiscountType"
+    ],
+    "src/services/DevStore.Orders.Domain/Vouchers/Voucher.cs": [
+      "Voucher"
+    ],
+    "src/services/DevStore.Orders.Domain/Vouchers/IVoucherRepository.cs": [
+      "IVoucherRepository"
+    ],
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherValidation.cs": [
+      "VoucherValidation"
+    ],
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherSpec.cs": [
+      "VoucherSpec"
+    ],
+    "src/services/DevStore.Orders.Domain/Orders/Order.cs": [
+      "Order"
+    ],
+    "src/services/DevStore.Orders.Domain/Orders/Address.cs": [
+      "Address"
+    ],
+    "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs": [
+      "OrderStatus"
+    ],
+    "src/services/DevStore.Orders.Domain/Orders/OrderItem.cs": [
+      "OrderItem"
+    ],
+    "src/services/DevStore.Orders.Domain/Orders/IOrderRepository.cs": [
+      "IOrderRepository"
+    ],
+    "src/services/DevStore.Billing.DevsPay/Transaction.cs": [
+      "Transaction"
+    ],
+    "src/services/DevStore.Billing.DevsPay/TransactionStatus.cs": [
+      "TransactionStatus"
+    ],
+    "src/services/DevStore.Billing.DevsPay/DevsPayService.cs": [
+      "DevsPayService"
+    ],
+    "src/services/DevStore.Billing.DevsPay/Card.cs": [
+      "Card"
+    ],
+    "src/services/DevStore.Billing.DevsPay/PaymentMethod.cs": [
+      "PaymentMethod"
+    ],
+    "src/building-blocks/DevStore.MessageBus/ConfigurationExtensions.cs": [
+      "ConfigurationExtensions"
+    ],
+    "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs": [
+      "DependencyInjectionExtensions"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs": [
+      "CanConnect",
+      "CheckTable",
+      "CheckTableExists",
+      "DbHealthChecker",
+      "DevStore.WebAPI.Core.Configuration",
+      "TestConnection",
+      "WaitForTable"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs": [
+      "AddDefaultHealthCheck",
+      "DevStore.WebAPI.Core.Configuration",
+      "GenericHealthCheck",
+      "UseDefaultHealthcheck"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/MessagingExtensions.cs": [
+      "AddMessagingHealthCheck",
+      "DevStore.WebAPI.Core.Configuration",
+      "MessagingExtensions"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs": [
+      "AddApiCoreConfiguration",
+      "AddLogger",
+      "ApiCoreConfig",
+      "DevStore.WebAPI.Core.Configuration",
+      "UseApiCoreConfiguration",
+      "WithDbContext"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs": [
+      "Build",
+      "DetectDatabase",
+      "DevStore.WebAPI.Core.DatabaseFlavor",
+      "MySql",
+      "Postgre",
+      "ProviderConfiguration",
+      "SqlServer",
+      "Sqlite",
+      "With"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs": [
+      "ContextConfiguration",
+      "DevStore.WebAPI.Core.DatabaseFlavor",
+      "PersistStore"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs": [
+      "DatabaseType",
+      "DevStore.WebAPI.Core.DatabaseFlavor",
+      "MySql",
+      "None",
+      "Postgre",
+      "SqlServer",
+      "Sqlite"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs": [
+      "ConfigureProviderForContext",
+      "DevStore.WebAPI.Core.DatabaseFlavor",
+      "ProviderSelector",
+      "WithProviderAutoSelection"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs": [
+      "JwtConfig"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/CustomAuthorize.cs": [
+      "CustomAuthorize"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/User/ClaimsPrincipalExtensions.cs": [
+      "ClaimsPrincipalExtensions"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/User/AspNetUser.cs": [
+      "AspNetUser"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/User/IAspNetUser.cs": [
+      "IAspNetUser"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs": [
+      "HttpExtensions"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/PollyExtensions.cs": [
+      "PollyExtensions"
+    ],
+    "src/building-blocks/DevStore.WebAPI.Core/Controllers/MainController.cs": [
+      "MainController"
+    ],
+    "src/building-blocks/DevStore.Core/DomainObjects/IAggregateRoot.cs": [
+      "DevStore.Core.DomainObjects",
+      "IAggregateRoot"
+    ],
+    "src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs": [
+      "DevStore.Core.DomainObjects",
+      "DomainException"
+    ],
+    "src/building-blocks/DevStore.Core/DomainObjects/Email.cs": [
+      "Address",
+      "DevStore.Core.DomainObjects",
+      "Email",
+      "Validate",
+      "get",
+      "set"
+    ],
+    "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs": [
+      "AddEvent",
+      "ClearEvents",
+      "DevStore.Core.DomainObjects",
+      "Entity",
+      "Equals",
+      "GetHashCode",
+      "Id",
+      "Notificacoes",
+      "RemoveEvent",
+      "ToString",
+      "get",
+      "set"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Message.cs": [
+      "Message"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Event.cs": [
+      "Event"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Command.cs": [
+      "Command"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/CommandHandler.cs": [
+      "CommandHandler"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/IntegrationEvent.cs": [
+      "IntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderDoneIntegrationEvent.cs": [
+      "OrderDoneIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderAuthorizedIntegrationEvent.cs": [
+      "OrderAuthorizedIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderCanceledIntegrationEvent.cs": [
+      "OrderCanceledIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderLoweredStockIntegrationEvent.cs": [
+      "OrderLoweredStockIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs": [
+      "OrderInitiatedIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderPaidIntegrationEvent.cs": [
+      "OrderPaidIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/UserRegisteredIntegrationEvent.cs": [
+      "UserRegisteredIntegrationEvent"
+    ],
+    "src/building-blocks/DevStore.Core/Messages/Integration/ResponseMessage.cs": [
+      "ResponseMessage"
+    ],
+    "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs": [
+      "DatabaseNotFoundException",
+      "DevStore.Core.Exceptions"
+    ],
+    "src/building-blocks/DevStore.Core/Communication/ResponseResult.cs": [
+      "ResponseResult"
+    ],
+    "src/building-blocks/DevStore.Core/Data/IUnitOfWork.cs": [
+      "IUnitOfWork"
+    ],
+    "src/building-blocks/DevStore.Core/Data/IRepository.cs": [
+      "IRepository"
+    ],
+    "src/building-blocks/DevStore.Core/Mediator/IMediatorHandler.cs": [
+      "IMediatorHandler"
+    ],
+    "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs": [
+      "MediatorHandler"
+    ],
+    "src/building-blocks/DevStore.Core/Validation/CreditCardExpiredAttribute.cs": [
+      "CreditCardExpiredAttribute"
+    ]
+  },
+  "signatures": {
+    "src/api-gateways/DevStore.Bff.Checkout/Program.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/SwaggerConfig.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/DependencyInjectionConfig.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/GrpcConfig.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/ApiConfig.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/MessageBusConfig.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartItemDto.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartDto.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Models/VoucherDTO.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ProductDto.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs": {
+      "OrderDto": "public class OrderDto",
+      "SecurityCode": "[Required(ErrorMessage = \"Security code is required\")]",
+      "set": "set;",
+      "get": "get;",
+      "ExpirationDate": "[RegularExpression(@\"(0[1-9]|1[0-2])\\/[0-9]{2}\", ErrorMessage = \"The expiration must be in form of MM/YY\")]",
+      "Holder": "[Required(ErrorMessage = \"Please inform card holder\")]",
+      "CardNumber": "[Required(ErrorMessage = \"Card number is required\")]",
+      "Address": "public AddressDto Address { get; set; }",
+      "OrderItems": "public List<ShoppingCartItemDto> OrderItems { get; set; }",
+      "HasVoucher": "public bool HasVoucher { get; set; }",
+      "Voucher": "public string Voucher { get; set; }",
+      "Discount": "public decimal Discount { get; set; }",
+      "Amount": "public decimal Amount { get; set; }",
+      "Date": "public DateTime Date { get; set; }",
+      "Status": "public int Status { get; set; }",
+      "Code": "public int Code { get; set; }",
+      "DevStore.Bff.Checkout.Models": "namespace DevStore.Bff.Checkout.Models;"
+    },
+    "src/api-gateways/DevStore.Bff.Checkout/Models/AddressDto.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/HttpClientAuthorizationDelegatingHandler.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/AppServicesSettings.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/OrderController.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/ShoppingCartController.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/PaymentService.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/OrderService.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/ShoppingCartService.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CustomerService.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CatalogService.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs": {},
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/GrpcServiceInterceptor.cs": {},
+    "src/web/DevStore.WebApp.Status/Program.cs": {},
+    "src/web/DevStore.WebApp.MVC/Program.cs": {},
+    "src/web/DevStore.WebApp.MVC/Configuration/IdentityConfig.cs": {},
+    "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs": {
+      "PollyExtensions": "public static class PollyExtensions",
+      "WaitAndRetry": "public static AsyncRetryPolicy<HttpResponseMessage> WaitAndRetry()",
+      "DependencyInjectionConfig": "public static class DependencyInjectionConfig",
+      "RegisterServices": "public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)",
+      "DevStore.WebApp.MVC.Configuration": "namespace DevStore.WebApp.MVC.Configuration;"
+    },
+    "src/web/DevStore.WebApp.MVC/Configuration/WebAppConfig.cs": {},
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/script.js": {},
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.js": {
+      "CreditCard": "function CreditCard() {"
+    },
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.min.js": {
+      "CreditCard": "function CreditCard(){$(\"#card_number\").length>0&&$(\"#card_number\").validateCreditCard(function(n){$(this).removeClass()"
+    },
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/site.js": {
+      "CreditCard": "function CreditCard() {"
+    },
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/creditcardvalidator.js": {
+      "Range": "function Range(trie1) {",
+      "Trie": "function Trie() {"
+    },
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js": {
+      "validationInfo": "function validationInfo(form) {",
+      "onReset": "function onReset(event) { // 'this' is the form element",
+      "onSuccess": "function onSuccess(error) { // 'this' is the form element",
+      "onErrors": "function onErrors(event, validator) { // 'this' is the form element",
+      "onError": "function onError(error, inputElement) { // 'this' is the form element",
+      "appendModelPrefix": "function appendModelPrefix(value, prefix) {",
+      "getModelPrefix": "function getModelPrefix(fieldName) {",
+      "escapeAttributeValue": "function escapeAttributeValue(value) {",
+      "splitAndTrim": "function splitAndTrim(value) {",
+      "setValidationValues": "function setValidationValues(options, ruleName, value) {"
+    },
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js": {
+      "u": "function u(e){var n=a(e),t=n.data(v),r=a.proxy(l,e),i=f.unobtrusive.options||{},u=function(n,t){var r=i[n];r&&a.isFuncti",
+      "l": "function l(e){var n=a(this),t=\"__jquery_unobtrusive_validation_form_reset\";if(!n.data(t)){n.data(t,!0);try{n.data(\"valid",
+      "s": "function s(e){var n=e.data(\"unobtrusiveContainer\");if(n){var t=n.attr(\"data-valmsg-replace\"),r=t?a.parseJSON(t):null;n.a",
+      "d": "function d(e,n){var t=a(this).find(\"[data-valmsg-summary=true]\"),r=t.find(\"ul\");r&&r.length&&n.errorList.length&&(r.empt",
+      "o": "function o(e,n){var r=a(this).find(\"[data-valmsg-for='\"+t(n[0].name)+\"']\"),i=r.attr(\"data-valmsg-replace\"),o=i?a.parseJS",
+      "i": "function i(a,e){return 0===a.indexOf(\"*.\")&&(a=a.replace(\"*.\",e)),a}",
+      "r": "function r(a){return a.substr(0,a.lastIndexOf(\".\")+1)}",
+      "t": "function t(a){return a.replace(/([!\"#$%&'()*+,.\\/:;<=>?@\\[\\\\\\]^`{|}~])/g,\"\\\\$1\")}",
+      "n": "function n(a){return a.replace(/^\\s+|\\s+$/g,\"\").split(/\\s*,\\s*/g)}",
+      "e": "function e(a,e,n){a.rules[e]=n,a.message&&(a.messages[e]=a.message)}"
+    },
+    "src/web/DevStore.WebApp.MVC/Models/VoucherViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/ShoppingCartViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/ProductViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/UserViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/ErrorViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/AddressViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/PagedViewModel.cs": {},
+    "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs": {
+      "OrderViewModel": "public class OrderViewModel",
+      "OrderItemViewModel": "public class OrderItemViewModel",
+      "Image": "public string Image { get; set; }",
+      "set": "set;",
+      "get": "get;",
+      "Price": "public decimal Price { get; set; }",
+      "Quantity": "public int Quantity { get; set; }",
+      "Name": "public string Name { get; set; }",
+      "OrderId": "public Guid OrderId { get; set; }",
+      "Address": "public AddressViewModel Address { get; set; }",
+      "OrderItems": "public List<OrderItemViewModel> OrderItems { get; set; } = new();",
+      "HasVoucher": "public bool HasVoucher { get; set; }",
+      "Discount": "public decimal Discount { get; set; }",
+      "Amount": "public decimal Amount { get; set; }",
+      "Date": "public DateTime Date { get; set; }",
+      "Status": "public int Status { get; set; }",
+      "Code": "public int Code { get; set; }",
+      "DevStore.WebApp.MVC.Models": "namespace DevStore.WebApp.MVC.Models;"
+    },
+    "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs": {
+      "TransactionViewModel": "public class TransactionViewModel",
+      "SecurityCode": "[Required(ErrorMessage = \"Security code is required\")]",
+      "set": "set;",
+      "get": "get;",
+      "ExpirationDate": "[RegularExpression(@\"(0[1-9]|1[0-2])\\/[0-9]{2}\", ErrorMessage = \"The expiration must be in form of MM/YY\")]",
+      "Holder": "[Required(ErrorMessage = \"Please inform card holder\")]",
+      "CardNumber": "[Required(ErrorMessage = \"Card number is required\")]",
+      "Address": "public AddressViewModel Address { get; set; }",
+      "Items": "public List<ShoppingCartItemViewModel> Items { get; set; } = new();",
+      "HasVoucher": "public bool HasVoucher { get; set; }",
+      "Voucher": "public string Voucher { get; set; }",
+      "Discount": "public decimal Discount { get; set; }",
+      "Amount": "public decimal Amount { get; set; }",
+      "DevStore.WebApp.MVC.Models": "namespace DevStore.WebApp.MVC.Models;"
+    },
+    "src/web/DevStore.WebApp.MVC/Extensions/ShoppingCartViewComponent.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/RazorHelpers.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/AppSettings.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/CustomHttpRequestException.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/SocialNumberAnnotation.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/SummaryViewComponent.cs": {},
+    "src/web/DevStore.WebApp.MVC/Extensions/PagingViewComponent.cs": {},
+    "src/web/DevStore.WebApp.MVC/Properties/AssemblyInfo.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/CatalogController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/MainController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/OrderController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/ShoppingCartController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/IdentityController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/HomeController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Controllers/CustomerController.cs": {},
+    "src/web/DevStore.WebApp.MVC/Services/Service.cs": {},
+    "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs": {
+      "CheckoutBffService": "public class CheckoutBffService : Service, ICheckoutBffService",
+      "MapToOrder": "public TransactionViewModel MapToOrder(ShoppingCartViewModel shoppingCart, AddressViewModel address)",
+      "GetCustomersById": "public async Task<IEnumerable<OrderViewModel>> GetCustomersById()",
+      "GetLastOrder": "public async Task<OrderViewModel> GetLastOrder()",
+      "FinishOrder": "public async Task<ResponseResult> FinishOrder(TransactionViewModel transaction)",
+      "ApplyVoucher": "public async Task<ResponseResult> ApplyVoucher(string voucher)",
+      "RemoveItemFromShoppingCart": "public async Task<ResponseResult> RemoveItemFromShoppingCart(Guid productId)",
+      "UpdateShoppingCartItem": "public async Task<ResponseResult> UpdateShoppingCartItem(Guid productId, ShoppingCartItemViewModel shoppingCartItem)",
+      "AddShoppingCartItem": "public async Task<ResponseResult> AddShoppingCartItem(ShoppingCartItemViewModel shoppingCart)",
+      "GetShoppingCartItemsQuantity": "public async Task<int> GetShoppingCartItemsQuantity()",
+      "GetShoppingCart": "public async Task<ShoppingCartViewModel> GetShoppingCart()",
+      "ICheckoutBffService": "public interface ICheckoutBffService",
+      "DevStore.WebApp.MVC.Services": "namespace DevStore.WebApp.MVC.Services;"
+    },
+    "src/web/DevStore.WebApp.MVC/Services/CustomerService.cs": {},
+    "src/web/DevStore.WebApp.MVC/Services/AuthService.cs": {},
+    "src/web/DevStore.WebApp.MVC/Services/CatalogService.cs": {},
+    "src/web/DevStore.WebApp.MVC/Services/Handlers/HttpClientAuthorizationDelegatingHandler.cs": {},
+    "src/tests/DevStore.Tests/IntegrationTest.cs": {
+      "IntegrationTest": "public abstract class IntegrationTest<TProgram>(string baseUrl) :",
+      "Dispose": "public void Dispose()",
+      "ShouldEventuallyAssert": "protected static async Task ShouldEventuallyAssert(Func<Task> assert, TimeSpan? timeout = null,",
+      "ExecuteInScope": "protected async Task<TResult> ExecuteInScope<TService, TResult>(Func<TService, Task<TResult>> action)",
+      "DisposeAsync": "public Task DisposeAsync()",
+      "InitializeAsync": "public Task InitializeAsync()",
+      "DevStore.Tests": "namespace DevStore.Tests;"
+    },
+    "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs": {
+      "CatalogIntegrationTests": "public abstract class CatalogIntegrationTests()",
+      "AddProducts": "protected async Task AddProducts(params Product[] products)",
+      "DevStore.Tests.CatalogApi": "namespace DevStore.Tests.CatalogApi;"
+    },
+    "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs": {
+      "CatalogTests": "public class CatalogTests : CatalogIntegrationTests",
+      "GetTests": "public class GetTests : CatalogTests",
+      "NoParameters_Success": "[Fact]",
+      "DevStore.Tests.CatalogApi": "namespace DevStore.Tests.CatalogApi;"
+    },
+    "src/services/DevStore.Identity.API/Program.cs": {},
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.Designer.cs": {
+      "DevStore.Identity.API.Migrations": "namespace DevStore.Identity.API.Migrations",
+      "Initial": "[DbContext(typeof(ApplicationDbContext))]",
+      "BuildTargetModel": "protected override void BuildTargetModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.cs": {
+      "DevStore.Identity.API.Migrations": "namespace DevStore.Identity.API.Migrations",
+      "Initial": "public partial class Initial : Migration",
+      "Down": "protected override void Down(MigrationBuilder migrationBuilder)",
+      "Up": "protected override void Up(MigrationBuilder migrationBuilder)"
+    },
+    "src/services/DevStore.Identity.API/Migrations/ApplicationDbContextModelSnapshot.cs": {
+      "DevStore.Identity.API.Migrations": "namespace DevStore.Identity.API.Migrations",
+      "ApplicationDbContextModelSnapshot": "[DbContext(typeof(ApplicationDbContext))]",
+      "BuildModel": "protected override void BuildModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Identity.API/Configuration/IdentityConfig.cs": {},
+    "src/services/DevStore.Identity.API/Configuration/SwaggerConfig.cs": {},
+    "src/services/DevStore.Identity.API/Configuration/DbMigrationHelpers.cs": {
+      "DbMigrationHelpers": "public static class DbMigrationHelpers",
+      "EnsureSeedData": "public static async Task EnsureSeedData(IServiceProvider serviceProvider)",
+      "DevStore.Identity.API.Configuration": "namespace DevStore.Identity.API.Configuration;"
+    },
+    "src/services/DevStore.Identity.API/Configuration/ApiConfig.cs": {},
+    "src/services/DevStore.Identity.API/Configuration/MessageBusConfig.cs": {},
+    "src/services/DevStore.Identity.API/Models/UserViewModels.cs": {},
+    "src/services/DevStore.Identity.API/Controllers/AuthController.cs": {},
+    "src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs": {},
+    "src/services/DevStore.Orders.API/Program.cs": {},
+    "src/services/DevStore.Orders.API/Configuration/SwaggerConfig.cs": {},
+    "src/services/DevStore.Orders.API/Configuration/DependencyInjectionConfig.cs": {},
+    "src/services/DevStore.Orders.API/Configuration/DbMigrationHelpers.cs": {
+      "DbMigrationHelpers": "public static class DbMigrationHelpers",
+      "EnsureSeedVouchers": "private static async Task EnsureSeedVouchers(OrdersContext context)",
+      "EnsureSeedData": "public static async Task EnsureSeedData(IServiceProvider serviceProvider)",
+      "DevStore.Orders.API.Configuration": "namespace DevStore.Orders.API.Configuration;"
+    },
+    "src/services/DevStore.Orders.API/Configuration/ApiConfig.cs": {},
+    "src/services/DevStore.Orders.API/Configuration/MessageBusConfig.cs": {},
+    "src/services/DevStore.Orders.API/Application/DTO/OrderItemDTO.cs": {},
+    "src/services/DevStore.Orders.API/Application/DTO/VoucherDTO.cs": {},
+    "src/services/DevStore.Orders.API/Application/DTO/OrderDTO.cs": {},
+    "src/services/DevStore.Orders.API/Application/DTO/AddressDto.cs": {},
+    "src/services/DevStore.Orders.API/Application/Queries/OrderQueries.cs": {},
+    "src/services/DevStore.Orders.API/Application/Queries/VoucherQueries.cs": {},
+    "src/services/DevStore.Orders.API/Application/Commands/AddOrderCommand.cs": {},
+    "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs": {},
+    "src/services/DevStore.Orders.API/Application/Events/OrderDoneEvent.cs": {},
+    "src/services/DevStore.Orders.API/Application/Events/OrderEventHandler.cs": {},
+    "src/services/DevStore.Orders.API/Controllers/OrderController.cs": {},
+    "src/services/DevStore.Orders.API/Controllers/VoucherController.cs": {},
+    "src/services/DevStore.Orders.API/Services/OrderOrchestratorIntegrationHandler.cs": {},
+    "src/services/DevStore.Orders.API/Services/OrderIntegrationHandler.cs": {},
+    "src/services/DevStore.Billing.API/Program.cs": {},
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.Designer.cs": {
+      "DevStore.Billing.API.Migrations": "namespace DevStore.Billing.API.Migrations",
+      "Initial": "[DbContext(typeof(BillingContext))]",
+      "BuildTargetModel": "protected override void BuildTargetModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.cs": {
+      "DevStore.Billing.API.Migrations": "namespace DevStore.Billing.API.Migrations",
+      "Initial": "public partial class Initial : Migration",
+      "Down": "protected override void Down(MigrationBuilder migrationBuilder)",
+      "Up": "protected override void Up(MigrationBuilder migrationBuilder)"
+    },
+    "src/services/DevStore.Billing.API/Migrations/BillingContextModelSnapshot.cs": {
+      "DevStore.Billing.API.Migrations": "namespace DevStore.Billing.API.Migrations",
+      "BillingContextModelSnapshot": "[DbContext(typeof(BillingContext))]",
+      "BuildModel": "protected override void BuildModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Billing.API/Configuration/DependencyInjectionConfig.cs": {},
+    "src/services/DevStore.Billing.API/Configuration/DbMigrationHelpers.cs": {
+      "DbMigrationHelpers": "public static class DbMigrationHelpers",
+      "EnsureSeedData": "private static async Task EnsureSeedData(IServiceProvider serviceProvider)",
+      "DevStore.Billing.API.Configuration": "namespace DevStore.Billing.API.Configuration;"
+    },
+    "src/services/DevStore.Billing.API/Configuration/ApiConfig.cs": {},
+    "src/services/DevStore.Billing.API/Configuration/MessageBusConfig.cs": {},
+    "src/services/DevStore.Billing.API/Facade/BillingConfig.cs": {},
+    "src/services/DevStore.Billing.API/Facade/IPaymentFacade.cs": {},
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs": {},
+    "src/services/DevStore.Billing.API/Models/Transaction.cs": {},
+    "src/services/DevStore.Billing.API/Models/TransactionType.cs": {},
+    "src/services/DevStore.Billing.API/Models/TransactionStatus.cs": {},
+    "src/services/DevStore.Billing.API/Models/IPaymentRepository.cs": {},
+    "src/services/DevStore.Billing.API/Models/CreditCard.cs": {},
+    "src/services/DevStore.Billing.API/Models/Payment.cs": {},
+    "src/services/DevStore.Billing.API/Controllers/PaymentController.cs": {},
+    "src/services/DevStore.Billing.API/Data/BillingContext.cs": {},
+    "src/services/DevStore.Billing.API/Data/Repository/PaymentRepository.cs": {},
+    "src/services/DevStore.Billing.API/Data/Mappings/TransactionMapping.cs": {},
+    "src/services/DevStore.Billing.API/Data/Mappings/PaymentMapping.cs": {},
+    "src/services/DevStore.Billing.API/Services/BillingService.cs": {},
+    "src/services/DevStore.Billing.API/Services/IBillingService.cs": {},
+    "src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs": {},
+    "src/services/DevStore.Customers.API/Program.cs": {},
+    "src/services/DevStore.Customers.API/Migrations/CustomerContextModelSnapshot.cs": {
+      "DevStore.Customers.API.Migrations": "namespace DevStore.Customers.API.Migrations",
+      "CustomerContextModelSnapshot": "[DbContext(typeof(CustomerContext))]",
+      "BuildModel": "protected override void BuildModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.Designer.cs": {
+      "DevStore.Customers.API.Migrations": "namespace DevStore.Customers.API.Migrations",
+      "Initial": "[DbContext(typeof(CustomerContext))]",
+      "BuildTargetModel": "protected override void BuildTargetModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.cs": {
+      "DevStore.Customers.API.Migrations": "namespace DevStore.Customers.API.Migrations",
+      "Initial": "public partial class Initial : Migration",
+      "Down": "protected override void Down(MigrationBuilder migrationBuilder)",
+      "Up": "protected override void Up(MigrationBuilder migrationBuilder)"
+    },
+    "src/services/DevStore.Customers.API/Configuration/SwaggerConfig.cs": {},
+    "src/services/DevStore.Customers.API/Configuration/DependencyInjectionConfig.cs": {},
+    "src/services/DevStore.Customers.API/Configuration/DbMigrationHelpers.cs": {
+      "DbMigrationHelpers": "public static class DbMigrationHelpers",
+      "EnsureSeedData": "public static async Task EnsureSeedData(IServiceProvider serviceProvider)",
+      "DevStore.Customers.API.Configuration": "namespace DevStore.Customers.API.Configuration;"
+    },
+    "src/services/DevStore.Customers.API/Configuration/ApiConfig.cs": {},
+    "src/services/DevStore.Customers.API/Configuration/MessageBusConfig.cs": {},
+    "src/services/DevStore.Customers.API/Models/Address.cs": {},
+    "src/services/DevStore.Customers.API/Models/Customer.cs": {},
+    "src/services/DevStore.Customers.API/Models/ICustomerRepository.cs": {},
+    "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs": {},
+    "src/services/DevStore.Customers.API/Application/Commands/AddAddressCommand.cs": {},
+    "src/services/DevStore.Customers.API/Application/Commands/CustomerCommandHandler.cs": {},
+    "src/services/DevStore.Customers.API/Application/Events/NewCustomerAddedEvent.cs": {},
+    "src/services/DevStore.Customers.API/Application/Events/CustomerEventHandler.cs": {},
+    "src/services/DevStore.Customers.API/Controllers/CustomerController.cs": {},
+    "src/services/DevStore.Customers.API/Data/CustomerContext.cs": {},
+    "src/services/DevStore.Customers.API/Data/Repository/CustomerRepository.cs": {},
+    "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs": {},
+    "src/services/DevStore.Customers.API/Data/Mappings/AddressMapping.cs": {},
+    "src/services/DevStore.Customers.API/Services/NewCustomerIntegrationHandler.cs": {},
+    "src/services/DevStore.Catalog.API/Program.cs": {
+      "DevStore.Catalog.API": "namespace DevStore.Catalog.API",
+      "Program": "public partial class Program;"
+    },
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.Designer.cs": {
+      "DevStore.Catalog.API.Migrations": "namespace DevStore.Catalog.API.Migrations",
+      "Initial": "[DbContext(typeof(CatalogContext))]",
+      "BuildTargetModel": "protected override void BuildTargetModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Catalog.API/Migrations/CatalogContextModelSnapshot.cs": {
+      "DevStore.Catalog.API.Migrations": "namespace DevStore.Catalog.API.Migrations",
+      "CatalogContextModelSnapshot": "[DbContext(typeof(CatalogContext))]",
+      "BuildModel": "protected override void BuildModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.cs": {
+      "DevStore.Catalog.API.Migrations": "namespace DevStore.Catalog.API.Migrations",
+      "Initial": "public partial class Initial : Migration",
+      "Down": "protected override void Down(MigrationBuilder migrationBuilder)",
+      "Up": "protected override void Up(MigrationBuilder migrationBuilder)"
+    },
+    "src/services/DevStore.Catalog.API/Configuration/SwaggerConfig.cs": {},
+    "src/services/DevStore.Catalog.API/Configuration/DependencyInjectionConfig.cs": {},
+    "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs": {
+      "DbMigrationHelpers": "public static class DbMigrationHelpers",
+      "EnsureSeedProducts": "private static async Task EnsureSeedProducts(CatalogContext context)",
+      "EnsureSeedData": "public static async Task EnsureSeedData(IServiceProvider serviceProvider)",
+      "DevStore.Catalog.API.Configuration": "namespace DevStore.Catalog.API.Configuration;"
+    },
+    "src/services/DevStore.Catalog.API/Configuration/ApiConfig.cs": {},
+    "src/services/DevStore.Catalog.API/Configuration/MessageBusConfig.cs": {},
+    "src/services/DevStore.Catalog.API/Models/PagedResult.cs": {},
+    "src/services/DevStore.Catalog.API/Models/IProductRepository.cs": {},
+    "src/services/DevStore.Catalog.API/Models/Product.cs": {},
+    "src/services/DevStore.Catalog.API/Controllers/CatalogController.cs": {},
+    "src/services/DevStore.Catalog.API/Data/CatalogContext.cs": {},
+    "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs": {},
+    "src/services/DevStore.Catalog.API/Data/Mappings/ProductMapping.cs": {},
+    "src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs": {},
+    "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs": {
+      "ShoppingCart": "public class ShoppingCart",
+      "CustomResponse": "private IResult CustomResponse(object result = null)",
+      "AddErrorToStack": "private void AddErrorToStack(string error)",
+      "ValidateShoppingCart": "private bool ValidateShoppingCart(CustomerShoppingCart shoppingCart)",
+      "Persist": "private async Task Persist()",
+      "GetValidItem": "private async Task<CartItem> GetValidItem(Guid productId, CustomerShoppingCart cart, CartItem item = null)",
+      "ManageCart": "private void ManageCart(CustomerShoppingCart cart, CartItem item)",
+      "ManageNewCart": "private void ManageNewCart(CartItem item)",
+      "GetShoppingCartClient": "private async Task<CustomerShoppingCart> GetShoppingCartClient()",
+      "ApplyVoucher": "public async Task<IResult> ApplyVoucher(Voucher voucher)",
+      "RemoveItem": "public async Task<IResult> RemoveItem(Guid productId)",
+      "UpdateItem": "public async Task<IResult> UpdateItem(Guid productId, CartItem item)",
+      "AddItem": "public async Task<IResult> AddItem(CartItem item)",
+      "GetShoppingCart": "public async Task<CustomerShoppingCart> GetShoppingCart()",
+      "DevStore.ShoppingCart.API": "namespace DevStore.ShoppingCart.API;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Program.cs": {},
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.cs": {
+      "DevStore.ShoppingCart.API.Migrations": "namespace DevStore.ShoppingCart.API.Migrations",
+      "Initial": "public partial class Initial : Migration",
+      "Down": "protected override void Down(MigrationBuilder migrationBuilder)",
+      "Up": "protected override void Up(MigrationBuilder migrationBuilder)"
+    },
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.Designer.cs": {
+      "DevStore.ShoppingCart.API.Migrations": "namespace DevStore.ShoppingCart.API.Migrations",
+      "Initial": "[DbContext(typeof(ShoppingCartContext))]",
+      "BuildTargetModel": "protected override void BuildTargetModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.ShoppingCart.API/Migrations/ShoppingCartContextModelSnapshot.cs": {
+      "DevStore.ShoppingCart.API.Migrations": "namespace DevStore.ShoppingCart.API.Migrations",
+      "ShoppingCartContextModelSnapshot": "[DbContext(typeof(ShoppingCartContext))]",
+      "BuildModel": "protected override void BuildModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs": {
+      "SwaggerConfig": "public static class SwaggerConfig",
+      "UseSwaggerConfiguration": "public static void UseSwaggerConfiguration(this WebApplication app)",
+      "AddSwaggerConfiguration": "public static void AddSwaggerConfiguration(this IServiceCollection services)",
+      "DevStore.ShoppingCart.API.Configuration": "namespace DevStore.ShoppingCart.API.Configuration;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Configuration/DependencyInjectionConfig.cs": {
+      "DependencyInjectionConfig": "public static class DependencyInjectionConfig",
+      "RegisterServices": "public static void RegisterServices(this IServiceCollection services)",
+      "DevStore.ShoppingCart.API.Configuration": "namespace DevStore.ShoppingCart.API.Configuration;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Configuration/DbMigrationHelpers.cs": {
+      "DbMigrationHelpers": "public static class DbMigrationHelpers",
+      "EnsureSeedData": "public static async Task EnsureSeedData(IServiceProvider serviceProvider)",
+      "DevStore.ShoppingCart.API.Configuration": "namespace DevStore.ShoppingCart.API.Configuration;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs": {
+      "ApiConfig": "public static class ApiConfig",
+      "UseApiConfiguration": "public static void UseApiConfiguration(this WebApplication app, IWebHostEnvironment env)",
+      "AddApiConfiguration": "public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)",
+      "DevStore.ShoppingCart.API.Configuration": "namespace DevStore.ShoppingCart.API.Configuration;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Configuration/MessageBusConfig.cs": {
+      "MessageBusConfig": "public static class MessageBusConfig",
+      "AddMessageBusConfiguration": "public static void AddMessageBusConfiguration(this IServiceCollection services,",
+      "DevStore.ShoppingCart.API.Configuration": "namespace DevStore.ShoppingCart.API.Configuration;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs": {
+      "CartItem": "public class CartItem",
+      "ShoppingCartItemValidation": "public class ShoppingCartItemValidation : AbstractValidator<CartItem>",
+      "IsValid": "internal bool IsValid()",
+      "UpdateUnit": "internal void UpdateUnit(int quantity)",
+      "AddUnit": "internal void AddUnit(int quantity)",
+      "CalculatePrice": "internal decimal CalculatePrice()",
+      "SetShoppingCart": "internal void SetShoppingCart(Guid carrinhoId)",
+      "CustomerShoppingCart": "[JsonIgnore] public CustomerShoppingCart CustomerShoppingCart { get; set; }",
+      "set": "set;",
+      "get": "get;",
+      "ShoppingCartId": "public Guid ShoppingCartId { get; set; }",
+      "Image": "public string Image { get; set; }",
+      "Price": "public decimal Price { get; set; }",
+      "Quantity": "public int Quantity { get; set; }",
+      "Name": "public string Name { get; set; }",
+      "ProductId": "public Guid ProductId { get; set; }",
+      "Id": "public Guid Id { get; set; }",
+      "DevStore.ShoppingCart.API.Model": "namespace DevStore.ShoppingCart.API.Model;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs": {
+      "DiscountType": "public enum DiscountType",
+      "Value": "Value = 1",
+      "Percentage": "Percentage = 0",
+      "Voucher": "public class Voucher",
+      "set": "set;",
+      "get": "get;",
+      "Code": "public string Code { get; set; }",
+      "Discount": "public decimal? Discount { get; set; }",
+      "DevStore.ShoppingCart.API.Model": "namespace DevStore.ShoppingCart.API.Model;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs": {
+      "CustomerShoppingCart": "public class CustomerShoppingCart",
+      "CustomerShoppingCartValidation": "public class CustomerShoppingCartValidation : AbstractValidator<CustomerShoppingCart>",
+      "IsValid": "internal bool IsValid()",
+      "RemoveItem": "internal void RemoveItem(CartItem item)",
+      "UpdateUnit": "internal void UpdateUnit(CartItem item, int unities)",
+      "UpdateItem": "internal void UpdateItem(CartItem item)",
+      "AddItem": "internal void AddItem(CartItem item)",
+      "GetProductById": "internal CartItem GetProductById(Guid productId)",
+      "HasItem": "internal bool HasItem(CartItem item)",
+      "CalculateDiscountPrice": "private void CalculateDiscountPrice()",
+      "CalculateShoppingCartPrice": "internal void CalculateShoppingCartPrice()",
+      "ApplyVoucher": "public void ApplyVoucher(Voucher voucher)",
+      "Voucher": "public Voucher Voucher { get; set; }",
+      "set": "set;",
+      "get": "get;",
+      "Discount": "public decimal Discount { get; set; }",
+      "HasVoucher": "public bool HasVoucher { get; set; }",
+      "ValidationResult": "public ValidationResult ValidationResult { get; set; }",
+      "Items": "public List<CartItem> Items { get; set; } = new();",
+      "Total": "public decimal Total { get; set; }",
+      "CustomerId": "public Guid CustomerId { get; set; }",
+      "Id": "public Guid Id { get; set; }",
+      "DevStore.ShoppingCart.API.Model": "namespace DevStore.ShoppingCart.API.Model;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs": {
+      "ShoppingCartContext": "public sealed class ShoppingCartContext : DbContext",
+      "OnModelCreating": "protected override void OnModelCreating(ModelBuilder modelBuilder)",
+      "CustomerShoppingCart": "public DbSet<CustomerShoppingCart> CustomerShoppingCart { get; set; }",
+      "set": "set;",
+      "get": "get;",
+      "CartItems": "public DbSet<CartItem> CartItems { get; set; }",
+      "DevStore.ShoppingCart.API.Data": "namespace DevStore.ShoppingCart.API.Data;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs": {
+      "ShoppingCartIntegrationHandler": "public class ShoppingCartIntegrationHandler : IConsumer<OrderDoneIntegrationEvent>",
+      "RemoveShoppingCart": "private async Task RemoveShoppingCart(OrderDoneIntegrationEvent message)",
+      "Consume": "public async Task Consume(ConsumeContext<OrderDoneIntegrationEvent> context)",
+      "DevStore.ShoppingCart.API.Services": "namespace DevStore.ShoppingCart.API.Services;"
+    },
+    "src/services/DevStore.ShoppingCart.API/Services/gRPC/ShoppingCartGrpcService.cs": {
+      "ShoppingCartGrpcService": "[Authorize]",
+      "MapShoppingCartClientToProtoResponse": "private static CustomerShoppingCartClientResponse MapShoppingCartClientToProtoResponse(",
+      "GetShoppingCartClient": "private async Task<CustomerShoppingCart> GetShoppingCartClient()",
+      "GetShoppingCart": "public override async Task<CustomerShoppingCartClientResponse> GetShoppingCart(GetShoppingCartRequest request,",
+      "DevStore.ShoppingCart.API.Services.gRPC": "namespace DevStore.ShoppingCart.API.Services.gRPC;"
+    },
+    "src/services/DevStore.Orders.Infra/Migrations/OrdersContextModelSnapshot.cs": {
+      "DevStore.Orders.Infra.Migrations": "namespace DevStore.Orders.Infra.Migrations",
+      "OrdersContextModelSnapshot": "[DbContext(typeof(OrdersContext))]",
+      "BuildModel": "protected override void BuildModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.Designer.cs": {
+      "DevStore.Orders.Infra.Migrations": "namespace DevStore.Orders.Infra.Migrations",
+      "Initial": "[DbContext(typeof(OrdersContext))]",
+      "BuildTargetModel": "protected override void BuildTargetModel(ModelBuilder modelBuilder)"
+    },
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.cs": {
+      "DevStore.Orders.Infra.Migrations": "namespace DevStore.Orders.Infra.Migrations",
+      "Initial": "public partial class Initial : Migration",
+      "Down": "protected override void Down(MigrationBuilder migrationBuilder)",
+      "Up": "protected override void Up(MigrationBuilder migrationBuilder)"
+    },
+    "src/services/DevStore.Orders.Infra/Repository/VoucherRepository.cs": {},
+    "src/services/DevStore.Orders.Infra/Repository/OrderRepository.cs": {},
+    "src/services/DevStore.Orders.Infra/Context/OrdersContext.cs": {},
+    "src/services/DevStore.Orders.Infra/Mappings/OrderMapping.cs": {},
+    "src/services/DevStore.Orders.Infra/Mappings/VoucherMapping.cs": {},
+    "src/services/DevStore.Orders.Infra/Mappings/OrderItemMapping.cs": {},
+    "src/services/DevStore.Orders.Domain/Vouchers/VoucherDiscountType.cs": {},
+    "src/services/DevStore.Orders.Domain/Vouchers/Voucher.cs": {},
+    "src/services/DevStore.Orders.Domain/Vouchers/IVoucherRepository.cs": {},
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherValidation.cs": {},
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherSpec.cs": {},
+    "src/services/DevStore.Orders.Domain/Orders/Order.cs": {},
+    "src/services/DevStore.Orders.Domain/Orders/Address.cs": {},
+    "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs": {},
+    "src/services/DevStore.Orders.Domain/Orders/OrderItem.cs": {},
+    "src/services/DevStore.Orders.Domain/Orders/IOrderRepository.cs": {},
+    "src/services/DevStore.Billing.DevsPay/Transaction.cs": {},
+    "src/services/DevStore.Billing.DevsPay/TransactionStatus.cs": {},
+    "src/services/DevStore.Billing.DevsPay/DevsPayService.cs": {},
+    "src/services/DevStore.Billing.DevsPay/Card.cs": {},
+    "src/services/DevStore.Billing.DevsPay/PaymentMethod.cs": {},
+    "src/building-blocks/DevStore.MessageBus/ConfigurationExtensions.cs": {},
+    "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs": {
+      "DbHealthChecker": "public class DbHealthChecker",
+      "CheckTable": "private static async Task<bool> CheckTable<T>(DbContext db) where T : class",
+      "CheckTableExists": "public static async Task<bool> CheckTableExists<T>(DbContext db) where T : class",
+      "CanConnect": "private static bool CanConnect(DbContext context)",
+      "WaitForTable": "public static async Task WaitForTable<T>(DbContext context) where T : class",
+      "TestConnection": "public static async Task TestConnection(DbContext context)",
+      "DevStore.WebAPI.Core.Configuration": "namespace DevStore.WebAPI.Core.Configuration;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs": {
+      "GenericHealthCheck": "public static class GenericHealthCheck",
+      "UseDefaultHealthcheck": "public static IApplicationBuilder UseDefaultHealthcheck(this IApplicationBuilder app)",
+      "AddDefaultHealthCheck": "public static IHealthChecksBuilder AddDefaultHealthCheck(",
+      "DevStore.WebAPI.Core.Configuration": "namespace DevStore.WebAPI.Core.Configuration;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/MessagingExtensions.cs": {
+      "MessagingExtensions": "public static class MessagingExtensions",
+      "AddMessagingHealthCheck": "public static IHealthChecksBuilder AddMessagingHealthCheck(this IHealthChecksBuilder healthChecksBuilder,",
+      "DevStore.WebAPI.Core.Configuration": "namespace DevStore.WebAPI.Core.Configuration;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs": {
+      "ApiCoreConfig": "public static class ApiCoreConfig",
+      "UseApiCoreConfiguration": "public static void UseApiCoreConfiguration(this WebApplication app, IWebHostEnvironment env)",
+      "WithDbContext": "public static IServiceCollection WithDbContext<TContext>(this IServiceCollection services,",
+      "AddApiCoreConfiguration": "public static IServiceCollection AddApiCoreConfiguration(this IServiceCollection services,",
+      "AddLogger": "public static void AddLogger(this IServiceCollection services, IConfiguration configuration)",
+      "DevStore.WebAPI.Core.Configuration": "namespace DevStore.WebAPI.Core.Configuration;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs": {
+      "ProviderConfiguration": "public class ProviderConfiguration",
+      "DetectDatabase": "public static (DatabaseType, string) DetectDatabase(IConfiguration configuration)",
+      "Build": "public static ProviderConfiguration Build(string connString)",
+      "With": "public ProviderConfiguration With()",
+      "Sqlite": "public Action<DbContextOptionsBuilder> Sqlite =>",
+      "Postgre": "public Action<DbContextOptionsBuilder> Postgre =>",
+      "MySql": "public Action<DbContextOptionsBuilder> MySql =>",
+      "SqlServer": "public Action<DbContextOptionsBuilder> SqlServer =>",
+      "DevStore.WebAPI.Core.DatabaseFlavor": "namespace DevStore.WebAPI.Core.DatabaseFlavor;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs": {
+      "ContextConfiguration": "public static class ContextConfiguration",
+      "PersistStore": "public static IServiceCollection PersistStore<TContext>(this IServiceCollection services,",
+      "DevStore.WebAPI.Core.DatabaseFlavor": "namespace DevStore.WebAPI.Core.DatabaseFlavor;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs": {
+      "DatabaseType": "public enum DatabaseType",
+      "Sqlite": "Sqlite",
+      "Postgre": "Postgre",
+      "MySql": "MySql",
+      "SqlServer": "SqlServer",
+      "None": "None",
+      "DevStore.WebAPI.Core.DatabaseFlavor": "namespace DevStore.WebAPI.Core.DatabaseFlavor;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs": {
+      "ProviderSelector": "public static class ProviderSelector",
+      "WithProviderAutoSelection": "public static Action<DbContextOptionsBuilder> WithProviderAutoSelection((DatabaseType, string) options)",
+      "ConfigureProviderForContext": "public static IServiceCollection ConfigureProviderForContext<TContext>(",
+      "DevStore.WebAPI.Core.DatabaseFlavor": "namespace DevStore.WebAPI.Core.DatabaseFlavor;"
+    },
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/CustomAuthorize.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/User/ClaimsPrincipalExtensions.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/User/AspNetUser.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/User/IAspNetUser.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/PollyExtensions.cs": {},
+    "src/building-blocks/DevStore.WebAPI.Core/Controllers/MainController.cs": {},
+    "src/building-blocks/DevStore.Core/DomainObjects/IAggregateRoot.cs": {
+      "IAggregateRoot": "public interface IAggregateRoot",
+      "DevStore.Core.DomainObjects": "namespace DevStore.Core.DomainObjects;"
+    },
+    "src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs": {
+      "DomainException": "public class DomainException : Exception",
+      "DevStore.Core.DomainObjects": "namespace DevStore.Core.DomainObjects;"
+    },
+    "src/building-blocks/DevStore.Core/DomainObjects/Email.cs": {
+      "Email": "public class Email",
+      "Validate": "public static bool Validate(string email)",
+      "Address": "public string Address { get; private set; }",
+      "set": "private set;",
+      "get": "get;",
+      "DevStore.Core.DomainObjects": "namespace DevStore.Core.DomainObjects;"
+    },
+    "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs": {
+      "Entity": "public abstract class Entity",
+      "ToString": "public override string ToString()",
+      "GetHashCode": "public override int GetHashCode()",
+      "Equals": "public override bool Equals(object obj)",
+      "ClearEvents": "public void ClearEvents()",
+      "RemoveEvent": "public void RemoveEvent(Event eventItem)",
+      "AddEvent": "public void AddEvent(Event @event)",
+      "Notificacoes": "public IReadOnlyCollection<Event> Notificacoes => _events?.AsReadOnly();",
+      "Id": "public Guid Id { get; set; }",
+      "set": "set;",
+      "get": "get;",
+      "DevStore.Core.DomainObjects": "namespace DevStore.Core.DomainObjects;"
+    },
+    "src/building-blocks/DevStore.Core/Messages/Message.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Event.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Command.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/CommandHandler.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/IntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderDoneIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderAuthorizedIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderCanceledIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderLoweredStockIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderPaidIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/UserRegisteredIntegrationEvent.cs": {},
+    "src/building-blocks/DevStore.Core/Messages/Integration/ResponseMessage.cs": {},
+    "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs": {
+      "DatabaseNotFoundException": "[Serializable]",
+      "DevStore.Core.Exceptions": "namespace DevStore.Core.Exceptions;"
+    },
+    "src/building-blocks/DevStore.Core/Communication/ResponseResult.cs": {},
+    "src/building-blocks/DevStore.Core/Data/IUnitOfWork.cs": {},
+    "src/building-blocks/DevStore.Core/Data/IRepository.cs": {},
+    "src/building-blocks/DevStore.Core/Mediator/IMediatorHandler.cs": {},
+    "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs": {},
+    "src/building-blocks/DevStore.Core/Validation/CreditCardExpiredAttribute.cs": {}
+  },
+  "indegree": {
+    "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs": 12,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs": 33,
+    "src/services/DevStore.ShoppingCart.API/Configuration/MessageBusConfig.cs": 7,
+    "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs": 10,
+    "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs": 7,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs": 15,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/AddressDto.cs": 1,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartItemDto.cs": 1,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs": 6,
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs": 1,
+    "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs": 2,
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/HttpClientAuthorizationDelegatingHandler.cs": 1,
+    "src/web/DevStore.WebApp.MVC/Services/AuthService.cs": 1,
+    "src/building-blocks/DevStore.WebAPI.Core/User/AspNetUser.cs": 2,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CustomerService.cs": 1,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CatalogService.cs": 1,
+    "src/building-blocks/DevStore.WebAPI.Core/User/IAspNetUser.cs": 4,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs": 8,
+    "src/web/DevStore.WebApp.MVC/Models/AddressViewModel.cs": 3,
+    "src/web/DevStore.WebApp.MVC/Models/ShoppingCartViewModel.cs": 1,
+    "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs": 14,
+    "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs": 6,
+    "src/web/DevStore.WebApp.MVC/Extensions/AppSettings.cs": 1,
+    "src/building-blocks/DevStore.Core/Communication/ResponseResult.cs": 1,
+    "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs": 14,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs": 1,
+    "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs": 32,
+    "src/services/DevStore.Catalog.API/Models/Product.cs": 3,
+    "src/tests/DevStore.Tests/IntegrationTest.cs": 2,
+    "src/services/DevStore.Catalog.API/Data/CatalogContext.cs": 4,
+    "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs": 1,
+    "src/services/DevStore.Catalog.API/Models/PagedResult.cs": 1,
+    "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs": 14,
+    "src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs": 3,
+    "src/building-blocks/DevStore.Core/DomainObjects/Email.cs": 5,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs": 12,
+    "src/services/DevStore.Orders.Domain/Vouchers/VoucherDiscountType.cs": 1,
+    "src/services/DevStore.Orders.Infra/Context/OrdersContext.cs": 3,
+    "src/services/DevStore.Billing.API/Data/BillingContext.cs": 3,
+    "src/services/DevStore.Billing.API/Models/TransactionStatus.cs": 1,
+    "src/services/DevStore.Customers.API/Data/CustomerContext.cs": 3,
+    "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs": 9,
+    "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs": 20,
+    "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs": 22,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs": 2,
+    "src/building-blocks/DevStore.Core/Messages/Message.cs": 1,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderDoneIntegrationEvent.cs": 1,
+    "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs": 1,
+    "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs": 1,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs": 2,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs": 1,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs": 1,
+    "src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs": 1,
+    "src/building-blocks/DevStore.Core/Messages/Event.cs": 1
+  },
+  "pagerank": {
+    "src/api-gateways/DevStore.Bff.Checkout/Program.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/SwaggerConfig.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/DependencyInjectionConfig.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/GrpcConfig.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/ApiConfig.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Configuration/MessageBusConfig.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartItemDto.cs": 0.013232425795209887,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartDto.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/VoucherDTO.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/ProductDto.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs": 0.024739598399391965,
+    "src/api-gateways/DevStore.Bff.Checkout/Models/AddressDto.cs": 0.013232425795209887,
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/HttpClientAuthorizationDelegatingHandler.cs": 0.003382468824395405,
+    "src/api-gateways/DevStore.Bff.Checkout/Extensions/AppServicesSettings.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/OrderController.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Controllers/ShoppingCartController.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/PaymentService.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs": 0.003037551864435911,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/OrderService.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/ShoppingCartService.cs": 0.002718096475465225,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CustomerService.cs": 0.003382468824395405,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/CatalogService.cs": 0.003382468824395405,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs": 0.0041117862865075894,
+    "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/GrpcServiceInterceptor.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.Status/Program.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Program.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Configuration/IdentityConfig.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs": 0.005471301697071938,
+    "src/web/DevStore.WebApp.MVC/Configuration/WebAppConfig.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/script.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/payment.min.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/site.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/js/creditcardvalidator.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Models/VoucherViewModel.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Models/ShoppingCartViewModel.cs": 0.003037551864435911,
+    "src/web/DevStore.WebApp.MVC/Models/ProductViewModel.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Models/UserViewModel.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Models/ErrorViewModel.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Models/AddressViewModel.cs": 0.024673990121005067,
+    "src/web/DevStore.WebApp.MVC/Models/PagedViewModel.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs": 0.040031999665223375,
+    "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs": 0.010877266820838036,
+    "src/web/DevStore.WebApp.MVC/Extensions/ShoppingCartViewComponent.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Extensions/RazorHelpers.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Extensions/AppSettings.cs": 0.003037551864435911,
+    "src/web/DevStore.WebApp.MVC/Extensions/CustomHttpRequestException.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Extensions/SocialNumberAnnotation.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Extensions/SummaryViewComponent.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Extensions/PagingViewComponent.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Properties/AssemblyInfo.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/CatalogController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/MainController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/OrderController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/ShoppingCartController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/IdentityController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/HomeController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Controllers/CustomerController.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Services/Service.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs": 0.003382468824395405,
+    "src/web/DevStore.WebApp.MVC/Services/CustomerService.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Services/AuthService.cs": 0.003382468824395405,
+    "src/web/DevStore.WebApp.MVC/Services/CatalogService.cs": 0.002718096475465225,
+    "src/web/DevStore.WebApp.MVC/Services/Handlers/HttpClientAuthorizationDelegatingHandler.cs": 0.002718096475465225,
+    "src/tests/DevStore.Tests/IntegrationTest.cs": 0.003651875868807366,
+    "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs": 0.0032956919765015987,
+    "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Program.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.Designer.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Migrations/20220403220650_Initial.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Migrations/ApplicationDbContextModelSnapshot.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Configuration/IdentityConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Configuration/SwaggerConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Configuration/DbMigrationHelpers.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Configuration/ApiConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Configuration/MessageBusConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Models/UserViewModels.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Controllers/AuthController.cs": 0.002718096475465225,
+    "src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs": 0.006183669481683465,
+    "src/services/DevStore.Orders.API/Program.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Configuration/SwaggerConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Configuration/DependencyInjectionConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Configuration/DbMigrationHelpers.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Configuration/ApiConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Configuration/MessageBusConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/DTO/OrderItemDTO.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/DTO/VoucherDTO.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/DTO/OrderDTO.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/DTO/AddressDto.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/Queries/OrderQueries.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/Queries/VoucherQueries.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/Commands/AddOrderCommand.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/Events/OrderDoneEvent.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Application/Events/OrderEventHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Controllers/OrderController.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Controllers/VoucherController.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Services/OrderOrchestratorIntegrationHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.API/Services/OrderIntegrationHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Program.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.Designer.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Migrations/20210908021922_Initial.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Migrations/BillingContextModelSnapshot.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Configuration/DependencyInjectionConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Configuration/DbMigrationHelpers.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Configuration/ApiConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Configuration/MessageBusConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Facade/BillingConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Facade/IPaymentFacade.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Models/Transaction.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Models/TransactionType.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Models/TransactionStatus.cs": 0.003873287477537972,
+    "src/services/DevStore.Billing.API/Models/IPaymentRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Models/CreditCard.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Models/Payment.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Controllers/PaymentController.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Data/BillingContext.cs": 0.006183669481683465,
+    "src/services/DevStore.Billing.API/Data/Repository/PaymentRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Data/Mappings/TransactionMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Data/Mappings/PaymentMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Services/BillingService.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Services/IBillingService.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Program.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Migrations/CustomerContextModelSnapshot.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.Designer.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Migrations/20210908035420_Initial.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Configuration/SwaggerConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Configuration/DependencyInjectionConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Configuration/DbMigrationHelpers.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Configuration/ApiConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Configuration/MessageBusConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Models/Address.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Models/Customer.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Models/ICustomerRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Application/Commands/AddAddressCommand.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Application/Commands/CustomerCommandHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Application/Events/NewCustomerAddedEvent.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Application/Events/CustomerEventHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Controllers/CustomerController.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Data/CustomerContext.cs": 0.006183669481683465,
+    "src/services/DevStore.Customers.API/Data/Repository/CustomerRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Data/Mappings/AddressMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Customers.API/Services/NewCustomerIntegrationHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Program.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.Designer.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Migrations/CatalogContextModelSnapshot.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Migrations/20210802102519_Initial.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Configuration/SwaggerConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Configuration/DependencyInjectionConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Configuration/ApiConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Configuration/MessageBusConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Models/PagedResult.cs": 0.0032956919765015987,
+    "src/services/DevStore.Catalog.API/Models/IProductRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Models/Product.cs": 0.004807066870880113,
+    "src/services/DevStore.Catalog.API/Controllers/CatalogController.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Data/CatalogContext.cs": 0.006539853373989234,
+    "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Data/Mappings/ProductMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs": 0.030579805651705323,
+    "src/services/DevStore.ShoppingCart.API/Program.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Migrations/20210908035300_Initial.Designer.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Migrations/ShoppingCartContextModelSnapshot.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs": 0.005009225296242839,
+    "src/services/DevStore.ShoppingCart.API/Configuration/DependencyInjectionConfig.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Configuration/DbMigrationHelpers.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs": 0.005471301697071938,
+    "src/services/DevStore.ShoppingCart.API/Configuration/MessageBusConfig.cs": 0.005471301697071938,
+    "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs": 0.011809268350779493,
+    "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs": 0.011382008678441531,
+    "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs": 0.011450040634840388,
+    "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs": 0.011678460226303245,
+    "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs": 0.002718096475465225,
+    "src/services/DevStore.ShoppingCart.API/Services/gRPC/ShoppingCartGrpcService.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Migrations/OrdersContextModelSnapshot.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.Designer.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Migrations/20210908035327_Initial.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Repository/VoucherRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Repository/OrderRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Context/OrdersContext.cs": 0.005606073980647093,
+    "src/services/DevStore.Orders.Infra/Mappings/OrderMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Mappings/VoucherMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Infra/Mappings/OrderItemMapping.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Vouchers/VoucherDiscountType.cs": 0.0032956919765015987,
+    "src/services/DevStore.Orders.Domain/Vouchers/Voucher.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Vouchers/IVoucherRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherValidation.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherSpec.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Orders/Order.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Orders/Address.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs": 0.003103160142822807,
+    "src/services/DevStore.Orders.Domain/Orders/OrderItem.cs": 0.002718096475465225,
+    "src/services/DevStore.Orders.Domain/Orders/IOrderRepository.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.DevsPay/Transaction.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.DevsPay/TransactionStatus.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.DevsPay/DevsPayService.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.DevsPay/Card.cs": 0.002718096475465225,
+    "src/services/DevStore.Billing.DevsPay/PaymentMethod.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.MessageBus/ConfigurationExtensions.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs": 0.008108987818471376,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs": 0.0047613686379405174,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/MessagingExtensions.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs": 0.007211548808736127,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs": 0.02682251954582893,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs": 0.004067150922881753,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs": 0.018067898902024395,
+    "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs": 0.0047613686379405174,
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.WebAPI.Core/Identity/CustomAuthorize.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.WebAPI.Core/User/ClaimsPrincipalExtensions.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.WebAPI.Core/User/AspNetUser.cs": 0.0038445452252245035,
+    "src/building-blocks/DevStore.WebAPI.Core/User/IAspNetUser.cs": 0.008407722559631018,
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs": 0.0032956919765015987,
+    "src/building-blocks/DevStore.WebAPI.Core/Extensions/PollyExtensions.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.WebAPI.Core/Controllers/MainController.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/DomainObjects/IAggregateRoot.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs": 0.011766924561731002,
+    "src/building-blocks/DevStore.Core/DomainObjects/Email.cs": 0.010645680101488128,
+    "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs": 0.017695747898097317,
+    "src/building-blocks/DevStore.Core/Messages/Message.cs": 0.0031801728762943238,
+    "src/building-blocks/DevStore.Core/Messages/Event.cs": 0.010238789332156847,
+    "src/building-blocks/DevStore.Core/Messages/Command.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/CommandHandler.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/IntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderDoneIntegrationEvent.cs": 0.0031801728762943238,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderAuthorizedIntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderCanceledIntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderLoweredStockIntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/OrderPaidIntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/UserRegisteredIntegrationEvent.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Messages/Integration/ResponseMessage.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs": 0.009610736121166063,
+    "src/building-blocks/DevStore.Core/Communication/ResponseResult.cs": 0.003037551864435911,
+    "src/building-blocks/DevStore.Core/Data/IUnitOfWork.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Data/IRepository.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Mediator/IMediatorHandler.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs": 0.002718096475465225,
+    "src/building-blocks/DevStore.Core/Validation/CreditCardExpiredAttribute.cs": 0.002718096475465225
+  },
+  "symbol_owner": {
+    "GrpcConfig": "src/api-gateways/DevStore.Bff.Checkout/Configuration/GrpcConfig.cs",
+    "ShoppingCartItemDto": "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartItemDto.cs",
+    "ShoppingCartDto": "src/api-gateways/DevStore.Bff.Checkout/Models/ShoppingCartDto.cs",
+    "VoucherDTO": "src/api-gateways/DevStore.Bff.Checkout/Models/VoucherDTO.cs",
+    "ProductDto": "src/api-gateways/DevStore.Bff.Checkout/Models/ProductDto.cs",
+    "Holder": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "OrderItems": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "CardNumber": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "ExpirationDate": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "Date": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "Status": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "DevStore.Bff.Checkout.Models": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "OrderDto": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "SecurityCode": "src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs",
+    "AddressDto": "src/api-gateways/DevStore.Bff.Checkout/Models/AddressDto.cs",
+    "HttpClientAuthorizationDelegatingHandler": "src/api-gateways/DevStore.Bff.Checkout/Extensions/HttpClientAuthorizationDelegatingHandler.cs",
+    "AppServicesSettings": "src/api-gateways/DevStore.Bff.Checkout/Extensions/AppServicesSettings.cs",
+    "ShoppingCartController": "src/api-gateways/DevStore.Bff.Checkout/Controllers/ShoppingCartController.cs",
+    "PaymentService": "src/api-gateways/DevStore.Bff.Checkout/Services/PaymentService.cs",
+    "Service": "src/api-gateways/DevStore.Bff.Checkout/Services/Service.cs",
+    "OrderService": "src/api-gateways/DevStore.Bff.Checkout/Services/OrderService.cs",
+    "ShoppingCartService": "src/api-gateways/DevStore.Bff.Checkout/Services/ShoppingCartService.cs",
+    "CustomerService": "src/api-gateways/DevStore.Bff.Checkout/Services/CustomerService.cs",
+    "CatalogService": "src/api-gateways/DevStore.Bff.Checkout/Services/CatalogService.cs",
+    "ShoppingCartGrpcService": "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/ShoppingCartGrpcService.cs",
+    "GrpcServiceInterceptor": "src/api-gateways/DevStore.Bff.Checkout/Services/gRPC/GrpcServiceInterceptor.cs",
+    "IdentityConfig": "src/web/DevStore.WebApp.MVC/Configuration/IdentityConfig.cs",
+    "PollyExtensions": "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs",
+    "RegisterServices": "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs",
+    "DevStore.WebApp.MVC.Configuration": "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs",
+    "WaitAndRetry": "src/web/DevStore.WebApp.MVC/Configuration/DependencyInjectionConfig.cs",
+    "WebAppConfig": "src/web/DevStore.WebApp.MVC/Configuration/WebAppConfig.cs",
+    "script": "src/web/DevStore.WebApp.MVC/wwwroot/js/script.js",
+    "Trie": "src/web/DevStore.WebApp.MVC/wwwroot/js/creditcardvalidator.js",
+    "Range": "src/web/DevStore.WebApp.MVC/wwwroot/js/creditcardvalidator.js",
+    "onSuccess": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "onError": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "setValidationValues": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "onErrors": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "appendModelPrefix": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "escapeAttributeValue": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "validationInfo": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "getModelPrefix": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "splitAndTrim": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "onReset": "src/web/DevStore.WebApp.MVC/wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "VoucherViewModel": "src/web/DevStore.WebApp.MVC/Models/VoucherViewModel.cs",
+    "ShoppingCartViewModel": "src/web/DevStore.WebApp.MVC/Models/ShoppingCartViewModel.cs",
+    "ProductViewModel": "src/web/DevStore.WebApp.MVC/Models/ProductViewModel.cs",
+    "UserViewModel": "src/web/DevStore.WebApp.MVC/Models/UserViewModel.cs",
+    "ErrorViewModel": "src/web/DevStore.WebApp.MVC/Models/ErrorViewModel.cs",
+    "AddressViewModel": "src/web/DevStore.WebApp.MVC/Models/AddressViewModel.cs",
+    "PagedViewModel": "src/web/DevStore.WebApp.MVC/Models/PagedViewModel.cs",
+    "Name": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "Image": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "OrderId": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "OrderItemViewModel": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "Quantity": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "DevStore.WebApp.MVC.Models": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "Price": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "OrderViewModel": "src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs",
+    "TransactionViewModel": "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs",
+    "Items": "src/web/DevStore.WebApp.MVC/Models/TransactionViewModel.cs",
+    "ShoppingCartViewComponent": "src/web/DevStore.WebApp.MVC/Extensions/ShoppingCartViewComponent.cs",
+    "RazorHelpers": "src/web/DevStore.WebApp.MVC/Extensions/RazorHelpers.cs",
+    "AppSettings": "src/web/DevStore.WebApp.MVC/Extensions/AppSettings.cs",
+    "CustomHttpRequestException": "src/web/DevStore.WebApp.MVC/Extensions/CustomHttpRequestException.cs",
+    "ExceptionMiddleware": "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs",
+    "SocialNumberAnnotation": "src/web/DevStore.WebApp.MVC/Extensions/SocialNumberAnnotation.cs",
+    "SummaryViewComponent": "src/web/DevStore.WebApp.MVC/Extensions/SummaryViewComponent.cs",
+    "PagingViewComponent": "src/web/DevStore.WebApp.MVC/Extensions/PagingViewComponent.cs",
+    "AssemblyInfo": "src/web/DevStore.WebApp.MVC/Properties/AssemblyInfo.cs",
+    "CatalogController": "src/web/DevStore.WebApp.MVC/Controllers/CatalogController.cs",
+    "MainController": "src/web/DevStore.WebApp.MVC/Controllers/MainController.cs",
+    "IdentityController": "src/web/DevStore.WebApp.MVC/Controllers/IdentityController.cs",
+    "HomeController": "src/web/DevStore.WebApp.MVC/Controllers/HomeController.cs",
+    "CustomerController": "src/web/DevStore.WebApp.MVC/Controllers/CustomerController.cs",
+    "RemoveItemFromShoppingCart": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "CheckoutBffService": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "MapToOrder": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "DevStore.WebApp.MVC.Services": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "FinishOrder": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "GetCustomersById": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "GetShoppingCartItemsQuantity": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "UpdateShoppingCartItem": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "GetLastOrder": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "ICheckoutBffService": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "AddShoppingCartItem": "src/web/DevStore.WebApp.MVC/Services/CheckoutBffService.cs",
+    "AuthService": "src/web/DevStore.WebApp.MVC/Services/AuthService.cs",
+    "ShouldEventuallyAssert": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "InitializeAsync": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "Dispose": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "IntegrationTest": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "DevStore.Tests": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "ExecuteInScope": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "DisposeAsync": "src/tests/DevStore.Tests/IntegrationTest.cs",
+    "DevStore.Tests.CatalogApi": "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs",
+    "CatalogIntegrationTests": "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs",
+    "AddProducts": "src/tests/DevStore.Tests/CatalogApi/CatalogIntegrationTests.cs",
+    "GetTests": "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs",
+    "CatalogTests": "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs",
+    "NoParameters_Success": "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs",
+    "ApplicationDbContextModelSnapshot": "src/services/DevStore.Identity.API/Migrations/ApplicationDbContextModelSnapshot.cs",
+    "DevStore.Identity.API.Configuration": "src/services/DevStore.Identity.API/Configuration/DbMigrationHelpers.cs",
+    "UserViewModels": "src/services/DevStore.Identity.API/Models/UserViewModels.cs",
+    "AuthController": "src/services/DevStore.Identity.API/Controllers/AuthController.cs",
+    "ApplicationDbContext": "src/services/DevStore.Identity.API/Data/ApplicationDbContext.cs",
+    "DevStore.Orders.API.Configuration": "src/services/DevStore.Orders.API/Configuration/DbMigrationHelpers.cs",
+    "EnsureSeedVouchers": "src/services/DevStore.Orders.API/Configuration/DbMigrationHelpers.cs",
+    "OrderItemDTO": "src/services/DevStore.Orders.API/Application/DTO/OrderItemDTO.cs",
+    "OrderDTO": "src/services/DevStore.Orders.API/Application/DTO/OrderDTO.cs",
+    "OrderQueries": "src/services/DevStore.Orders.API/Application/Queries/OrderQueries.cs",
+    "VoucherQueries": "src/services/DevStore.Orders.API/Application/Queries/VoucherQueries.cs",
+    "AddOrderCommand": "src/services/DevStore.Orders.API/Application/Commands/AddOrderCommand.cs",
+    "OrderCommandHandler": "src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs",
+    "OrderDoneEvent": "src/services/DevStore.Orders.API/Application/Events/OrderDoneEvent.cs",
+    "OrderEventHandler": "src/services/DevStore.Orders.API/Application/Events/OrderEventHandler.cs",
+    "VoucherController": "src/services/DevStore.Orders.API/Controllers/VoucherController.cs",
+    "OrderOrchestratorIntegrationHandler": "src/services/DevStore.Orders.API/Services/OrderOrchestratorIntegrationHandler.cs",
+    "OrderIntegrationHandler": "src/services/DevStore.Orders.API/Services/OrderIntegrationHandler.cs",
+    "BillingContextModelSnapshot": "src/services/DevStore.Billing.API/Migrations/BillingContextModelSnapshot.cs",
+    "DevStore.Billing.API.Configuration": "src/services/DevStore.Billing.API/Configuration/DbMigrationHelpers.cs",
+    "BillingConfig": "src/services/DevStore.Billing.API/Facade/BillingConfig.cs",
+    "IPaymentFacade": "src/services/DevStore.Billing.API/Facade/IPaymentFacade.cs",
+    "CreditCardPaymentFacade": "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs",
+    "Transaction": "src/services/DevStore.Billing.API/Models/Transaction.cs",
+    "TransactionType": "src/services/DevStore.Billing.API/Models/TransactionType.cs",
+    "TransactionStatus": "src/services/DevStore.Billing.API/Models/TransactionStatus.cs",
+    "IPaymentRepository": "src/services/DevStore.Billing.API/Models/IPaymentRepository.cs",
+    "Payment": "src/services/DevStore.Billing.API/Models/Payment.cs",
+    "PaymentController": "src/services/DevStore.Billing.API/Controllers/PaymentController.cs",
+    "BillingContext": "src/services/DevStore.Billing.API/Data/BillingContext.cs",
+    "PaymentRepository": "src/services/DevStore.Billing.API/Data/Repository/PaymentRepository.cs",
+    "TransactionMapping": "src/services/DevStore.Billing.API/Data/Mappings/TransactionMapping.cs",
+    "PaymentMapping": "src/services/DevStore.Billing.API/Data/Mappings/PaymentMapping.cs",
+    "BillingService": "src/services/DevStore.Billing.API/Services/BillingService.cs",
+    "IBillingService": "src/services/DevStore.Billing.API/Services/IBillingService.cs",
+    "BillingIntegrationHandler": "src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs",
+    "CustomerContextModelSnapshot": "src/services/DevStore.Customers.API/Migrations/CustomerContextModelSnapshot.cs",
+    "DevStore.Customers.API.Configuration": "src/services/DevStore.Customers.API/Configuration/DbMigrationHelpers.cs",
+    "Customer": "src/services/DevStore.Customers.API/Models/Customer.cs",
+    "ICustomerRepository": "src/services/DevStore.Customers.API/Models/ICustomerRepository.cs",
+    "NewCustomerCommand": "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs",
+    "AddAddressCommand": "src/services/DevStore.Customers.API/Application/Commands/AddAddressCommand.cs",
+    "CustomerCommandHandler": "src/services/DevStore.Customers.API/Application/Commands/CustomerCommandHandler.cs",
+    "NewCustomerAddedEvent": "src/services/DevStore.Customers.API/Application/Events/NewCustomerAddedEvent.cs",
+    "CustomerEventHandler": "src/services/DevStore.Customers.API/Application/Events/CustomerEventHandler.cs",
+    "CustomerContext": "src/services/DevStore.Customers.API/Data/CustomerContext.cs",
+    "CustomerRepository": "src/services/DevStore.Customers.API/Data/Repository/CustomerRepository.cs",
+    "CustomerMapping": "src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs",
+    "AddressMapping": "src/services/DevStore.Customers.API/Data/Mappings/AddressMapping.cs",
+    "NewCustomerIntegrationHandler": "src/services/DevStore.Customers.API/Services/NewCustomerIntegrationHandler.cs",
+    "DevStore.Catalog.API": "src/services/DevStore.Catalog.API/Program.cs",
+    "CatalogContextModelSnapshot": "src/services/DevStore.Catalog.API/Migrations/CatalogContextModelSnapshot.cs",
+    "DevStore.Catalog.API.Configuration": "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs",
+    "EnsureSeedProducts": "src/services/DevStore.Catalog.API/Configuration/DbMigrationHelpers.cs",
+    "PagedResult": "src/services/DevStore.Catalog.API/Models/PagedResult.cs",
+    "IProductRepository": "src/services/DevStore.Catalog.API/Models/IProductRepository.cs",
+    "Product": "src/services/DevStore.Catalog.API/Models/Product.cs",
+    "CatalogContext": "src/services/DevStore.Catalog.API/Data/CatalogContext.cs",
+    "ProductRepository": "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs",
+    "ProductMapping": "src/services/DevStore.Catalog.API/Data/Mappings/ProductMapping.cs",
+    "CatalogIntegrationHandler": "src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs",
+    "ManageNewCart": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "UpdateItem": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "ShoppingCart": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "DevStore.ShoppingCart.API": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "ManageCart": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "RemoveItem": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "CustomResponse": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "GetShoppingCartClient": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "GetValidItem": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "AddErrorToStack": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "ValidateShoppingCart": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "Persist": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "AddItem": "src/services/DevStore.ShoppingCart.API/ShoppingCart.cs",
+    "ShoppingCartContextModelSnapshot": "src/services/DevStore.ShoppingCart.API/Migrations/ShoppingCartContextModelSnapshot.cs",
+    "AddSwaggerConfiguration": "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs",
+    "UseSwaggerConfiguration": "src/services/DevStore.ShoppingCart.API/Configuration/SwaggerConfig.cs",
+    "UseApiConfiguration": "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs",
+    "AddApiConfiguration": "src/services/DevStore.ShoppingCart.API/Configuration/ApiConfig.cs",
+    "AddMessageBusConfiguration": "src/services/DevStore.ShoppingCart.API/Configuration/MessageBusConfig.cs",
+    "ProductId": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "IsValid": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "AddUnit": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "ShoppingCartItemValidation": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "SetShoppingCart": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "ShoppingCartId": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "UpdateUnit": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "CalculatePrice": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "CartItem": "src/services/DevStore.ShoppingCart.API/Model/CartItem.cs",
+    "Value": "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs",
+    "Percentage": "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs",
+    "DiscountType": "src/services/DevStore.ShoppingCart.API/Model/Voucher.cs",
+    "CustomerId": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "GetProductById": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "ValidationResult": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "Total": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "CalculateDiscountPrice": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "CustomerShoppingCartValidation": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "HasItem": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "CalculateShoppingCartPrice": "src/services/DevStore.ShoppingCart.API/Model/CustomerShoppingCart.cs",
+    "CartItems": "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs",
+    "ShoppingCartContext": "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs",
+    "DevStore.ShoppingCart.API.Data": "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs",
+    "OnModelCreating": "src/services/DevStore.ShoppingCart.API/Data/ShoppingCartContext.cs",
+    "DevStore.ShoppingCart.API.Services": "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs",
+    "Consume": "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs",
+    "RemoveShoppingCart": "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs",
+    "ShoppingCartIntegrationHandler": "src/services/DevStore.ShoppingCart.API/Services/ShoppingCartIntegrationHandler.cs",
+    "MapShoppingCartClientToProtoResponse": "src/services/DevStore.ShoppingCart.API/Services/gRPC/ShoppingCartGrpcService.cs",
+    "DevStore.ShoppingCart.API.Services.gRPC": "src/services/DevStore.ShoppingCart.API/Services/gRPC/ShoppingCartGrpcService.cs",
+    "OrdersContextModelSnapshot": "src/services/DevStore.Orders.Infra/Migrations/OrdersContextModelSnapshot.cs",
+    "VoucherRepository": "src/services/DevStore.Orders.Infra/Repository/VoucherRepository.cs",
+    "OrderRepository": "src/services/DevStore.Orders.Infra/Repository/OrderRepository.cs",
+    "OrdersContext": "src/services/DevStore.Orders.Infra/Context/OrdersContext.cs",
+    "OrderMapping": "src/services/DevStore.Orders.Infra/Mappings/OrderMapping.cs",
+    "VoucherMapping": "src/services/DevStore.Orders.Infra/Mappings/VoucherMapping.cs",
+    "OrderItemMapping": "src/services/DevStore.Orders.Infra/Mappings/OrderItemMapping.cs",
+    "VoucherDiscountType": "src/services/DevStore.Orders.Domain/Vouchers/VoucherDiscountType.cs",
+    "IVoucherRepository": "src/services/DevStore.Orders.Domain/Vouchers/IVoucherRepository.cs",
+    "VoucherValidation": "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherValidation.cs",
+    "VoucherSpec": "src/services/DevStore.Orders.Domain/Vouchers/Specs/VoucherSpec.cs",
+    "Order": "src/services/DevStore.Orders.Domain/Orders/Order.cs",
+    "OrderStatus": "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs",
+    "OrderItem": "src/services/DevStore.Orders.Domain/Orders/OrderItem.cs",
+    "IOrderRepository": "src/services/DevStore.Orders.Domain/Orders/IOrderRepository.cs",
+    "DevsPayService": "src/services/DevStore.Billing.DevsPay/DevsPayService.cs",
+    "Card": "src/services/DevStore.Billing.DevsPay/Card.cs",
+    "PaymentMethod": "src/services/DevStore.Billing.DevsPay/PaymentMethod.cs",
+    "ConfigurationExtensions": "src/building-blocks/DevStore.MessageBus/ConfigurationExtensions.cs",
+    "DependencyInjectionExtensions": "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs",
+    "TestConnection": "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "CheckTable": "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "WaitForTable": "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "DbHealthChecker": "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "CheckTableExists": "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "CanConnect": "src/building-blocks/DevStore.WebAPI.Core/Configuration/DbHealthChecker.cs",
+    "AddDefaultHealthCheck": "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs",
+    "UseDefaultHealthcheck": "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs",
+    "GenericHealthCheck": "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs",
+    "MessagingExtensions": "src/building-blocks/DevStore.WebAPI.Core/Configuration/MessagingExtensions.cs",
+    "AddMessagingHealthCheck": "src/building-blocks/DevStore.WebAPI.Core/Configuration/MessagingExtensions.cs",
+    "AddApiCoreConfiguration": "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs",
+    "AddLogger": "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs",
+    "WithDbContext": "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs",
+    "UseApiCoreConfiguration": "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs",
+    "ApiCoreConfig": "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs",
+    "With": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "Postgre": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "MySql": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "DetectDatabase": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "SqlServer": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "Sqlite": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "Build": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "ProviderConfiguration": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs",
+    "PersistStore": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs",
+    "ContextConfiguration": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ContextConfiguration.cs",
+    "DatabaseType": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs",
+    "None": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/DatabaseType.cs",
+    "ConfigureProviderForContext": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs",
+    "ProviderSelector": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs",
+    "WithProviderAutoSelection": "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs",
+    "JwtConfig": "src/building-blocks/DevStore.WebAPI.Core/Identity/JwtConfig.cs",
+    "CustomAuthorize": "src/building-blocks/DevStore.WebAPI.Core/Identity/CustomAuthorize.cs",
+    "ClaimsPrincipalExtensions": "src/building-blocks/DevStore.WebAPI.Core/User/ClaimsPrincipalExtensions.cs",
+    "AspNetUser": "src/building-blocks/DevStore.WebAPI.Core/User/AspNetUser.cs",
+    "IAspNetUser": "src/building-blocks/DevStore.WebAPI.Core/User/IAspNetUser.cs",
+    "HttpExtensions": "src/building-blocks/DevStore.WebAPI.Core/Extensions/HttpExtensions.cs",
+    "IAggregateRoot": "src/building-blocks/DevStore.Core/DomainObjects/IAggregateRoot.cs",
+    "DomainException": "src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs",
+    "Validate": "src/building-blocks/DevStore.Core/DomainObjects/Email.cs",
+    "Email": "src/building-blocks/DevStore.Core/DomainObjects/Email.cs",
+    "RemoveEvent": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "Notificacoes": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "Equals": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "AddEvent": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "Entity": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "ToString": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "ClearEvents": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "GetHashCode": "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs",
+    "Message": "src/building-blocks/DevStore.Core/Messages/Message.cs",
+    "Event": "src/building-blocks/DevStore.Core/Messages/Event.cs",
+    "Command": "src/building-blocks/DevStore.Core/Messages/Command.cs",
+    "CommandHandler": "src/building-blocks/DevStore.Core/Messages/CommandHandler.cs",
+    "IntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/IntegrationEvent.cs",
+    "OrderDoneIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/OrderDoneIntegrationEvent.cs",
+    "OrderAuthorizedIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/OrderAuthorizedIntegrationEvent.cs",
+    "OrderCanceledIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/OrderCanceledIntegrationEvent.cs",
+    "OrderLoweredStockIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/OrderLoweredStockIntegrationEvent.cs",
+    "OrderInitiatedIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs",
+    "OrderPaidIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/OrderPaidIntegrationEvent.cs",
+    "UserRegisteredIntegrationEvent": "src/building-blocks/DevStore.Core/Messages/Integration/UserRegisteredIntegrationEvent.cs",
+    "ResponseMessage": "src/building-blocks/DevStore.Core/Messages/Integration/ResponseMessage.cs",
+    "DatabaseNotFoundException": "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs",
+    "DevStore.Core.Exceptions": "src/building-blocks/DevStore.Core/Exceptions/DatabaseNotFoundException.cs",
+    "ResponseResult": "src/building-blocks/DevStore.Core/Communication/ResponseResult.cs",
+    "IUnitOfWork": "src/building-blocks/DevStore.Core/Data/IUnitOfWork.cs",
+    "IRepository": "src/building-blocks/DevStore.Core/Data/IRepository.cs",
+    "IMediatorHandler": "src/building-blocks/DevStore.Core/Mediator/IMediatorHandler.cs",
+    "MediatorHandler": "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs",
+    "CreditCardExpiredAttribute": "src/building-blocks/DevStore.Core/Validation/CreditCardExpiredAttribute.cs"
+  }
+}

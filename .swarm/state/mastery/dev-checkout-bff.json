@@ -1,0 +1,45 @@
+{
+  "agent": "dev-checkout-bff",
+  "probed_at": "2026-07-01T15:33:00Z",
+  "score": "5/5",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-checkout-bff.yaml",
+  "questions": [
+    {
+      "q": "Dois caminhos até dev-cart, intercambiáveis?",
+      "sustained_by": "DOMAIN-BFF-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ShoppingCartService.cs:11 (HTTP) vs ShoppingCartGrpcService.cs:8 (gRPC)",
+      "proof": "ShoppingCartService.cs:11 (HTTP) vs ShoppingCartGrpcService.cs:8 (gRPC)"
+    },
+    {
+      "q": "IPaymentService funcional?",
+      "sustained_by": "DOMAIN-BFF-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "PaymentService.cs — interface vazia",
+      "proof": "PaymentService.cs — interface vazia"
+    },
+    {
+      "q": "Padrão de client HTTP?",
+      "sustained_by": "DOMAIN-BFF-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Service.cs:10 herdado por 5/5 clients",
+      "proof": "Service.cs:10 herdado por 5/5 clients"
+    },
+    {
+      "q": "OrderDto carrega dados de cartão em claro?",
+      "sustained_by": "DOMAIN-BFF-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderDto.cs CardNumber/Holder/ExpirationDate/SecurityCode como string plana",
+      "proof": "OrderDto.cs CardNumber/Holder/ExpirationDate/SecurityCode como string plana"
+    },
+    {
+      "q": "Alterar o .proto do dev-cart exige algo do BFF?",
+      "sustained_by": "DOMAIN-BFF-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Bff.Checkout.csproj:27 <Protobuf Include> referencia o arquivo físico do outro serviço",
+      "proof": "Bff.Checkout.csproj:27 <Protobuf Include> referencia o arquivo físico do outro serviço"
+    }
+  ],
+  "proof_summary": "5/5 certas-com-evidência."
+}

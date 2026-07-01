@@ -1,0 +1,32 @@
+# Fatia de domínio — dev-catalog (Catalog.API)
+- id: DOMAIN-CATALOG-001
+  kind: project_pattern
+  claim: "Product.cs é o único aggregate root do projeto com setters públicos em TODAS as propriedades — modelo anêmico, diferente do padrão DDD-lite (construtor + private set) usado em Order/Customer. É um desvio conhecido, não corrigir 'de passagem' numa task não relacionada (mudança de comportamento silenciosa)."
+  applies_to: "dev-catalog · Product.cs — inconsistência de modelagem conhecida"
+  source: "src/services/DevStore.Catalog.API/Models/Product.cs:8-14; knowledge/stack/dotnet-9.yaml#NET9-STACK-018"
+  confidence: verified
+  check: "comparar setters de Product.cs com Order.cs/Customer.cs"
+
+- id: DOMAIN-CATALOG-002
+  kind: project_pattern
+  claim: "Não há CQRS/MediatR nesta fronteira — CatalogController injeta IProductRepository diretamente. Não introduzir Command/Handler aqui sem justificativa forte; é a fronteira mais simples do repo de propósito (CRUD direto)."
+  applies_to: "dev-catalog · ausência deliberada de CQRS"
+  source: "src/services/DevStore.Catalog.API/Controllers/CatalogController.cs:20-25; grep -rl MediatR src/services/DevStore.Catalog.API → vazio"
+  confidence: verified
+  check: "confirmar ausência de pasta Application/Commands em Catalog.API"
+
+- id: DOMAIN-CATALOG-003
+  kind: project_pattern
+  claim: "ProductRepository.GetAll usa AsNoTrackingWithIdentityResolution() — a otimização de tracking mais avançada do repo. Preservar esse padrão ao adicionar novas queries paginadas; não regredir para AsNoTracking() simples."
+  applies_to: "dev-catalog · Data/Repository/ProductRepository.cs"
+  source: "src/services/DevStore.Catalog.API/Data/Repository/ProductRepository.cs:26,32"
+  confidence: verified
+  check: "grep -n AsNoTrackingWithIdentityResolution ProductRepository.cs"
+
+- id: DOMAIN-CATALOG-004
+  kind: project_pattern
+  claim: "TakeFromInventory/IsAvailable em Product.cs são chamados pelo consumer CatalogIntegrationHandler ao processar OrderAuthorizedIntegrationEvent — a baixa de estoque é reativa a evento, não parte do fluxo síncrono de compra. Mudanças em regra de estoque têm que considerar o delay assíncrono (o pedido pode ser autorizado antes do estoque ser efetivamente baixado)."
+  applies_to: "dev-catalog · baixa de estoque assíncrona"
+  source: "src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs:24,29,49-52,62"
+  confidence: verified
+  check: "seguir o fluxo Consume→WriteDownInventory→Product.TakeFromInventory→Update→Commit→Publish"

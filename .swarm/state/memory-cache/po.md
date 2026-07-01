@@ -1,0 +1,2 @@
+## Padrões aprendidos (learning.db — derivado do codebase + trajetórias)
+- **respeitar invariante: O valor/desconto enviado pelo cliente no AddOrderCommand é usado só para comparação anti-fraude — o servidor SEMPRE recalcula e rejeita divergência.**  ·  quando: tocar O valor/desconto enviado pelo cliente no AddOrderCommand é usado só para comparação anti-fraude — o servidor SEMPRE recalcula e rejeita divergência.  ·  conf 0.85  ·  _derived:DOMAIN_INVARIANTS.yaml BIZ-2_

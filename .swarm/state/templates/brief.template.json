@@ -1,0 +1,25 @@
+{
+  "id": "TASK-NN-XX-TYPE",
+  "sprint": "SPRINT-NN",
+  "agent": "dev-",
+  "status": "DRAFT",
+  "dependencies": [],
+  "allowed_paths": ["APERTAR-AO-ARQUIVO-REAL — nunca null, nunca glob amplo"],
+  "objective": "máx 5 bullets — o que deve ser entregue",
+  "context_inline": "trechos de ADR/contrato/handoff EXTRAÍDOS pelo tech-lead — o executor não lê docs",
+  "anchors": ["path/existente/no/disco — 'Baseado em'"],
+  "context_complete": false,
+  "forbidden_explore": false,
+  "max_reads": 0,
+  "acceptance_criteria": [
+    "critério específico e testável",
+    "verification_command verde, 0 regressões"
+  ],
+  "verification_command": "OBRIGATÓRIO antes do despacho — executável e escopado",
+  "probe_command": "OPCIONAL (v5/D6) — modo NÃO-MUTANTE do verification_command (probe_cmd da stack); transition.py roda no --to DISPATCHED e recusa se falhar. Ausente = runnability não checada (E0)",
+  "contract": null,
+  "attempts": 0,
+  "status_history": [],
+  "submission": null,
+  "gate_report": null
+}

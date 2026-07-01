@@ -1,0 +1,59 @@
+{
+  "agent": "dev-billing",
+  "probed_at": "2026-07-01T15:30:00Z",
+  "score": "6/7",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-billing.yaml + extrato relevante de knowledge/stack/dotnet-9.yaml",
+  "questions": [
+    {
+      "q": "Se CreditCardPaymentFacade receber TransactionStatus.Chargeback (valor 4) do DevsPay e fizer cast direto para o enum Refund do Billing.API, qual é o resultado semântico?",
+      "sustained_by": "DOMAIN-BILLING-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs:73",
+      "proof": "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs:73"
+    },
+    {
+      "q": "O evento OrderInitiatedIntegrationEvent publicado no RabbitMQ contém dados de cartão em texto claro?",
+      "sustained_by": "DOMAIN-BILLING-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs:12-15",
+      "proof": "src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs:12-15"
+    },
+    {
+      "q": "Se o RabbitMQ reentregar o mesmo OrderLoweredStockIntegrationEvent, o que acontece no fluxo de captura?",
+      "sustained_by": "DOMAIN-BILLING-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep vazio para Idempot/MessageId em Billing.API",
+      "proof": "grep vazio para Idempot/MessageId em Billing.API"
+    },
+    {
+      "q": "O DevStore.Billing.DevsPay faz chamadas HTTP reais a um gateway externo?",
+      "sustained_by": "DOMAIN-BILLING-005",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Transaction.cs — Faker().Random.Bool(0.7f), sem rede",
+      "proof": "Transaction.cs — Faker().Random.Bool(0.7f), sem rede"
+    },
+    {
+      "q": "Qual é a superfície de entrada HTTP real do Billing.API?",
+      "sustained_by": "DOMAIN-BILLING-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "PaymentController.cs vazio",
+      "proof": "PaymentController.cs vazio"
+    },
+    {
+      "q": "Timeout e tratamento de exceção do _bus.Request<> ao chamar Billing.API fora do ar?",
+      "sustained_by": "NET9-STACK-008",
+      "verified_against_code": "rasa",
+      "evidence": "padrão de chamada sem try/catch confirmado; valor numérico do timeout (30s) não verificado na config real do MassTransit",
+      "proof": "padrão de chamada sem try/catch confirmado; valor numérico do timeout (30s) não verificado na config real do MassTransit"
+    },
+    {
+      "q": "O orçamento de retry do Polly cobre a espera do MassTransit Request<>?",
+      "sustained_by": "NET9-STACK-009",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "PollyExtensions.cs:15-20 — 1s+5s+10s=16s",
+      "proof": "PollyExtensions.cs:15-20 — 1s+5s+10s=16s"
+    }
+  ],
+  "proof_summary": "6/7 certas-com-evidência; 1 rasa (timeout numérico do MassTransit não confirmado na config, só o padrão de chamada sem tratamento)."
+}

@@ -1,0 +1,188 @@
+# Estágio 1 — Scan⁺ · PROJECT_PROFILE.yaml
+# DevStore — e-commerce de referência .NET, arquitetura de microserviços.
+# Gerado em 2026-07-01 via scan real (16 subagentes de leitura, evidência arquivo:linha).
+
+project:
+  name: DevStore
+  description_1_line: "E-commerce de referência em .NET 9 com 9 microserviços, 1 BFF, 1 web MVC, message bus RabbitMQ/MassTransit e banco multi-provider por serviço."
+  monorepo: true
+
+stacks:
+  - ecosystem: dotnet
+    root: "."
+    runtime_version: "9.0.302"
+    version_evidence: "global.json:3 (sdk.version, rollForward: latestPatch)"
+    build_cmd: "dotnet build --configuration Release --no-restore"
+    test_cmd: "dotnet test --no-build --no-restore --configuration Release --logger \"console;verbosity=detailed\""
+    lint_cmd: null   # nenhum `dotnet format` no CI nem em scripts do repo — ausência confirmada (grep vazio em .github/workflows)
+    probe_cmd: "dotnet test --list-tests"   # modo não-mutante (D6) — NÃO EXECUTADO nesta sessão (ver verified:false)
+    verified: false
+    verified_reason: "SDK .NET 9.0.302 exigido pelo global.json não está instalado nesta máquina (só 8.0.125, rollForward=latestPatch recusa). `dotnet build`/`dotnet test` falham com erro de resolução de SDK. Decisão do founder (Estágio 1, pergunta material): manter unverified em vez de instalar o SDK agora. Comandos vêm do CI real (.github/workflows/build.yml:71-77), não são hipótese."
+    source_of_commands: ".github/workflows/build.yml (job build-and-test)"
+
+layout:
+  product_dirs:
+    - src/api-gateways/DevStore.Bff.Checkout
+    - src/building-blocks/DevStore.Core
+    - src/building-blocks/DevStore.MessageBus
+    - src/building-blocks/DevStore.WebAPI.Core
+    - src/services/DevStore.Billing.API
+    - src/services/DevStore.Billing.DevsPay
+    - src/services/DevStore.Catalog.API
+    - src/services/DevStore.Customers.API
+    - src/services/DevStore.Identity.API
+    - src/services/DevStore.Orders.API
+    - src/services/DevStore.Orders.Domain
+    - src/services/DevStore.Orders.Infra
+    - src/services/DevStore.ShoppingCart.API
+    - src/web/DevStore.WebApp.MVC
+    - src/web/DevStore.WebApp.Status
+  test_dirs:
+    - src/tests/DevStore.Tests
+  infra_dirs:
+    - docker
+    - .github/workflows
+  docs_dirs:
+    - docs   # existe mas está vazio (0 arquivos) — nenhum ADR/doc de arquitetura pré-existente
+
+architecture:
+  # A2 — camadas por sufixo de projeto (.csproj), 16 projetos no total (DevStore.slnx)
+  detected_layers:
+    - {project: DevStore.Bff.Checkout,     path: src/api-gateways/DevStore.Bff.Checkout,     logical_layer: api-gateway}
+    - {project: DevStore.Core,             path: src/building-blocks/DevStore.Core,          logical_layer: core}
+    - {project: DevStore.MessageBus,       path: src/building-blocks/DevStore.MessageBus,    logical_layer: core}
+    - {project: DevStore.WebAPI.Core,      path: src/building-blocks/DevStore.WebAPI.Core,   logical_layer: core}
+    - {project: DevStore.Billing.API,      path: src/services/DevStore.Billing.API,          logical_layer: api}
+    - {project: DevStore.Billing.DevsPay,  path: src/services/DevStore.Billing.DevsPay,      logical_layer: infra}   # lib in-process, simulador de gateway (Bogus), sem Sdk.Web
+    - {project: DevStore.Catalog.API,      path: src/services/DevStore.Catalog.API,          logical_layer: api}
+    - {project: DevStore.Customers.API,    path: src/services/DevStore.Customers.API,        logical_layer: api}
+    - {project: DevStore.Identity.API,     path: src/services/DevStore.Identity.API,         logical_layer: api}
+    - {project: DevStore.Orders.API,       path: src/services/DevStore.Orders.API,           logical_layer: api}
+    - {project: DevStore.Orders.Domain,    path: src/services/DevStore.Orders.Domain,        logical_layer: domain}
+    - {project: DevStore.Orders.Infra,     path: src/services/DevStore.Orders.Infra,         logical_layer: infra}
+    - {project: DevStore.ShoppingCart.API, path: src/services/DevStore.ShoppingCart.API,     logical_layer: api}
+    - {project: DevStore.Tests,            path: src/tests/DevStore.Tests,                   logical_layer: test}
+    - {project: DevStore.WebApp.MVC,       path: src/web/DevStore.WebApp.MVC,                logical_layer: web}
+    - {project: DevStore.WebApp.Status,    path: src/web/DevStore.WebApp.Status,             logical_layer: web}
+  shared_kernel:
+    # Core + MessageBus + WebAPI.Core não são "Domain+Domain.Core" (o caso literal do A2.4),
+    # mas cumprem o MESMO papel: zero ProjectReference de saída, TODOS os outros 13 projetos
+    # de produto dependem de pelo menos um dos três (confirmado via grep de ProjectReference
+    # em todos os .csproj) → tratados como UMA fronteira (dev-core), não três.
+    - src/building-blocks/DevStore.Core
+    - src/building-blocks/DevStore.MessageBus
+    - src/building-blocks/DevStore.WebAPI.Core
+  # Único bounded context com split real de camada em projetos distintos (clean architecture):
+  orders_layering: "DevStore.Orders.API (api) + DevStore.Orders.Domain (domain) + DevStore.Orders.Infra (infra) — 3 projetos, 1 fronteira dev-orders (mesmo bounded context, não shared kernel)."
+
+# NOTA (pós-Estágio 2/3): nomes abaixo são os CANDIDATOS do scan (Estágio 1). O roster final
+# (TEAM_ROSTER.yaml) renomeou/fundiu: dev-status → gate `devops`; qa → `qa-dotnet`; e o
+# Estágio 3 (mesa redonda) moveu DevStore.MessageBus de dev-core para o território real de
+# `dev-messaging` (evitar overlap de trees — ver TEAM_ROSTER.yaml). Fonte de verdade de
+# território ATIVO é sempre TEAM_ROSTER.yaml, não este bloco histórico.
+agent_trees:
+  dev-core:          [src/building-blocks/DevStore.Core, src/building-blocks/DevStore.MessageBus, src/building-blocks/DevStore.WebAPI.Core]
+  dev-catalog:        [src/services/DevStore.Catalog.API]
+  dev-customers:      [src/services/DevStore.Customers.API]
+  dev-identity:       [src/services/DevStore.Identity.API]
+  dev-orders:         [src/services/DevStore.Orders.API, src/services/DevStore.Orders.Domain, src/services/DevStore.Orders.Infra]
+  dev-billing:        [src/services/DevStore.Billing.API, src/services/DevStore.Billing.DevsPay]
+  dev-cart:           [src/services/DevStore.ShoppingCart.API]
+  dev-checkout-bff:   [src/api-gateways/DevStore.Bff.Checkout]
+  dev-web:            [src/web/DevStore.WebApp.MVC]
+  dev-status:         [src/web/DevStore.WebApp.Status]   # candidato — 1 arquivo, 0 lógica de negócio; ver gate_signals.devops. Estágio 2 decide standalone vs fundido em gate devops.
+  qa:                 [src/tests/DevStore.Tests]
+  # Sem sobreposição entre fronteiras — confirmado (cada projeto pertence a exatamente 1 fronteira).
+
+glossary:
+  terms:
+    - {concept: "Pedido",              term_used: "Order",        found_in: [src/services/DevStore.Orders.API, src/services/DevStore.Orders.Domain, src/services/DevStore.Orders.Infra, src/api-gateways/DevStore.Bff.Checkout, src/web/DevStore.WebApp.MVC], count: 702, never_use: ["Pedido (nomes de classe/pasta)"]}
+    - {concept: "Carrinho",            term_used: "ShoppingCart", found_in: [src/services/DevStore.ShoppingCart.API, src/api-gateways/DevStore.Bff.Checkout], count: 226, never_use: ["Basket", "Cart isolado"]}
+    - {concept: "Cupom/Desconto",      term_used: "Voucher",      found_in: [src/services/DevStore.Orders.Domain, src/services/DevStore.ShoppingCart.API, src/api-gateways/DevStore.Bff.Checkout], count: 283, never_use: ["Coupon", "Cupom (nomes de classe)"]}
+    - {concept: "Cliente",             term_used: "Customer",     found_in: [src/services/DevStore.Customers.API], count: 39, never_use: ["Client"]}
+    - {concept: "Produto",             term_used: "Product",      found_in: [src/services/DevStore.Catalog.API], count: 62, never_use: ["Item (para produto de catálogo)"]}
+    - {concept: "Documento fiscal",    term_used: "SocialNumber", found_in: [src/services/DevStore.Customers.API], count: 16, never_use: ["CPF (nome de campo)"]}
+    - {concept: "Base de domínio",     term_used: "Entity",       found_in: [src/building-blocks/DevStore.Core, "todas as fronteiras de serviço"], count: 24, never_use: ["BaseEntity"]}
+    - {concept: "Acesso a dados",      term_used: "Repository",   found_in: [src/building-blocks/DevStore.Core, "todas as fronteiras de serviço"], count: 12, never_use: ["Gateway", "Client (para persistência)"]}
+    - {concept: "Erro de negócio",     term_used: "ValidationResult (FluentValidation) + DomainException", found_in: [src/building-blocks/DevStore.Core, src/services/DevStore.Customers.API, src/services/DevStore.Orders.API], count: 6, never_use: ["Notification pattern clássico (lista de erros no Entity)"]}
+  suffixes:
+    Controller: "endpoint HTTP (MVC-style; ShoppingCart.API usa Minimal API em Program.cs, sem Controller)"
+    Service: "orquestração de caso de uso ou client HTTP tipado (ambíguo — usado nos dois sentidos)"
+    Repository: "acesso a dados via IRepository<T>"
+    Context: "DbContext do EF Core, 1 por serviço"
+    Command / CommandHandler: "escrita via MediatR (IRequest<ValidationResult>)"
+    Event / EventHandler: "evento de domínio in-process via MediatR (INotification)"
+    IntegrationEvent / IntegrationHandler: "evento cross-serviço via MassTransit/RabbitMQ"
+    ViewModel: "DTO de apresentação (WebApp.MVC)"
+    Dto / DTO: "DTO de integração (Bff.Checkout) — grafia inconsistente (Dto vs DTO coexistem)"
+    Mapping: "IEntityTypeConfiguration<T> do EF Core"
+    Validation: "AbstractValidator<T> do FluentValidation, geralmente nested class no próprio Command/Model"
+  language:
+    domain_class_and_folder_names: "inglês (100% — 0 ocorrências de Pedido/Cupom/Cliente como nome de classe em nenhuma fronteira)"
+    user_facing_validation_messages: "português (ex.: VoucherValidation.cs: \"Este voucher está expirado\")"
+    namespaces: "inglês, prefixo DevStore.<Servico>"
+
+never_use:
+  - {pattern: "AutoMapper",            reason: "mapeamento sempre manual/explícito (MapOrder, ToViewModel, construtores de DTO)", source: "grep -rc AutoMapper --include=*.csproj src → 0 em 16/16 projetos", scope: convention}
+  - {pattern: "BaseEntity",            reason: "a base de domínio chama-se sempre Entity",                                          source: "grep -rn BaseEntity src --include=*.cs → 0 ocorrências; Entity.cs (DevStore.Core) é a única base",                     scope: convention}
+  - {pattern: "Basket",                reason: "termo do domínio é ShoppingCart em toda fronteira de carrinho",                     source: "grep -rc Basket src --include=*.cs → 0",                                                                              scope: convention}
+  - {pattern: "Coupon / Cupom",        reason: "termo do domínio é Voucher em Orders/ShoppingCart/Bff.Checkout",                    source: "grep -rc Coupon src --include=*.cs → 0",                                                                              scope: convention}
+  - {pattern: "IGateway / IClient (para persistência)", reason: "acesso a dados sempre via IRepository<T> : IDisposable",           source: "grep -rE 'interface I.*Gateway|interface I.*Client' em dev-core → 0 (busca ampliada ao repo não encontrou padrão análogo em outras fronteiras)", scope: convention}
+  - {pattern: "Moq / NSubstitute / FluentAssertions / AutoFixture / Bogus em testes de qa", reason: "o único teste real existente (DevStore.Tests) é 100% integração ponta-a-ponta com WebApplicationFactory + SQL Server real, sem nenhum mock", source: "DevStore.Tests.csproj sem nenhuma dessas libs; grep 'Mock<|Substitute.For' → 0", scope: convention}
+  - {pattern: "Refit como client HTTP ativo", reason: "Refit está referenciado em 3 .csproj (WebApp.MVC, Bff.Checkout — e é usado só para capturar ValidationApiException/ApiException em WebApp.MVC/Extensions/ExceptionMiddleware.cs:8,34,38); todo client HTTP real usa HttpClient tipado (AddHttpClient<TInterface,TImpl>) + Polly", source: "grep -rE '\\[Get\\(|\\[Post\\(|: IRefit' em Services/*.cs de WebApp.MVC e Bff.Checkout → 0", scope: convention}
+
+anchors:
+  dev-core: src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderConfiguration.cs
+  dev-catalog: src/services/DevStore.Catalog.API/Data/CatalogContext.cs
+  dev-customers: src/services/DevStore.Customers.API/Data/CustomerContext.cs
+  dev-identity: src/services/DevStore.Identity.API/Controllers/AuthController.cs
+  dev-orders: src/services/DevStore.Orders.Domain/Orders/Order.cs
+  dev-billing: src/services/DevStore.Billing.API/Services/BillingIntegrationHandler.cs
+  dev-cart: src/services/DevStore.ShoppingCart.API/ShoppingCart.cs
+  dev-checkout-bff: src/api-gateways/DevStore.Bff.Checkout/Models/OrderDto.cs
+  dev-web: src/web/DevStore.WebApp.MVC/Models/OrderViewModel.cs
+  dev-status: src/web/DevStore.WebApp.Status/Program.cs
+  qa: src/tests/DevStore.Tests/IntegrationTest.cs
+
+libs_and_tools:
+  - {name: "MediatR",                                        version: "13.0.0", used_as: "CQRS in-process — Command:IRequest<ValidationResult>, Event:INotification, via IMediatorHandler", evidence_path: "src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs:17-25"}
+  - {name: "MassTransit.RabbitMQ",                            version: "8.5.1",  used_as: "bus de eventos de integração cross-serviço (publish/subscribe + request/response síncrono)", evidence_path: "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs:9-30"}
+  - {name: "FluentValidation",                                version: "12.0.0", used_as: "validação de Command (AbstractValidator<T>) e como container de ValidationResult para erros de negócio", evidence_path: "src/services/DevStore.Customers.API/Application/Commands/NewCustomerCommand.cs:29-58"}
+  - {name: "dapper",                                          version: "2.1.66", used_as: "declarado em Catalog.API e Orders.API mas SEM uso real confirmado (grep de QueryAsync/ExecuteAsync vazio) — dependência vestigial", evidence_path: "src/services/DevStore.Orders.API/DevStore.Orders.API.csproj:12 (uso: nenhum)"}
+  - {name: "Microsoft.EntityFrameworkCore.* (SqlServer/Sqlite/MySql/Npgsql/Relational)", version: "9.0.7 (Design/Tools/Relational/SqlServer/Sqlite), 9.0.6 (MySql.EntityFrameworkCore), 9.0.4 (Npgsql)", used_as: "ORM multi-provider selecionado em runtime por AppSettings:DatabaseType", evidence_path: "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs:10-24"}
+  - {name: "AspNetCore.HealthChecks.* (SqlServer/MySql/NpgSql/Sqlite/Rabbitmq/UI + storages)", version: "9.0.0", used_as: "health checks /healthz (self) e /healthz-infra (db/bus) por serviço + dashboard agregador em WebApp.Status", evidence_path: "src/building-blocks/DevStore.WebAPI.Core/Configuration/GenericHealthCheck.cs:14-47"}
+  - {name: "Polly",                                           version: "8.6.2 (+ Microsoft.Extensions.Http.Polly 9.0.7)", used_as: "retry com backoff fixo (1s/5s/10s) em HttpClient de saída", evidence_path: "src/building-blocks/DevStore.WebAPI.Core/Extensions/PollyExtensions.cs:11-23"}
+  - {name: "Refit",                                           version: "8.0.0",  used_as: "presente só para tratamento de exceção (ValidationApiException/ApiException) em WebApp.MVC — NÃO usado como client ativo (ver never_use)", evidence_path: "src/web/DevStore.WebApp.MVC/Extensions/ExceptionMiddleware.cs:8,34,38"}
+  - {name: "Grpc.AspNetCore / Grpc.Net.ClientFactory / Grpc.Tools", version: "2.71.0 / 2.71.0 / 2.72.0", used_as: "ShoppingCart.API expõe gRPC (Protos/shoppingcart.proto); Bff.Checkout consome como client gerado do mesmo .proto", evidence_path: "src/services/DevStore.ShoppingCart.API/Protos/shoppingcart.proto:7-9"}
+  - {name: "NetDevPack.Security.Jwt.* / NetDevPack.Identity / NetDevPack.Security.PasswordHasher.Argon2", version: "8.2.2 / 7.0.1 / 7.1.0", used_as: "emissão de JWT com JWKS rotativo (KeepFor=15min) + hashing de senha Argon2", evidence_path: "src/services/DevStore.Identity.API/Configuration/JwtConfig.cs:22-31; src/services/DevStore.Identity.API/Configuration/IdentityConfig.cs:38-40"}
+  - {name: "Bogus",                                           version: "35.6.3", used_as: "DevsPay.Transaction usa Bogus para simular 70% de sucesso de autorização de cartão — NÃO é chamada real a gateway", evidence_path: "src/services/DevStore.Billing.DevsPay/Transaction.cs:101-102"}
+  - {name: "Serilog.AspNetCore / Serilog.Sinks.Seq",          version: "9.0.0",  used_as: "logging centralizado para Seq (docker/docker-common-resources.yml: datalust/seq)", evidence_path: "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs:16-21"}
+  - {name: "Swashbuckle.AspNetCore / NSwag.AspNetCore",       version: "9.0.3 / 14.4.0", used_as: "documentação OpenAPI/Swagger por serviço", evidence_path: "src/building-blocks/DevStore.WebAPI.Core/Configuration/ApiCoreConfig.cs:26,58-60"}
+  - {name: "Xunit / Microsoft.AspNetCore.Mvc.Testing / coverlet.collector", version: "2.9.3 / 9.0.7 / 6.0.4", used_as: "único projeto de teste (DevStore.Tests), 1 teste real, integração via WebApplicationFactory contra Catalog.API", evidence_path: "src/tests/DevStore.Tests/CatalogApi/CatalogTests.cs:10-24"}
+
+gate_signals:
+  security:
+    value: true
+    evidence:
+      - "dev-identity emite/valida JWT (JWKS rotativo) e faz hashing de senha (Argon2) — src/services/DevStore.Identity.API/Configuration/JwtConfig.cs:22, IdentityConfig.cs:38-40"
+      - "dev-billing publica PAN+CVV em claro no bus RabbitMQ (OrderInitiatedIntegrationEvent) — src/building-blocks/DevStore.Core/Messages/Integration/OrderInitiatedIntegrationEvent.cs:12-15; origem em src/services/DevStore.Orders.API/Application/Commands/OrderCommandHandler.cs:140-143 — violação PCI-DSS confirmada"
+      - "dev-billing tem enum mismatch confirmado entre TransactionStatus (Billing.API) e TransactionStatus (DevsPay) — cast posicional silencioso mapeia Chargeback→Refund — src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs:73,88"
+      - "dev-billing sem proteção de idempotência em Authorize/Capture/Cancel — reprocessamento de evento duplica cobrança simulada — src/services/DevStore.Billing.API/Services/BillingService.cs:24-118"
+      - "dev-customers persiste SocialNumber (CPF) e Email em claro — src/services/DevStore.Customers.API/Data/Mappings/CustomerMapping.cs:18-27; e publica ambos no bus via UserRegisteredIntegrationEvent"
+  perf:
+    value: false
+    evidence: "Nenhum benchmark, meta de SLO ou hot-path documentado (docs/ vazio, 0 ADRs). Polly existe para resiliência (retry), não para tuning de performance."
+  devops:
+    value: true
+    evidence: "docker-compose com 8 serviços + SQL Server 2022 + RabbitMQ 4.1 + Seq + nginx (reverse proxy/TLS) + geração automática de certificado; CI (.github/workflows/build.yml) builda+testa+builda imagens Docker+push; serviço dedicado DevStore.WebApp.Status para dashboard de health checks agregado. Footgun de config real já encontrado nesse serviço: appsettings.Production.json define ENDPOINTS como array JSON enquanto Program.cs:14 espera string única via Get<string>() — inconsistência Development/Docker (string ';'/'|') vs Production (array), risco de dashboard de status quebrado/vazio em prod sem erro visível."
+  git:
+    value: false
+    evidence: "Prefixos de commit convencionais (feat/chore/refactor) usados na prática (git log), mas sem enforcement mecânico — nenhum commitlint/husky/lefthook configurado no repo (lefthook está instalado no SISTEMA do operador, não no repo)."
+
+adrs_existing: []   # docs/ existe mas está vazio — 0 ADRs pré-existentes no repositório
+
+graph_available: true
+graph:
+  path: .swarm/knowledge/graph.json
+  method: tree-sitter+pagerank
+  files: 249

@@ -1,0 +1,32 @@
+# Fatia de domínio — architect (core, conhece o sistema inteiro)
+- id: DOMAIN-ARCHITECT-001
+  kind: principle
+  claim: "O único contrato de camada FORMAL do repo é Orders.Domain (puro, só depende de Core) → Orders.Infra (implementa IOrderRepository). Todos os outros 8 serviços são monolíticos-por-serviço (Controllers/Data/Models na mesma pasta, sem split de projeto). Uma decisão de arquitetura que proponha layering formal para outro serviço precisa justificar o custo extra vs o padrão dominante do repo."
+  applies_to: "architect · padrão de camadas real vs proposto"
+  source: "PROJECT_PROFILE.yaml#architecture.detected_layers"
+  confidence: verified
+  check: "comparar Orders (3 projetos) com qualquer outro serviço (1 projeto)"
+
+- id: DOMAIN-ARCHITECT-002
+  kind: principle
+  claim: "Dois caminhos de comunicação cross-serviço coexistem: síncrono bloqueante (MassTransit Request<>, usado em Orders→Billing) e assíncrono fire-and-forget (Publish/Consume, usado nos demais fluxos). Decisão de arquitetura sobre novo fluxo cross-serviço tem que escolher explicitamente um dos dois padrões e justificar — não inventar um terceiro (ex.: HTTP síncrono direto entre serviços de domínio, que não existe hoje)."
+  applies_to: "architect · dois padrões de integração já estabelecidos"
+  source: "knowledge/ORCHESTRATION_MAP.yaml (dev-orders depends_on dev-billing síncrono; demais assíncronos)"
+  confidence: verified
+  check: "ver DOMAIN-ORDERS-004"
+
+- id: DOMAIN-ARCHITECT-003
+  kind: bound_decision
+  claim: "Não há ADR pré-existente no repositório (docs/ vazio) — toda decisão arquitetural anterior foi implícita no código. O architect deste harness é o PRIMEIRO a formalizar decisões em knowledge/ADR/; não há precedente formal para contradizer ou seguir, só o código como fonte de verdade."
+  applies_to: "architect · ausência de histórico de ADR"
+  source: "PROJECT_PROFILE.yaml#adrs_existing: []"
+  confidence: verified
+  check: "find docs -type f → vazio"
+
+- id: DOMAIN-ARCHITECT-004
+  kind: principle
+  claim: "Arbitragem de não-convergência dev↔verifier (core-spec §7.4) neste projeto tem um caso real esperado: a ambiguidade de OrderStatus.Refused/Delivered sem transição implementada (DOMAIN-ORDERS-002) é o tipo de critério que pode gerar 2 REJECTED consecutivos (dev diz 'não implementado por design', verifier diz 'enum sugere que deveria estar') — o architect arbitra reformulando o acceptance_criteria, não travando em BLOCKED."
+  applies_to: "architect · exemplo real de arbitragem esperada"
+  source: "src/services/DevStore.Orders.Domain/Orders/OrderStatus.cs:3-9"
+  confidence: verified
+  check: "ver DOMAIN-ORDERS-002"

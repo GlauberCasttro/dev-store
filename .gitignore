@@ -511,3 +511,7 @@ FodyWeavers.xsd
 # learning.db é índice DERIVADO (seed-learning.py reconstrói de .swarm/knowledge/ +
 # texto earned) — nunca commitar o binário; o que viaja é o texto + o próprio código.
 .swarm/state/learning.db
+# .accept-ok é token de PROVA DO RUN ATUAL (accept-check.sh reescreve o timestamp toda
+# vez que roda, inclusive dentro do próprio pre-commit) — commitar gera churn e conflito
+# de stash no lefthook; o que importa é o ledger (init-validation.jsonl), não este token.
+.swarm/state/.accept-ok

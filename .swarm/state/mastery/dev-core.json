@@ -1,0 +1,52 @@
+{
+  "agent": "dev-core",
+  "probed_at": "2026-07-01T15:38:00Z",
+  "score": "5/6",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-core.yaml",
+  "questions": [
+    {
+      "q": "Base de domínio e marker de aggregate root?",
+      "sustained_by": "DOMAIN-CORE-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Entity.cs:7-17; 8 entidades confirmadas",
+      "proof": "Entity.cs:7-17; 8 entidades confirmadas"
+    },
+    {
+      "q": "Dois canais de erro de negócio?",
+      "sustained_by": "DOMAIN-CORE-002",
+      "verified_against_code": "rasa→corrigido",
+      "evidence": "DomainException vaza para Services/IConsumer, não só Value Objects — CORRIGIDO na fatia",
+      "proof": "DomainException vaza para Services/IConsumer, não só Value Objects — CORRIGIDO na fatia"
+    },
+    {
+      "q": "UseSqlServer direto em Program.cs de serviço?",
+      "sustained_by": "DOMAIN-CORE-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep confirma só em ProviderConfiguration.cs",
+      "proof": "grep confirma só em ProviderConfiguration.cs"
+    },
+    {
+      "q": "Mecanismo de config de provider?",
+      "sustained_by": "DOMAIN-CORE-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "ApiCoreConfig.cs:45-51 cadeia completa",
+      "proof": "ApiCoreConfig.cs:45-51 cadeia completa"
+    },
+    {
+      "q": "Centralização de licenciamento MediatR?",
+      "sustained_by": "DOMAIN-CORE-004",
+      "verified_against_code": "errada→corrigido",
+      "evidence": "AddMediatR chamado individualmente em 6 Program.cs — CORRIGIDO na fatia (era aspiracional, não fato)",
+      "proof": "AddMediatR chamado individualmente em 6 Program.cs — CORRIGIDO na fatia (era aspiracional, não fato)"
+    },
+    {
+      "q": "Padrão correto de bootstrap MassTransit?",
+      "sustained_by": "DOMAIN-CORE-005",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "DependencyInjectionExtensions.cs:17-30, 6 serviços confirmados",
+      "proof": "DependencyInjectionExtensions.cs:17-30, 6 serviços confirmados"
+    }
+  ],
+  "proof_summary": "5/6 (83%) PASSOU. 2 claims corrigidas após a sonda revelar imprecisão (DOMAIN-CORE-002 e 004) — fatia atualizada em knowledge/domain/dev-core.yaml."
+}

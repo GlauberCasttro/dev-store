@@ -1,0 +1,59 @@
+{
+  "agent": "dev-orders",
+  "probed_at": "2026-07-01T15:34:00Z",
+  "score": "7/7",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/dev-orders.yaml + extrato relevante de knowledge/stack/dotnet-9.yaml",
+  "questions": [
+    {
+      "q": "Divergência de Amount no AddOrderCommand?",
+      "sustained_by": "DOMAIN-ORDERS-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderCommandHandler.cs:110-129 + Order.cs:72-78",
+      "proof": "OrderCommandHandler.cs:110-129 + Order.cs:72-78"
+    },
+    {
+      "q": "Transição para Refused/Delivered já existe?",
+      "sustained_by": "DOMAIN-ORDERS-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderStatus.cs:3-9, grep amplo sem atribuição",
+      "proof": "OrderStatus.cs:3-9, grep amplo sem atribuição"
+    },
+    {
+      "q": "Voucher é parte do agregado Order?",
+      "sustained_by": "DOMAIN-ORDERS-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "Voucher.cs:7 aggregate root próprio",
+      "proof": "Voucher.cs:7 aggregate root próprio"
+    },
+    {
+      "q": "Billing.API cai durante pagamento — o que acontece?",
+      "sustained_by": "DOMAIN-ORDERS-004 / NET9-STACK-008",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "OrderCommandHandler.cs:146-147 sem try/catch",
+      "proof": "OrderCommandHandler.cs:146-147 sem try/catch"
+    },
+    {
+      "q": "GetConnection()/Dapper é padrão estabelecido?",
+      "sustained_by": "DOMAIN-ORDERS-005",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "IOrderRepository.cs:15, grep Dapper vazio",
+      "proof": "IOrderRepository.cs:15, grep Dapper vazio"
+    },
+    {
+      "q": "Orçamento Polly cobre espera do MassTransit Request<>?",
+      "sustained_by": "NET9-STACK-009",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "PollyExtensions.cs:17-19 — CONFIRMADO CONCRETAMENTE, candidato a promoção verified",
+      "proof": "PollyExtensions.cs:17-19 — CONFIRMADO CONCRETAMENTE, candidato a promoção verified"
+    },
+    {
+      "q": "IPipelineBehavior de validação automática existe?",
+      "sustained_by": "NET9-STACK-010",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep IPipelineBehavior vazio em todo src/",
+      "proof": "grep IPipelineBehavior vazio em todo src/"
+    }
+  ],
+  "proof_summary": "7/7 certas-com-evidência. Achado lateral: NET9-STACK-009 (marcado unverified na fatia de stack) teve os números concretamente confirmados nesta sonda — promovido a verified no dotnet-9.yaml."
+}

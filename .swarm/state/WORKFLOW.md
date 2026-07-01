@@ -1,0 +1,3 @@
+# WORKFLOW — estado macro
+
+IDLE

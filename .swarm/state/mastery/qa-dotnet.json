@@ -1,0 +1,42 @@
+{
+  "agent": "qa-dotnet",
+  "probed_at": "2026-07-01T15:48:00Z",
+  "score": "4/4",
+  "passed": true,
+  "isolation": "contexto limpo: só knowledge/domain/qa-dotnet.yaml (pós-correção)",
+  "questions": [
+    {
+      "q": "Cobertura real de testes automatizados?",
+      "answer_blind": "1/11 fronteiras (só Catalog, 1 [Fact]).",
+      "sustained_by": "DOMAIN-QA-001",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "CatalogTests.cs:10; .csproj com ProjectReference único",
+      "proof": "CatalogTests.cs:10; .csproj com ProjectReference único"
+    },
+    {
+      "q": "Filosofia de teste — mocks ou integração real?",
+      "answer_blind": "100% integração via WebApplicationFactory contra SQL Server real, zero mocks.",
+      "sustained_by": "DOMAIN-QA-002",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "DevStore.Tests.csproj sem Moq/NSubstitute/Bogus",
+      "proof": "DevStore.Tests.csproj sem Moq/NSubstitute/Bogus"
+    },
+    {
+      "q": "ExecuteInScope/ShouldEventuallyAssert são usados?",
+      "answer_blind": "ExecuteInScope tem 1 uso real (CatalogIntegrationTests.cs:11); ShouldEventuallyAssert zero uso.",
+      "sustained_by": "DOMAIN-QA-003",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "grep confirma exatamente essa distinção — claim corrigida validada",
+      "proof": "grep confirma exatamente essa distinção — claim corrigida validada"
+    },
+    {
+      "q": "Pré-requisitos reais para rodar o teste isoladamente?",
+      "answer_blind": "SQL Server real em localhost:1433 + SDK 9.0.302 (ausente no ambiente atual).",
+      "sustained_by": "DOMAIN-QA-004",
+      "verified_against_code": "certa-com-evidência",
+      "evidence": "appsettings.Test.json + dotnet --version",
+      "proof": "appsettings.Test.json + dotnet --version"
+    }
+  ],
+  "proof_summary": "4/4 certas-com-evidência. Claim DOMAIN-QA-003 (já corrigida no ciclo anterior) reconfirmada consistente."
+}

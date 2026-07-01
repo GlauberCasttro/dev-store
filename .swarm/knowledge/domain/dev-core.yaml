@@ -1,0 +1,40 @@
+# Fatia de domínio — dev-core (shared kernel: DevStore.Core + MessageBus + WebAPI.Core)
+- id: DOMAIN-CORE-001
+  kind: project_pattern
+  claim: "Toda entidade de domínio herda de Entity (Id + Notificacoes/eventos) e implementa IAggregateRoot como marker — nunca criar hierarquia de domínio fora dessa base."
+  applies_to: "dev-core · base de domínio consumida por todos os 9 serviços"
+  source: "src/building-blocks/DevStore.Core/DomainObjects/Entity.cs:7,17"
+  confidence: verified
+  check: "grep -rn 'class.*: Entity' src/services — toda entidade de agregado segue o padrão"
+
+- id: DOMAIN-CORE-002
+  kind: project_pattern
+  claim: "Erro de negócio tem DOIS canais: DomainException (exception simples) e ValidationResult acumulado via CommandHandler.AddError (fluxo de Command/MediatR). CORRIGIDO pela sonda de maestria (2b.6): DomainException NÃO fica restrita a Value Objects (Email.cs) — também é usada em Services de integração/IConsumer (CatalogIntegrationHandler.cs:65, OrderIntegrationHandler.cs:44,59, BillingIntegrationHandler.cs:67,79, BillingService.cs:61,94). A regra real e válida é mais estreita: os dois canais nunca se misturam DENTRO DO MESMO CommandHandler de Command/MediatR — fora disso, DomainException é usada mais amplamente do que a claim original sugeria."
+  applies_to: "dev-core · Messages/CommandHandler.cs + DomainObjects/DomainException.cs"
+  source: "src/building-blocks/DevStore.Core/Messages/CommandHandler.cs:16-19; src/building-blocks/DevStore.Core/DomainObjects/DomainException.cs:5; src/services/DevStore.Catalog.API/Services/CatalogIntegrationHandler.cs:65 (DomainException fora de Value Object)"
+  confidence: verified
+  check: "grep -rn 'throw new DomainException' src/services — confirmar uso também em IConsumer handlers, não só em Value Objects"
+
+- id: DOMAIN-CORE-003
+  kind: bound_decision
+  claim: "Banco multi-provider é decisão de CONFIGURAÇÃO (AppSettings:DatabaseType), nunca hardcoded no serviço — todo novo serviço deve usar ApiCoreConfig.WithDbContext<T>() e nunca chamar UseSqlServer()/UseSqlite() direto."
+  applies_to: "dev-core · DatabaseFlavor/ProviderSelector.cs"
+  source: "src/building-blocks/DevStore.WebAPI.Core/DatabaseFlavor/ProviderSelector.cs:10-24"
+  confidence: verified
+  check: "grep -rn 'UseSqlServer\\|UseSqlite\\|UseMySQL\\|UseNpgsql' src/services — só deve aparecer dentro de ProviderConfiguration.cs, nunca em Program.cs de serviço"
+
+- id: DOMAIN-CORE-004
+  kind: principle
+  claim: "MediatR 13 exige atenção a licenciamento (RPL-1.5/comercial). CORRIGIDO pela sonda de maestria (2b.6): HOJE NÃO HÁ centralização real — cada um dos 6 serviços com MediatR chama AddMediatR(...) no próprio Program.cs individualmente (ex.: Orders.API/Program.cs:18), a fachada IMediatorHandler (dev-core) só encapsula Send/Publish via IMediator já injetado, não registra o MediatR. Se um LicenseKey for necessário, hoje teria que ser replicado 6x. A 'centralização aqui' é RECOMENDAÇÃO/gap a resolver, não fato atual — não afirmar como se já existisse."
+  applies_to: "dev-core · Mediator/MediatorHandler.cs — gap de centralização"
+  source: "knowledge/stack/dotnet-9.yaml#NET9-STACK-001,002; src/services/DevStore.Orders.API/Program.cs:18 (AddMediatR individual); src/building-blocks/DevStore.Core/Mediator/MediatorHandler.cs (não registra MediatR)"
+  confidence: verified
+  check: "grep -rln 'AddMediatR' src/services → 6 ocorrências individuais, confirma ausência de ponto único de registro"
+
+- id: DOMAIN-CORE-005
+  kind: project_pattern
+  claim: "MessageBus (MassTransit/RabbitMQ) é configurado 1x por serviço via AddMessageBus(configuration, assembly) — a convenção AddConsumers(assemblies)+UsingRabbitMq+ConfigureEndpoints(context) é a ÚNICA forma correta; registro manual de AddConsumer<T> dentro do UsingRabbitMq quebra o padrão fanout-per-consumer já estabelecido."
+  applies_to: "dev-core · MessageBus/DependencyInjectionExtensions.cs"
+  source: "src/building-blocks/DevStore.MessageBus/DependencyInjectionExtensions.cs:17-30"
+  confidence: verified
+  check: "confirmar que ConfigureEndpoints(context) é a última chamada dentro de UsingRabbitMq em qualquer novo serviço"
