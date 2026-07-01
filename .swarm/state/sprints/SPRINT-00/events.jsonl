@@ -14,3 +14,5 @@
 {"type": "gate.report", "task": "TASK-00-02-DEV", "verdict": "PASS", "actor": "tech-lead", "at": "2026-07-01T23:23:39+00:00"}
 {"type": "task.accepted", "task": "TASK-00-02-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T23:23:43+00:00"}
 {"type": "task.committed", "task": "TASK-00-02-DEV", "agent": "dev-billing", "actor": "tech-lead", "attempt": 0, "at": "2026-07-01T23:31:14+00:00"}
+{"type": "sprint.active", "sprint": "SPRINT-00", "actor": "tech-lead", "at": "2026-07-01T23:34:34+00:00"}
+{"type": "sprint.archived", "sprint": "SPRINT-00", "actor": "tech-lead", "at": "2026-07-01T23:36:08+00:00"}
