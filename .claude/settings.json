@@ -1,0 +1,20 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {"matcher": "Write|Edit", "hooks": [
+        {"type": "command", "command": "$CLAUDE_PROJECT_DIR/.swarm/scripts-harness/protect-harness.sh", "timeout": 3000},
+        {"type": "command", "command": "$CLAUDE_PROJECT_DIR/.swarm/scripts-harness/guard-zones.sh", "timeout": 3000},
+        {"type": "command", "command": "$CLAUDE_PROJECT_DIR/.swarm/scripts-harness/guard-allowed-paths.sh", "timeout": 4000}
+      ]},
+      {"matcher": "Agent", "hooks": [
+        {"type": "command", "command": "$CLAUDE_PROJECT_DIR/.swarm/scripts-harness/inject-memory.sh", "timeout": 3000}
+      ]}
+    ],
+    "SessionStart": [
+      {"hooks": [{"type": "command", "command": "$CLAUDE_PROJECT_DIR/.swarm/scripts-harness/session-banner.sh", "timeout": 3000}]}
+    ],
+    "Stop": [
+      {"hooks": [{"type": "command", "command": "$CLAUDE_PROJECT_DIR/.swarm/scripts-harness/uncommitted-warn.sh", "timeout": 3000}]}
+    ]
+  }
+}

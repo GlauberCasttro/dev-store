@@ -1,0 +1,31 @@
+# lefthook.yml — gate E3 (git hooks) do harness Fable.
+# Instalar: lefthook install
+#
+# Stack real (PROJECT_PROFILE.stacks[0]): dotnet 9.0.302, lint_cmd: null (nenhum
+# `dotnet format` configurado no CI nem em scripts do repo — grep vazio em
+# .github/workflows; ausência confirmada, não hipótese) — bloco fmt/lint por stack
+# OMITIDO até o projeto adotar formatter/linter real (não fabricar comando não
+# confirmado). commit-msg convencional OMITIDO (gate_signals.git=false — sem
+# enforcement mecânico de prefixo de commit detectado no scan).
+
+pre-commit:
+  parallel: true
+  commands:
+    # Coerência de estado: máquina de estados + schema de brief + monotonicidade.
+    harness-validate:
+      run: python3 .swarm/scripts-harness/transition.py --validate-all
+
+    # ACEITE COMPLETO no commit — accept-check roda harness-lint + verify-artifacts
+    # + audit do ledger por fase + roster-status, e cunha o token .accept-ok.
+    accept-check:
+      run: bash .swarm/scripts-harness/accept-check.sh --root .
+
+    # Integridade do store de memória (ids únicos, json válido, campos obrigatórios).
+    memory-store:
+      glob: ".swarm/knowledge/memory/conhecimento.jsonl"
+      run: bash .swarm/scripts-harness/check-knowledge-jsonl.sh
+
+    # Os guards realmente bloqueiam contra o payload real do PreToolUse? (v5.2)
+    guards:
+      glob: ".swarm/scripts-harness/guard-*.sh"
+      run: bash .swarm/scripts-harness/test-guards.sh

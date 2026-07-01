@@ -506,3 +506,8 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,rider,dotnetcore
 /src/.idea/.idea.DevStore/.idea/workspace.xml
+
+### Fable harness (Project-Swarm-Fable v9/v11) ###
+# learning.db é índice DERIVADO (seed-learning.py reconstrói de .swarm/knowledge/ +
+# texto earned) — nunca commitar o binário; o que viaja é o texto + o próprio código.
+.swarm/state/learning.db
