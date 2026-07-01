@@ -8,9 +8,10 @@
     "verification_global": "dotnet build --configuration Release --no-restore (unverified — SDK 9.0.302 não instalado no host; smoke usa verification_command escopado via grep, não build global)",
     "tests_passing_at_start": null
   },
-  "tasks": ["TASK-00-01-DEV"],
+  "tasks": ["TASK-00-01-DEV", "TASK-00-02-DEV"],
   "waves": [
-    { "wave": 1, "tasks": ["TASK-00-01-DEV"], "note": "única task de smoke — sem paralelismo" }
+    { "wave": 1, "tasks": ["TASK-00-01-DEV"], "note": "única task de smoke — sem paralelismo" },
+    { "wave": 2, "tasks": ["TASK-00-02-DEV"], "note": "fix real do DOMAIN-BILLING-002 (cast posicional -> switch nominal, 2 direções); mesmo allowed_paths de TASK-00-01, sem paralelismo" }
   ],
   "definition_of_done": [
     "todas as tasks COMMITTED (ACCEPTED sem commit = ciclo aberto, não fecha)",

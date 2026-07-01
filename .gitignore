@@ -515,3 +515,6 @@ FodyWeavers.xsd
 # vez que roda, inclusive dentro do próprio pre-commit) — commitar gera churn e conflito
 # de stash no lefthook; o que importa é o ledger (init-validation.jsonl), não este token.
 .swarm/state/.accept-ok
+# [Ll]ogs/ (boilerplate VS acima) engole .swarm/logs/ por não ser âncorado à raiz — mas
+# log de sessão é parte do protocolo de fechamento (/salvar-sessao) e precisa ser commitado.
+!.swarm/logs/

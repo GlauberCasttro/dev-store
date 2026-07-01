@@ -1,0 +1,144 @@
+{
+  "id": "TASK-00-02-DEV",
+  "sprint": "SPRINT-00",
+  "agent": "dev-billing",
+  "status": "COMMITTED",
+  "dependencies": [],
+  "allowed_paths": [
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs"
+  ],
+  "objective": "1) Em ToTransaction (hoje linha ~75), substituir o cast posicional '(TransactionStatus)transaction.Status' por um switch nominal explícito DevsPay.TransactionStatus -> DevStore.Billing.API.Models.TransactionStatus, seguindo literalmente o mapeamento do how-to 1 de .claude/rules/dev-billing-layer.md. 2) Em ParaTransaction (hoje linha ~90), substituir o cast posicional '(DevsPay.TransactionStatus)transaction.TransactionStatus' por switch nominal na direção inversa (Billing.API.Models.TransactionStatus -> DevsPay.TransactionStatus) — mesma classe de bug (DOMAIN-BILLING-002), mesmo arquivo, direção oposta; não documentado explicitamente na knowledge slice mas é o mesmo padrão de cast posicional entre os mesmos dois enums, dentro do allowed_paths desta task. 3) Cada switch lança ArgumentOutOfRangeException no caso default (padrão do how-to). 4) Preservar a codificação do arquivo (UTF-16LE com BOM, CRLF) — ler/escrever binário controlado, não deixar a ferramenta de edição regravar em UTF-8 (footgun já confirmado na TASK-00-01-DEV). 5) Atualizar/remover o comentário CAUTION existente (linhas 73-74) para não ficar órfão referenciando um cast que não existe mais — pode virar um comentário curto explicando por que o mapeamento é explícito agora.",
+  "context_inline": "DOMAIN-BILLING-002 (.swarm/knowledge/domain/dev-billing.yaml, confidence: verified) e .claude/rules/dev-billing-layer.md how-to 1: os dois enums TransactionStatus são independentes e mantidos por times/sistemas diferentes (Billing.API vs DevsPay simulado) — hoje coincidem numericamente posição-a-posição, mas o cast posicional é frágil (silencioso se qualquer um dos dois enums mudar de ordem/ganhar membro no meio) e conflacia semanticamente 'Chargeback' (estorno forçado pelo banco/disputa) com 'Refund' (devolução voluntária do lojista) sob o mesmo valor numérico. Enums reais (confirmados via leitura direta dos arquivos): DevStore.Billing.API.Models.TransactionStatus (Models/TransactionStatus.cs): Authorized=1, Paid=2, Denied=3, Refund=4, Canceled=5. DevStore.Billing.DevsPay.TransactionStatus (DevStore.Billing.DevsPay/TransactionStatus.cs): Authorized=1, Paid=2, Refused=3, Chargeback=4, Cancelled=5. Mapeamento nominal a implementar (idêntico numericamente ao cast atual para os 5 valores existentes — o objetivo é tornar explícito/defensivo, não mudar o resultado runtime hoje): Authorized<->Authorized, Paid<->Paid, Denied(Billing)<->Refused(DevsPay), Refund(Billing)<->Chargeback(DevsPay), Canceled(Billing)<->Cancelled(DevsPay). Código atual do arquivo (linhas 68-98, já decodificado de UTF-16LE): método ToTransaction (linha 68) faz 'TransactionStatus = (TransactionStatus)transaction.Status' na linha 75 (dentro do object initializer, com o comentário CAUTION nas linhas 73-74 adicionado pela TASK-00-01-DEV); método ParaTransaction (linha 86) faz 'Status = (DevsPay.TransactionStatus)transaction.TransactionStatus' na linha 90. Ambos os métodos são chamados só dentro deste mesmo arquivo (AuthorizePayment linha 45, CapturePayment linha 55, CancelAuthorization linha 65 chamam ToTransaction; CapturePayment linha 53 e CancelAuthorization linha 63 chamam ParaTransaction) — assinaturas públicas (nome/parâmetros/retorno) devem permanecer idênticas pois são 'public static', potencialmente referenciadas fora do arquivo.",
+  "anchors": [
+    "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs",
+    "src/services/DevStore.Billing.API/Models/TransactionStatus.cs",
+    "src/services/DevStore.Billing.DevsPay/TransactionStatus.cs",
+    ".claude/rules/dev-billing-layer.md"
+  ],
+  "context_complete": true,
+  "forbidden_explore": true,
+  "max_reads": 3,
+  "acceptance_criteria": [
+    "Nenhuma ocorrência literal de '(TransactionStatus)transaction.Status' nem de '(DevsPay.TransactionStatus)transaction.TransactionStatus' permanece no arquivo",
+    "Um switch nominal (ou equivalente com 'switch') cobre as duas direções, citando 'Chargeback', 'Refund', 'Refused' e 'Denied' explicitamente por nome",
+    "Assinaturas públicas de ToTransaction e ParaTransaction (nome, parâmetros, tipo de retorno) permanecem inalteradas",
+    "Nenhum arquivo fora de allowed_paths foi alterado",
+    "verification_command retorna exit 0",
+    "Codificação UTF-16LE com BOM e CRLF preservada (confirmável via `file`)"
+  ],
+  "verification_command": "python3 -c \"import codecs,sys; p='src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs'; b=open(p,'rb').read(); d=b.decode('utf-16') if b[:2] in (codecs.BOM_UTF16_LE,codecs.BOM_UTF16_BE) else b.decode('utf-8'); ok=True; ok = ok and 'TransactionStatus = (TransactionStatus)transaction.Status' not in d; ok = ok and 'Status = (DevsPay.TransactionStatus)transaction.TransactionStatus' not in d; ok = ok and all(t in d for t in ('Chargeback','Refund','Refused','Denied','switch')); sys.exit(0 if ok else 1)\"",
+  "probe_command": "python3 -c \"import codecs,sys; p='src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs'; b=open(p,'rb').read(); d=b.decode('utf-16') if b[:2] in (codecs.BOM_UTF16_LE,codecs.BOM_UTF16_BE) else b.decode('utf-8'); sys.exit(0 if ('TransactionStatus = (TransactionStatus)transaction.Status' in d and 'Status = (DevsPay.TransactionStatus)transaction.TransactionStatus' in d) else 1)\"",
+  "contract": null,
+  "attempts": 0,
+  "status_history": [
+    {
+      "at": "2026-07-01T23:17:46+00:00",
+      "from": "DRAFT",
+      "to": "READY",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T23:17:59+00:00",
+      "from": "READY",
+      "to": "DISPATCHED",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T23:18:05+00:00",
+      "from": "DISPATCHED",
+      "to": "IN_PROGRESS",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T23:21:38+00:00",
+      "from": "IN_PROGRESS",
+      "to": "SUBMITTED",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T23:21:38+00:00",
+      "from": "SUBMITTED",
+      "to": "VERIFYING",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T23:23:43+00:00",
+      "from": "VERIFYING",
+      "to": "ACCEPTED",
+      "actor": "tech-lead",
+      "reason": ""
+    },
+    {
+      "at": "2026-07-01T23:31:14+00:00",
+      "from": "ACCEPTED",
+      "to": "COMMITTED",
+      "actor": "tech-lead",
+      "reason": "Aprovação humana explícita do usuário ('pode sim')"
+    }
+  ],
+  "submission": {
+    "status": "SUBMITTED",
+    "files_changed": [
+      "src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs"
+    ],
+    "checks_run": [
+      "verification_command (python3 decode UTF-16LE + ausência dos 2 casts posicionais + presença de Chargeback/Refund/Refused/Denied/switch) -> exit 0",
+      "file(1) confirmando 'Unicode text, UTF-16, little-endian text, with CRLF line terminators' preservado",
+      "leitura manual do arquivo completo confirmando as duas assinaturas públicas inalteradas e os 2 métodos privados MapToTransactionStatus/MapToDevsPayStatus com switch nominal + default -> ArgumentOutOfRangeException"
+    ],
+    "risks": "dotnet build não executado (SDK 9.0.302 exigido por global.json ausente no host, só 8.0.125 disponível — condição pré-existente, não introduzida por esta task). Validação foi textual/sintática via verification_command + revisão manual do C# gerado, sem compilação real. Mapeamento é numericamente idêntico ao cast anterior para os 5 valores hoje existentes (mudança de robustez/explicitação, não de comportamento runtime).",
+    "notes": "ToTransaction (linha 78) e ParaTransaction (linha 95) agora chamam MapToTransactionStatus/MapToDevsPayStatus (métodos privados novos, linhas 105-125) em vez do cast posicional. Comentários CAUTION das linhas 73-77 e 93-94 atualizados para descrever o mapeamento explícito em vez de referenciar um cast que não existe mais, mantendo a citação DOMAIN-BILLING-002. Codificação UTF-16LE com BOM e CRLF preservada via escrita binária controlada.",
+    "handoff": "Pronto para verifier. Território tocado: só o arquivo em allowed_paths (confirmado via git diff --stat -- src/). Nenhum outro arquivo de produto lido ou alterado."
+  },
+  "gate_report": {
+    "verdict": "PASS",
+    "evidence": [
+      "Leitura direta do arquivo (decodificado UTF-16LE) mostra MapToTransactionStatus (linhas 105-114) e MapToDevsPayStatus (linhas 116-125) com switch nominal substituindo os dois casts posicionais",
+      "python3 verification_command do brief executado literalmente: EXIT_CODE=0",
+      "git status --short: único arquivo de produto alterado é src/services/DevStore.Billing.API/Facade/CreditCardPaymentFacade.cs (demais mudanças são state files do harness em .swarm/, fora de src/)",
+      "git diff --stat -- src/: 1 file changed (Bin 7526 -> 10968 bytes), confirmando escopo único",
+      "file(1): 'Unicode text, UTF-16, little-endian text, with CRLF line terminators' — encoding preservado",
+      "git show HEAD (versão anterior) vs arquivo atual: assinaturas 'public static Transaction ToTransaction(DevsPay.Transaction transaction)' e 'public static DevsPay.Transaction ParaTransaction(Transaction transaction, DevsPayService devsPayService)' idênticas byte-a-byte",
+      "Leitura direta de Models/TransactionStatus.cs (Billing.API: Authorized=1,Paid=2,Denied=3,Refund=4,Canceled=5) e DevsPay/TransactionStatus.cs (Authorized=1,Paid=2,Refused=3,Chargeback=4,Cancelled=5) confirmando mapeamento nominal correto em ambas as direções, sem inversão de par",
+      "Confirmado por regex/contagem que nenhum literal '(TransactionStatus)transaction.Status' ou '(DevsPay.TransactionStatus)transaction.TransactionStatus' resta no arquivo",
+      "Ambos os métodos privados de mapeamento terminam em '_ => throw new ArgumentOutOfRangeException(nameof(status), status, null)' — comportamento defensivo exigido pelo how-to 1 da layer rule"
+    ],
+    "criteria": [
+      {
+        "id": "C1",
+        "pass": true,
+        "proof": "python3 checagem direta: 'cast1 presente: False', 'cast2 presente: False' — nenhuma ocorrência literal dos dois casts posicionais no arquivo decodificado"
+      },
+      {
+        "id": "C2",
+        "pass": true,
+        "proof": "Linhas 105-125 do arquivo: dois blocos 'switch' citando nominalmente Chargeback(3x), Refund(3x), Refused(2x), Denied(2x) — MapToTransactionStatus mapeia Refused->Denied e Chargeback->Refund; MapToDevsPayStatus mapeia Denied->Refused e Refund->Chargeback"
+      },
+      {
+        "id": "C3",
+        "pass": true,
+        "proof": "Diff de assinatura entre HEAD e versão atual: 'public static Transaction ToTransaction(DevsPay.Transaction transaction)' (linha 68) e 'public static DevsPay.Transaction ParaTransaction(Transaction transaction, DevsPayService devsPayService)' (linha 89) — nome, parâmetros e tipo de retorno idênticos em ambas versões"
+      },
+      {
+        "id": "C4",
+        "pass": true,
+        "proof": "git status --short mostra só 1 arquivo de produto modificado (CreditCardPaymentFacade.cs, dentro do allowed_path); demais entradas são artefatos de state do harness (.swarm/state/...), fora de src/. git diff --stat -- src/ confirma exatamente 1 file changed dentro de src/"
+      },
+      {
+        "id": "C5",
+        "pass": true,
+        "proof": "Comando verification_command do brief executado literalmente via Bash, saída: EXIT_CODE=0"
+      },
+      {
+        "id": "C6",
+        "pass": true,
+        "proof": "file(1) output: 'Unicode text, UTF-16, little-endian text, with CRLF line terminators' — BOM UTF-16LE + CRLF confirmados"
+      }
+    ]
+  }
+}

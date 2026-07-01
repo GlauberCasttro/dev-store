@@ -1,0 +1,2 @@
+## Padrões aprendidos (learning.db — derivado do codebase + trajetórias)
+- **A cobertura de teste automatizado real é 1/11 fronteiras — para 10 das 11 fronteiras, o verifier NÃO pode confiar em suíte de regressão existente; verification_command de acceptance_criteria precisa ser mais literal (ex.: chamar o endpoint manualmente, inspecionar side-effect no banco) em vez de assumir 'os testes verdes provam'.**  ·  quando: checar se a fronteira da task tem teste antes de aceitar 'testes passaram' como evidência suficiente  ·  conf 0.85  ·  _derived:ver DOMAIN-QA-001_
